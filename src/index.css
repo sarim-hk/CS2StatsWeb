@@ -2,10 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    height: 100vh;
+@media (min-aspect-ratio: 8/9) {
+  .aspect-ratio-adjust {
+    width: 100% !important;
+  }
 }
 
-#root {
-    height: 100%;
+
+@media (min-aspect-ratio: 12/9) {
+  .aspect-ratio-adjust {
+    width: 75% !important;
+  }
+}
+
+
+@media (min-aspect-ratio: 16/9) {
+  .aspect-ratio-adjust {
+    width: 50% !important;
+  }
 }
