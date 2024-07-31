@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Player {
     Avatar: string;
@@ -14,7 +15,7 @@ function PlayersPanel() {
 
     useEffect(() => {
         axios
-            .get<Player[]>("http://127.0.0.1:5000/api/get_players_or_player?API_KEY=3D2VKCUX8FXQB7G5")
+            .get<Player[]>(API_URL + "/get_players_or_player")
             .then((response) => setMatches(response.data))
             .catch((error) => console.error("Error fetching data:", error));
     }, []);

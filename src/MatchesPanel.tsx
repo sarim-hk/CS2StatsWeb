@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Match {
     Map: string;
@@ -17,7 +18,7 @@ function MatchesPanel() {
 
     useEffect(() => {
         axios
-            .get<Match[]>("http://127.0.0.1:5000/api/get_matches_or_match?API_KEY=3D2VKCUX8FXQB7G5")
+            .get<Match[]>(API_URL + "/get_matches_or_match")
             .then((response) => setMatches(response.data))
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
