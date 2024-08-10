@@ -11,6 +11,7 @@ interface PlayerStatsPanelProps {
 function combinePlayerStats(playerStatsList: PlayerStatsInterface[]): PlayerStatsInterface {
     const combinedStats: PlayerStatsInterface = {
         PlayerStatID: -1,
+        PlayerID: "-1",
         Kills: 0,
         Headshots: 0,
         Assists: 0,
@@ -38,7 +39,7 @@ function PlayerStatsPanel({ PlayerID }: PlayerStatsPanelProps) {
 
     useEffect(() => {
         axios
-            .get<PlayerStatsInterface[]>(`${API_URL}/get_player_playerstats?player_id=${PlayerID}`)
+            .get<PlayerStatsInterface[]>(`${API_URL}/get_player_playerstats_by_player_id?player_id=${PlayerID}`)
             .then((response) => {
                 const playerStats = combinePlayerStats(response.data);
                 setPlayerStats(playerStats);
@@ -52,47 +53,47 @@ function PlayerStatsPanel({ PlayerID }: PlayerStatsPanelProps) {
 
                 <div className="flex justify-between">
                     <div className="flex">
-                        Kills
+                        <div>Kills</div>
                         <div className="ml-1 text-[8px]">per round</div>
                     </div>
-                    <div>{playerStats?.Kills && playerStats?.RoundsPlayed ? (playerStats.Kills / playerStats.RoundsPlayed).toFixed(0) : 0}</div>
+                    <div>{playerStats?.Kills && playerStats?.RoundsPlayed ? (playerStats.Kills / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
 
                 <div className="flex justify-between">
                     <div className="flex">
-                        Assists
+                        <div>Assists</div>
                         <div className="ml-1 text-[8px]">per round</div>
                     </div>
-                    <div>{playerStats?.Assists && playerStats?.RoundsPlayed ? (playerStats.Assists / playerStats.RoundsPlayed).toFixed(0) : 0}</div>
+                    <div>{playerStats?.Assists && playerStats?.RoundsPlayed ? (playerStats.Assists / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
 
                 <div className="flex justify-between">
                     <div className="flex">
-                        Deaths
+                        <div>Deaths</div>
                         <div className="ml-1 text-[8px]">per round</div>
                     </div>
-                    <div>{playerStats?.Deaths && playerStats?.RoundsPlayed ? (playerStats.Deaths / playerStats.RoundsPlayed).toFixed(0) : 0}</div>
+                    <div>{playerStats?.Deaths && playerStats?.RoundsPlayed ? (playerStats.Deaths / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
 
                 <div className="flex justify-between">
                     <div className="flex">
-                        Damage
+                        <div>Damage</div>
                         <div className="ml-1 text-[8px]">per round</div>
                     </div>
-                    <div>{playerStats?.TotalDamage && playerStats?.RoundsPlayed ? (playerStats.TotalDamage / playerStats.RoundsPlayed).toFixed(0) : 0}</div>
+                    <div>{playerStats?.TotalDamage && playerStats?.RoundsPlayed ? (playerStats.TotalDamage / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
 
                 <div className="flex justify-between">
                     <div className="flex">
-                        Utility Damage
+                        <div>Utility Damage</div>
                         <div className="ml-1 text-[8px]">per round</div>
                     </div>
-                    <div>{playerStats?.UtilityDamage && playerStats?.RoundsPlayed ? (playerStats.UtilityDamage / playerStats.RoundsPlayed).toFixed(0) : 0}</div>
+                    <div>{playerStats?.UtilityDamage && playerStats?.RoundsPlayed ? (playerStats.UtilityDamage / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
 
                 <div className="flex justify-between">
                     <div>Headshots</div>
-                    <div>{playerStats?.Kills && playerStats?.Headshots ? (playerStats.Headshots / playerStats.Kills * 100).toFixed(0) : 0}%</div>
+                    <div>{playerStats?.Kills && playerStats?.Headshots ? (playerStats.Headshots / playerStats.Kills * 100).toFixed(2) : 0}%</div>
                 </div>
                 
             </div>

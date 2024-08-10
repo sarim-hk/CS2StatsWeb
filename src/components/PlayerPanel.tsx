@@ -13,7 +13,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
     useEffect(() => {
         axios
-            .get<PlayerInterface>(`${API_URL}/get_players_or_player?player_id=${PlayerID}`)
+            .get<PlayerInterface>(`${API_URL}/get_player_by_player_id?player_id=${PlayerID}`)
             .then((response) => setPlayer((response.data)))
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);
@@ -22,14 +22,10 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
     return (
         <div className="p-1 bg-gray-800 font-display">
             <div className="flex p-4 bg-gray-600 items-center">
-                <img
-                    className="object-fill w-24 h-24 mr-2 border-gray-800 border-solid border-2"
-                    src={player?.Avatar}
-                    alt={player?.Username}
-                />
+                <img className="object-fill w-24 h-24 mr-2 border-gray-800 border-solid border-2" src={player?.AvatarL}/>
                 <div className="pl-1">
-                    <h1 className="text-4xl">{player?.Username}</h1>
-                    ELO: {player?.ELO}
+                    <h1 className="text-3xl">{player?.Username}</h1>
+                    <div>ELO: {player?.ELO}</div>
                 </div>
             </div>
         </div>

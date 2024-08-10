@@ -9,7 +9,7 @@ function PlayersPanel() {
 
     useEffect(() => {
         axios
-            .get<PlayerInterface[]>(`${API_URL}/get_players_or_player`)
+            .get<PlayerInterface[]>(`${API_URL}/get_players`)
             .then((response) => {
                 setPlayers(response.data);
             })
@@ -22,9 +22,9 @@ function PlayersPanel() {
                 <div key={index} className="flex items-start pl-1 bg-gray-600">
                     <div>
                         <a href={`/player/${player.PlayerID}`} className="flex items-center pt-1 pb-1">
-                            <img className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2" src={player.Avatar} alt={player.Username} />
+                            <img className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2" src={player.AvatarM} alt={player.Username} />
                             <div>
-                                {player.Username}
+                                <div>{player.Username}</div>
                                 <div className="text-xs text-left">ELO: {player.ELO}</div>
                             </div>
                         </a>

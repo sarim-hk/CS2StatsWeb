@@ -1,8 +1,10 @@
 interface PlayerInterface {
     PlayerID: string;
     Username: string;
+    AvatarS: string;
+    AvatarM: string;
+    AvatarL: string;
     ELO: number;
-    Avatar: string;
 }
 
 export default PlayerInterface;

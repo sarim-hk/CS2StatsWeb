@@ -9,13 +9,12 @@ interface MatchesPanelProps {
 }
 
 function MatchesPanel({ PlayerID }: MatchesPanelProps) {
-
     const [matches, setMatches] = useState<MatchInterface[]>([]);
 
     useEffect(() => {
         const url = PlayerID
-            ? `${API_URL}/get_player_matches?player_id=${PlayerID}`
-            : `${API_URL}/get_matches_or_match`;
+            ? `${API_URL}/get_matches_by_player_id?player_id=${PlayerID}`
+            : `${API_URL}/get_matches`;
 
         axios
             .get<MatchInterface[]>(url)
@@ -27,13 +26,11 @@ function MatchesPanel({ PlayerID }: MatchesPanelProps) {
         <div className="p-1 bg-gray-800 font-display divide-y divide-white">
             {matches.map((match, index) => (
                 <div key={index} className="flex items-start p-4 bg-gray-600 ">
-                    <div className="grid grid-cols-4 flex-1">
-                        <a href="{yourLink1}" className="flex justify-start col-span-1">
-                            <div className="flex items-center justify-center">
-                                {match.MatchDate}
-                            </div>
+                    <div className="grid grid-cols-4 flex-1"> 
+                        <a href={`/match/${match.MatchID}`} className="flex justify-start col-span-1">
+                            <div className="flex items-center justify-center">{match.MatchDate}</div>
                         </a>
-                        <a href="{yourLink1}" className="flex justify-end col-span-3">
+                        <a href={`/match/${match.MatchID}`} className="flex justify-end col-span-3">
                             <div>
                                 <div className="flex items-center justify-center">
                                     <div className="pr-1 flex font-semibold text-blue-500">Counter-Terrorists {match.TeamCTScore}</div>

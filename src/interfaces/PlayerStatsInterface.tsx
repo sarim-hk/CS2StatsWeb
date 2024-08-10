@@ -1,5 +1,6 @@
 interface PlayerStatsInterface {
     PlayerStatID: number;
+    PlayerID: string,
     Kills: number;
     Headshots: number;
     Assists: number;
