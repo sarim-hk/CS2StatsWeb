@@ -46,17 +46,32 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                     <tbody>
                         {match?.TeamCT.Players.map((player, index) => (
                             <tr key={index} className="text-center">
-                                <td className="py-2 px-4 border-b border-gray-300">{player.PlayerID}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.Kills}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.Deaths}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.Assists}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.Headshots}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.TotalDamage}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.UtilityDamage}</td>
-                                <td className="py-2 px-4 border-b border-gray-300">{player.RoundsPlayed}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.Username}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.Kills}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.Deaths}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.Assists}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.Headshots}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.TotalDamage}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.UtilityDamage}</td>
+                                <td className="py-2 px-4 border-b border-blue-500">{player.RoundsPlayed}</td>
                             </tr>
                         ))}
                     </tbody>
+                    <tbody>
+                        {match?.TeamT.Players.map((player, index) => (
+                            <tr key={index} className="text-center">
+                                <td className="py-2 px-4 border-b border-orange-500">{player.Username}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.Kills}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.Deaths}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.Assists}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.Headshots}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.TotalDamage}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.UtilityDamage}</td>
+                                <td className="py-2 px-4 border-b border-orange-500">{player.RoundsPlayed}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+
                 </table>
             </div>
         </div>
