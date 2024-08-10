@@ -11,7 +11,8 @@ interface PlayerStatsPanelProps {
 function combinePlayerStats(playerStatsList: PlayerStatsInterface[]): PlayerStatsInterface {
     const combinedStats: PlayerStatsInterface = {
         PlayerStatID: -1,
-        PlayerID: "-1",
+        PlayerID: "",
+        Username: "",
         Kills: 0,
         Headshots: 0,
         Assists: 0,
