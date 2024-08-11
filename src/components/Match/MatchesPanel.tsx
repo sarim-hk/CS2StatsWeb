@@ -23,7 +23,7 @@ function MatchesPanel({ PlayerID }: MatchesPanelProps) {
     }, [PlayerID]);
 
     return (
-        <div className="p-1 bg-gray-800 font-display divide-y divide-white">
+        <div className="p-1 bg-gray-800 divide-y divide-white">
             {matches.map((match, index) => (
                 <div key={index} className="flex items-start p-4 bg-gray-600 ">
                     <div className="grid grid-cols-4 flex-1"> 

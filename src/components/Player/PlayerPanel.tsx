@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PlayerInterface from '../interfaces/PlayerInterface';
+import PlayerInterface from '../../interfaces/PlayerInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -20,7 +20,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
 
     return (
-        <div className="p-1 bg-gray-800 font-display">
+        <div className="p-1 bg-gray-800">
             <div className="flex p-4 bg-gray-600 items-center">
                 <img className="object-fill w-24 h-24 mr-2 border-gray-800 border-solid border-2" src={player?.AvatarL}/>
                 <div className="pl-1">

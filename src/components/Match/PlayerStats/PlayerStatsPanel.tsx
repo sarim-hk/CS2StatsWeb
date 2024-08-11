@@ -49,7 +49,7 @@ function PlayerStatsPanel({ PlayerID }: PlayerStatsPanelProps) {
     }, [PlayerID]);
 
     return (
-        <div className="p-1 bg-gray-800 font-display">
+        <div className="p-1 bg-gray-800">
             <div className="p-4 bg-gray-600">
 
                 <div className="flex justify-between">

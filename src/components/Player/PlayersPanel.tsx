@@ -17,7 +17,7 @@ function PlayersPanel() {
     }, []);
 
     return (
-        <div className="p-1 bg-gray-800 font-display divide-y divide-white">
+        <div className="p-1 bg-gray-800 divide-y divide-white">
             {players.map((player, index) => (
                 <div key={index} className="flex items-start pl-1 bg-gray-600">
                     <div>

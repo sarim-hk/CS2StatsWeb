@@ -1,7 +1,6 @@
 import Layout from "../components/Layout";
-import MatchesPanel from "../components/MatchesPanel";
-import PlayersPanel from "../components/PlayersPanel";
-
+import MatchesPanel from "../components/Match/MatchesPanel";
+import PlayersPanel from "../components/Player/PlayersPanel";
 
 function Home() {
   return (

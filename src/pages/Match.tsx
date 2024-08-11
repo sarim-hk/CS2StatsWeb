@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import Layout from "../components/Layout";
-import MatchPanel from '../components/MatchPanel';
-
+import MatchPanel from '../components/Match/MatchPanel';
 
 function Match() {
     const { MatchID } = useParams<{ MatchID: string }>();
@@ -13,7 +12,7 @@ function Match() {
 
     return (
         <Layout>
-            <div className="flex gap-4">
+            <div>
                 <MatchPanel MatchID={numericalMatchID}/>
             </div>
         </Layout>

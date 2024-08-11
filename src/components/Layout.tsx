@@ -23,7 +23,7 @@ function Layout({ children }: LayoutProps) {
                         <h1 className="p-2 text-xl flex items-center">Stats</h1>
                     </div>
                 </div>
-                <div className="p-1">{children}</div>
+                <div className="p-1 font-display">{children}</div>
 
             </div>
         </div>
