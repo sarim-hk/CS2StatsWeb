@@ -43,17 +43,23 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {match?.TeamCT.Players.map((player, index) => (
-                            <tr key={index} className="text-center">
-                                <td className="py-2 px-4 text-left">
-                                    <a href={`/player/${player.PlayerID}`}>{player.Username}</a>
+                        {match?.TeamCT.Players
+                            .sort((a, b) => b.Kills - a.Kills) // Sort players by Kills in descending order
+                            .map((player, index) => (
+                                <tr key={index} className="text-center">
+                                    <td className="py-2 px-4 text-left">
+                                        <a href={`/player/${player.PlayerID}`}>{player.Username}</a>
                                     </td>
-                                <td className="py-2 px-4">{player.Kills}-{player.Deaths}-{player.Assists}</td>
-                                <td className="py-2 px-4">{player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%</td>
-                                <td className="py-2 px-4">{player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}</td>
-                                <td className="py-2 px-4">{player.UtilityDamage}</td>
-                            </tr>
-                        ))}
+                                    <td className="py-2 px-4">{player.Kills}-{player.Deaths}-{player.Assists}</td>
+                                    <td className="py-2 px-4">
+                                        {player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%
+                                    </td>
+                                    <td className="py-2 px-4">
+                                        {player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}
+                                    </td>
+                                    <td className="py-2 px-4">{player.UtilityDamage}</td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
@@ -71,17 +77,23 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {match?.TeamT.Players.map((player, index) => (
-                            <tr key={index} className="text-center">
-                                <td className="py-2 px-4 text-left">
-                                    <a href={`/player/${player.PlayerID}`}>{player.Username}</a>
-                                </td>
-                                <td className="py-2 px-4">{player.Kills}-{player.Deaths}-{player.Assists}</td>
-                                <td className="py-2 px-4">{player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%</td>
-                                <td className="py-2 px-4">{player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}</td>
-                                <td className="py-2 px-4">{player.UtilityDamage}</td>
-                            </tr>
-                        ))}
+                        {match?.TeamT.Players
+                            .sort((a, b) => b.Kills - a.Kills) // Sort players by Kills in descending order
+                            .map((player, index) => (
+                                <tr key={index} className="text-center">
+                                    <td className="py-2 px-4 text-left">
+                                        <a href={`/player/${player.PlayerID}`}>{player.Username}</a>
+                                    </td>
+                                    <td className="py-2 px-4">{player.Kills}-{player.Deaths}-{player.Assists}</td>
+                                    <td className="py-2 px-4">
+                                        {player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%
+                                    </td>
+                                    <td className="py-2 px-4">
+                                        {player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}
+                                    </td>
+                                    <td className="py-2 px-4">{player.UtilityDamage}</td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>

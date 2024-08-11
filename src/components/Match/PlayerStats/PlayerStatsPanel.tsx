@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PlayerStatsInterface from '../interfaces/PlayerStatsInterface';
+import PlayerStatsInterface from '../../../interfaces/PlayerStatsInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
 

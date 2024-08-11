@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import MatchInterface from '../interfaces/MatchInterface';
+import MatchInterface from "../../interfaces/MatchInterface";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
