@@ -24,8 +24,10 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
             <div className="flex p-4 bg-gray-600 items-center">
                 <img className="object-fill w-24 h-24 mr-2 border-gray-800 border-solid border-2" src={player?.AvatarL}/>
                 <div className="pl-1">
-                    <h1 className="text-3xl">{player?.Username}</h1>
-                    <div>ELO: {player?.ELO}</div>
+                    <a href={`https://steamcommunity.com/profiles/${PlayerID}`}>
+                        <h1 className="text-3xl">{player?.Username}</h1>
+                        <div>ELO: {player?.ELO}</div>
+                    </a>
                 </div>
             </div>
         </div>
