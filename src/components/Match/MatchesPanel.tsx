@@ -6,9 +6,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 interface MatchesPanelProps {
     PlayerID?: string; // Optional prop
+    fullscreen?: boolean; // Optional fullscreen prop
 }
 
-function MatchesPanel({ PlayerID }: MatchesPanelProps) {
+function MatchesPanel({ PlayerID, fullscreen = false }: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
 
     useEffect(() => {
@@ -26,11 +27,11 @@ function MatchesPanel({ PlayerID }: MatchesPanelProps) {
         <div className="p-1 bg-gray-800 divide-y divide-white">
             {matches.map((match, index) => (
                 <div key={index} className="flex items-start p-4 bg-gray-600 ">
-                    <div className="grid grid-cols-4 flex-1"> 
-                        <a href={`/match/${match.MatchID}`} className="flex justify-start col-span-1">
+                    <div className="grid grid-cols-4 flex-1">
+                        <a href={`/match/${match.MatchID}`} className={`flex justify-start ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
                             <div className="flex items-center justify-center">{match.MatchDate}</div>
                         </a>
-                        <a href={`/match/${match.MatchID}`} className="flex justify-end col-span-3">
+                        <a href={`/match/${match.MatchID}`} className={`flex justify-end ${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
                             <div>
                                 <div className="flex items-center justify-center">
                                     <div className="pr-1 flex font-semibold text-blue-500">Counter-Terrorists {match.TeamCTScore}</div>

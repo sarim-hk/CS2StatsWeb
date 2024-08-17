@@ -18,8 +18,8 @@ function Layout({ children }: LayoutProps) {
                         />
                     </a>
                     <div className="ml-auto flex">
-                        <h1 className="p-2 text-xl flex items-center">Matches</h1>
-                        <h1 className="p-2 text-xl flex items-center">Players</h1>
+                        <a className="p-2 text-xl flex items-center" href="/matches">Matches</a>
+                        <a className="p-2 text-xl flex items-center" href="/players">Players</a>
                         <h1 className="p-2 text-xl flex items-center">Stats</h1>
                     </div>
                 </div>

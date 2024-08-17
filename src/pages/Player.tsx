@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import Layout from "../components/Layout";
 import PlayerPanel from '../components/Player/PlayerPanel';
 import MatchesPanel from '../components/Match/MatchesPanel';
-import PlayerStatsPanel from '../components/Match/PlayerStats/PlayerStatsPanel';
+import PlayerStatsPanel from '../components/PlayerStats/PlayerStatsPanel';
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
