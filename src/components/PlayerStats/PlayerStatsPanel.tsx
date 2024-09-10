@@ -91,13 +91,22 @@ function PlayerStatsPanel({ PlayerID }: PlayerStatsPanelProps) {
                     </div>
                     <div>{playerStats?.UtilityDamage && playerStats?.RoundsPlayed ? (playerStats.UtilityDamage / playerStats.RoundsPlayed).toFixed(2) : 0}</div>
                 </div>
+            </div>
 
+            <div className="pl-4 pr-4 pb-4 bg-gray-600">
+                
                 <div className="flex justify-between">
                     <div>Headshots</div>
                     <div>{playerStats?.Kills && playerStats?.Headshots ? (playerStats.Headshots / playerStats.Kills * 100).toFixed(2) : 0}%</div>
                 </div>
-                
+
+                <div className="flex justify-between">
+                    <div>KD</div>
+                    <div>{playerStats?.Kills && playerStats?.Deaths ? (playerStats.Kills / playerStats.Deaths).toFixed(2) : 0}</div>
+                </div>
+
             </div>
+
         </div>
     );
 }
