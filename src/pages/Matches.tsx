@@ -6,7 +6,7 @@ function Matches() {
         <Layout>
             <div className="flex gap-4">
                 <div className="flex-1">
-                    <MatchesPanel fullscreen={true} />
+                    <MatchesPanel fullscreen={true} searchEnabled={true} />
                 </div>
             </div>
         </Layout>

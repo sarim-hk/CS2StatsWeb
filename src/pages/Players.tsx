@@ -6,7 +6,7 @@ function Players() {
         <Layout>
             <div className="flex gap-4">
                 <div className="flex-1">
-                    <PlayersPanel />
+                    <PlayersPanel searchEnabled={true} />
                 </div>
             </div>
         </Layout>
