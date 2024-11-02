@@ -30,7 +30,6 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                 </div>
             </div>
 
-            {/* Counter-Terrorists Table */}
             <div className="p-1">
                 <table className="min-w-full bg-gray-600 text-xs h-auto">
                     <thead>
@@ -44,7 +43,7 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                     </thead>
                     <tbody>
                         {match?.TeamCT.Players
-                            .sort((a, b) => b.Kills - a.Kills) // Sort players by Kills in descending order
+                            .sort((a, b) => b.Kills - a.Kills)
                             .map((player, index) => (
                                 <tr key={index} className="text-center">
                                     <td className="py-2 px-4 text-left">

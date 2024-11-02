@@ -58,7 +58,7 @@ function LiveMatchPanel() {
                                         <td className="py-2 px-4 border-b">{player.Kills}-{player.Deaths}-{player.Assists}</td>
                                         <td className="py-2 px-4 border-b">{((player.Damage / ((liveMatch?.TScore ?? 0) + (liveMatch?.CTScore ?? 1))) || 0).toFixed(2)}</td>
                                         <td className="py-2 px-4 border-b">{player.Health}</td>
-                                        <td className="py-2 px-4 border-b">{player.MoneySaved}</td>
+                                        <td className="py-2 px-4 border-b">{player.MoneySaved}$</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -72,7 +72,7 @@ function LiveMatchPanel() {
                                         <td className="py-2 px-4 border-b">{player.Kills}-{player.Deaths}-{player.Assists}</td>
                                         <td className="py-2 px-4 border-b">{((player.Damage / ((liveMatch?.TScore ?? 0) + (liveMatch?.CTScore ?? 1))) || 0).toFixed(2)}</td>
                                         <td className="py-2 px-4 border-b">{player.Health}</td>
-                                        <td className="py-2 px-4 border-b">{player.MoneySaved}</td>
+                                        <td className="py-2 px-4 border-b">{player.MoneySaved}$</td>
                                     </tr>
                                 ))}
                             </tbody>

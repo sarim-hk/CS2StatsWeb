@@ -13,7 +13,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
     useEffect(() => {
         axios
-            .get<PlayerInterface>(`${API_URL}/get_player_by_player_id?player_id=${PlayerID}`)
+            .get<PlayerInterface>(`${API_URL}/player_panel_by_player_id?player_id=${PlayerID}`)
             .then((response) => setPlayer((response.data)))
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);
