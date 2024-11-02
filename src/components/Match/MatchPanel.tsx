@@ -55,7 +55,7 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                                         {player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%
                                     </td>
                                     <td className="py-2 px-4">
-                                        {player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}
+                                        {player?.TotalDamageInflicted && player?.RoundsPlayed ? (player.TotalDamageInflicted / player.RoundsPlayed).toFixed(2) : 0}
                                     </td>
                                     <td className="py-2 px-4">{player.UtilityDamage}</td>
                                 </tr>
@@ -89,7 +89,7 @@ function MatchPanel({ MatchID }: MatchPanelProps) {
                                         {player?.Kills && player?.Headshots ? (player.Headshots / player.Kills * 100).toFixed(2) : 0}%
                                     </td>
                                     <td className="py-2 px-4">
-                                        {player?.TotalDamage && player?.RoundsPlayed ? (player.TotalDamage / player.RoundsPlayed).toFixed(2) : 0}
+                                        {player?.TotalDamageInflicted && player?.RoundsPlayed ? (player.TotalDamageInflicted / player.RoundsPlayed).toFixed(2) : 0}
                                     </td>
                                     <td className="py-2 px-4">{player.UtilityDamage}</td>
                                 </tr>

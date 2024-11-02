@@ -1,11 +1,14 @@
 interface Match {
-    Map: string;
-    MatchDate: string;
     MatchID: number;
-    TeamCTID: number;
-    TeamCTScore: number;
-    TeamTID: number;
-    TeamTScore: number;
-}
+    MapID: string;
+    MatchDate: string;
+    WinningTeamID: string;
+    LosingTeamID: string;
+    WinningTeamScore: number;
+    LosingTeamScore: number;
+    WinningSide: number;
+    WinningDeltaELO: number;
+    LosingDeltaELO: number;
+    }
 
 export default Match;

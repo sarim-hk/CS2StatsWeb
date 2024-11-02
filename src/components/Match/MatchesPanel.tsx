@@ -9,14 +9,14 @@ interface MatchesPanelProps {
     fullscreen?: boolean;
     searchEnabled?: boolean;
 }
-function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: MatchesPanelProps) { // Default searchEnabled is false
+function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         const url = PlayerID
-            ? `${API_URL}/get_matches_by_player_id?player_id=${PlayerID}`
-            : `${API_URL}/get_matches`;
+            ? `${API_URL}/matches_panel_by_player_id?player_id=${PlayerID}`
+            : `${API_URL}/matches_panel`;
 
         axios
             .get<MatchInterface[]>(url)
@@ -25,7 +25,7 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: M
     }, [PlayerID]);
 
     const filteredMatches = matches.filter(match =>
-        match.Map.toLowerCase().includes(searchTerm.toLowerCase())
+        match.MapID.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -45,18 +45,38 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: M
 
             {filteredMatches.length > 0 ? (
                 filteredMatches.map((match, index) => (
-                    <div key={index} className="flex items-start p-4 bg-gray-600 ">
+                    <div key={index} className="flex items-start p-4 bg-gray-600">
                         <div className="grid grid-cols-4 flex-1">
+
                             <a href={`/match/${match.MatchID}`} className={`flex justify-start ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
                                 <div className="flex items-center justify-center">{match.MatchDate}</div>
                             </a>
+
                             <a href={`/match/${match.MatchID}`} className={`flex justify-end ${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
                                 <div>
+
                                     <div className="flex items-center justify-center">
-                                        <div className="pr-1 flex font-semibold text-blue-500">Counter-Terrorists {match.TeamCTScore}</div>
-                                        <div className="pl-1 font-semibold text-orange-500">{match.TeamTScore} Terrorists</div>
+                                        {match.WinningSide === 2 ? (
+                                            <>
+                                                <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-orange-500">Terrorists {match.WinningTeamScore}</a>
+                                                <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-blue-500">{match.LosingTeamScore} Counter-Terrorists</a>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-blue-500">Counter-Terrorists {match.WinningTeamScore}</a>
+                                                <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-orange-500">{match.LosingTeamScore} Terrorists</a>
+                                            </>
+                                        )}
                                     </div>
-                                    <div className="text-xs text-right">{match.Map}</div>
+
+                                    {match.WinningSide == 2 ? (
+                                        <div className="text-xs text-right">+{match.WinningDeltaELO} / {match.LosingDeltaELO}</div>
+                                    ) : (
+                                        <div className="text-xs text-right">{match.LosingDeltaELO} / +{match.WinningDeltaELO}</div>
+                                    )}
+                                    
+                                    <div className="text-xs text-right">{match.MapID}</div>
+
                                 </div>
                             </a>
                         </div>
@@ -65,6 +85,7 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: M
             ) : (
                 <div className="p-2 text-white">No matches found for the given map name.</div>
             )}
+
         </div>
     );
 }
