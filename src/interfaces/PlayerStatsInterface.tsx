@@ -6,7 +6,8 @@ interface PlayerStatsInterface {
     Headshots: number;
     Assists: number;
     Deaths: number;
-    TotalDamage: number;
+    TotalDamageInflicted: number;
+    TotalDamageTaken: number;
     UtilityDamage: number;
     RoundsPlayed: number;
 }

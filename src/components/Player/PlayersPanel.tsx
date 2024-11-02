@@ -14,7 +14,7 @@ function PlayersPanel({ searchEnabled = false }: PlayersPanelProps) {
 
     useEffect(() => {
         axios
-            .get<PlayerInterface[]>(`${API_URL}/get_players`)
+            .get<PlayerInterface[]>(`${API_URL}/players_panel`)
             .then((response) => {
                 setPlayers(response.data);
             })
