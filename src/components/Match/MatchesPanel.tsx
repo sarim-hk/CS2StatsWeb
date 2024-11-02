@@ -69,12 +69,7 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false }: M
                                         )}
                                     </div>
 
-                                    {match.WinningSide == 2 ? (
-                                        <div className="text-xs text-right">+{match.WinningDeltaELO} / {match.LosingDeltaELO}</div>
-                                    ) : (
-                                        <div className="text-xs text-right">{match.LosingDeltaELO} / +{match.WinningDeltaELO}</div>
-                                    )}
-                                    
+                                    <div className="text-xs text-right">+{match.WinningDeltaELO} / {match.LosingDeltaELO}</div>
                                     <div className="text-xs text-right">{match.MapID}</div>
 
                                 </div>
