@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PlayerInterface from '../../interfaces/PlayerInterface';
+import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,11 +9,11 @@ interface PlayerPanelProps {
 }
 
 function PlayerPanel({ PlayerID }: PlayerPanelProps) {
-    const [player, setPlayer] = useState<PlayerInterface>();
+    const [player, setPlayer] = useState<PlayerInfoInterface>();
 
     useEffect(() => {
         axios
-            .get<PlayerInterface>(`${API_URL}/player_panel_by_player_id?player_id=${PlayerID}`)
+            .get<PlayerInfoInterface>(`${API_URL}/player_panel_by_player_id?player_id=${PlayerID}`)
             .then((response) => setPlayer((response.data)))
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);

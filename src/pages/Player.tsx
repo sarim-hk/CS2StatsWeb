@@ -2,29 +2,24 @@ import { useParams } from 'react-router-dom';
 import Layout from "../components/Layout";
 import PlayerPanel from '../components/Player/PlayerPanel';
 import MatchesPanel from '../components/Match/MatchesPanel';
-import PlayerStatsPanel from '../components/PlayerStats/PlayerStatsPanel';
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
 
-    // this doesnt work properly lol - missing player id wont trigger it
-    if (!PlayerID) {
+    if (PlayerID === undefined || PlayerID.trim() === "") {
         return <div>Player ID is missing.</div>;
     }
 
     return (
         <Layout>
             <div className="flex gap-4">
-
                 <div className="flex-1">
                     <div className="pb-4"><PlayerPanel PlayerID={PlayerID} /></div>
-                    <PlayerStatsPanel PlayerID={PlayerID}/>
                 </div>
 
                 <div className="flex-2">
-                    <MatchesPanel PlayerID={PlayerID} />
+                    <MatchesPanel PlayerID={PlayerID} panelSize={350} />
                 </div>
-                
             </div>
         </Layout>
     );
