@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PlayerInterface from '../../interfaces/PlayerInterface';
+import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,12 +9,12 @@ interface PlayersPanelProps {
 }
 
 function PlayersPanel({ searchEnabled = false }: PlayersPanelProps) {
-    const [players, setPlayers] = useState<PlayerInterface[]>([]);
+    const [players, setPlayers] = useState<PlayerInfoInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         axios
-            .get<PlayerInterface[]>(`${API_URL}/players_panel`)
+            .get<PlayerInfoInterface[]>(`${API_URL}/players_panel`)
             .then((response) => {
                 setPlayers(response.data);
             })
