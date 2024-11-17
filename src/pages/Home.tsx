@@ -10,10 +10,12 @@ function Home() {
         <div className="flex-1">
           <PlayersPanel />
         </div>
+
         <div className="flex-2">
           <LiveMatchPanel/>
           <MatchesPanel/>
         </div>
+        
       </div>
     </Layout>
   );
