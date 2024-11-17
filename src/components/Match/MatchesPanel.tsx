@@ -8,7 +8,7 @@ interface MatchesPanelProps {
     PlayerID?: string;
     fullscreen?: boolean;
     searchEnabled?: boolean;
-    panelSize?: number; // Optional prop to control the height of the panel
+    panelSize?: number;
 }
 
 function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false, panelSize }: MatchesPanelProps) {
@@ -32,7 +32,7 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false, pan
 
     return (
         <div
-            className={`p-1 bg-gray-800 divide-y divide-white ${panelSize ? '' : 'h-full'}`}
+            className={`p-1 bg-gray-800 divide-y divide-white ${panelSize ? '' : 'h-full'} scrollbar-hide`}
             style={{
                 height: panelSize ? `${panelSize}px` : 'auto',
                 overflowY: "auto",
