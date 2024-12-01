@@ -57,17 +57,20 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
 
             <div className="bg-gray-700 p-1">
                 <div className="grid grid-cols-3 gap-1">
+
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> CS2S Rating 1.0 </div>
                         <div className="text-xl font-semibold"> {stats?.Rating} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Headshots </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.Headshots && stats?.Kills
-                                ? ((stats?.Headshots / stats?.Kills) * 100).toFixed(2) : "0"}%
-                        </div>
+                        <div className="text-xs"> Impact </div>
+                        <div className="text-xl font-semibold"> {stats?.Impact} </div>
+                    </div>
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> KAST </div>
+                        <div className="text-xl font-semibold"> {stats?.KAST}% </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
@@ -79,13 +82,11 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Impact </div>
-                        <div className="text-xl font-semibold"> {stats?.Impact} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> KAST </div>
-                        <div className="text-xl font-semibold"> {stats?.KAST}% </div>
+                        <div className="text-xs"> Headshots </div>
+                        <div className="text-xl font-semibold">
+                            {stats?.Headshots && stats?.Kills
+                                ? ((stats?.Headshots / stats?.Kills) * 100).toFixed(2) : "0"}%
+                        </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
