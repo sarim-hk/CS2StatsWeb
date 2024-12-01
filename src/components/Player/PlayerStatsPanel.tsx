@@ -94,24 +94,6 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Rounds Played </div>
-                        <div className="text-xl font-semibold"> {stats?.RoundsPlayed} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Matches Played </div>
-                        <div className="text-xl font-semibold"> {playerStats?.MatchesPlayed} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Match Win Rate </div>
-                        <div className="text-xl font-semibold">
-                            {playerStats?.MatchesWon && playerStats?.MatchesPlayed
-                                ? ((playerStats.MatchesWon / playerStats.MatchesPlayed) * 100).toFixed(2) : "0"}%
-                        </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Enemies Flashed / Round </div>
                         <div className="text-xl font-semibold">
                             {stats?.Blinds.Count && stats?.RoundsPlayed
@@ -132,6 +114,24 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
                         <div className="text-xl font-semibold">
                             {stats?.UtilityDamage && stats?.RoundsPlayed
                                 ? ((stats?.UtilityDamage / stats?.RoundsPlayed)).toFixed(2) : "0"}
+                        </div>
+                    </div>
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Rounds Played </div>
+                        <div className="text-xl font-semibold"> {stats?.RoundsPlayed} </div>
+                    </div>
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Matches Played </div>
+                        <div className="text-xl font-semibold"> {playerStats?.MatchesPlayed} </div>
+                    </div>
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Match Win Rate </div>
+                        <div className="text-xl font-semibold">
+                            {playerStats?.MatchesWon && playerStats?.MatchesPlayed
+                                ? ((playerStats.MatchesWon / playerStats.MatchesPlayed) * 100).toFixed(2) : "0"}%
                         </div>
                     </div>
 
