@@ -2,6 +2,8 @@ interface CompletePlayerStatsInterface {
     Overall: PlayerStatsInterface;
     Terrorist: PlayerStatsInterface;
     CounterTerrorist: PlayerStatsInterface;
+    MatchesPlayed: number;
+    MatchesWon: number;
 }
 
 interface PlayerStatsInterface {

@@ -76,6 +76,25 @@ function PlayerStatsPanel({ PlayerID }: PlayerStatsPanelProps) {
                         <div className="text-xl font-semibold"> {stats?.ADR} </div>
                     </div>
 
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Matches Played </div>
+                        <div className="text-xl font-semibold"> {playerStats?.MatchesPlayed} </div>
+                    </div>
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Matches Won </div>
+                        <div className="text-xl font-semibold"> {playerStats?.MatchesWon} </div>
+                    </div>
+
+
+                    <div className="text-center p-1 bg-gray-600">
+                        <div className="text-xs"> Win Rate </div>
+                        <div className="text-xl font-semibold">
+                            {playerStats?.MatchesWon && playerStats?.MatchesPlayed
+                                ? ((playerStats.MatchesWon / playerStats.MatchesPlayed) * 100).toFixed(2)
+                                : "0"}%
+                        </div>                    </div>
+
                 </div>
             </div>
         </div>

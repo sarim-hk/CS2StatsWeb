@@ -21,3 +21,11 @@
     width: 50% !important;
   }
 }
+
+.border-winning-team {
+  border: 2px solid #4CAF50; /* Green border for the winning team */
+}
+
+.border-losing-team {
+  border: 2px dashed #FF5722; /* Orange dashed border for the losing team */
+}
