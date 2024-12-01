@@ -89,7 +89,7 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
                             value={mapId}
                             onChange={(e) => setMapId(e.target.value)}
                             className={`flex-grow p-1 bg-gray-700 text-white text-xs 
-                                border border-gray-500 focus:outline-none mr-2
+                                border border-gray-500 focus:outline-none
                                 ${mapId.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
                         />
                     </div>
