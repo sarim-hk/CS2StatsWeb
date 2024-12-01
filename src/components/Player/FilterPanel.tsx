@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type TimePeriod = "7days" | "14days" | "1month" | "3months" | "6months" | "1year";
 type MatchCount = "5matches" | "10matches" | "15matches" | "20matches" | "25matches" | "50matches" | "100matches";
@@ -12,7 +12,6 @@ interface FilterPanelProps {
 function FilterPanel({ onFilterChange }: FilterPanelProps) {
     const [selectedFilter, setSelectedFilter] = useState<Filter>(null);
     const [mapId, setMapId] = useState<string>("");
-    const [pendingMapId, setPendingMapId] = useState<string>("");
 
     const timePeriodLabels: { [key in TimePeriod]: string } = {
         "7days": "7 Days",
@@ -33,29 +32,22 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
         "100matches": "100 Matches"
     };
 
-    const handleFilterClick = (filter: Filter) => {
-        const newFilter = selectedFilter === filter ? null : filter;
-        setSelectedFilter(newFilter);
-        generateAndApplyFilter(newFilter, mapId);
-    };
-
-    const generateAndApplyFilter = (filter: Filter, currentMapId: string) => {
+    useEffect(() => {
         let generatedFilter = "";
 
-        if (filter) {
-            generatedFilter += `range=${filter}&`;
+        if (selectedFilter) {
+            generatedFilter += `range=${selectedFilter}&`;
         }
 
-        if (currentMapId.trim()) {
-            generatedFilter += `map_id=${currentMapId}&`;
+        if (mapId.trim()) {
+            generatedFilter += `map_id=${mapId}&`;
         }
 
         onFilterChange(generatedFilter.replace(/&$/, ""));
-    };
+    }, [selectedFilter, mapId, onFilterChange]);
 
-    const handleMapSearch = () => {
-        setMapId(pendingMapId);
-        generateAndApplyFilter(selectedFilter, pendingMapId);
+    const handleFilterClick = (filter: Filter) => {
+        setSelectedFilter(prevFilter => prevFilter === filter ? null : filter);
     };
 
     return (
@@ -94,17 +86,12 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
                         <input
                             type="text"
                             placeholder="Enter Map Name"
-                            value={pendingMapId}
-                            onChange={(e) => setPendingMapId(e.target.value)}
-                            className="flex-grow p-1 bg-gray-700 text-white text-xs 
-                                border border-gray-500 focus:outline-none focus:ring-1 focus:ring-green-500 mr-2"
+                            value={mapId}
+                            onChange={(e) => setMapId(e.target.value)}
+                            className={`flex-grow p-1 bg-gray-700 text-white text-xs 
+                                border border-gray-500 focus:outline-none mr-2
+                                ${mapId.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
                         />
-
-                        <button
-                            onClick={handleMapSearch}
-                            className="bg-gray-700 text-white text-xs px-3 py-1 border border-gray-500 focus:outline-none">
-                            OK
-                        </button>
                     </div>
                 </div>
             </div>
