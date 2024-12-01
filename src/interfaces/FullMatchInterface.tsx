@@ -22,8 +22,8 @@ interface RoundInterface {
     RoundEndReason: number;
     RoundID: number;
     StartTick: number;
-    WinningSide: number;
-    WinningTeamID: string;
+    WinnerSide: number;
+    WinnerTeamID: string;
 }
 
 interface PlayerInterface {

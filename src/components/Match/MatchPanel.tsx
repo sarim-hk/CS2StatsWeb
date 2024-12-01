@@ -5,9 +5,9 @@ interface MatchPanelProps {
 }
 
 function MatchPanel({ Match }: MatchPanelProps) {
-    
+
     const sideToTeamID: { [side: number]: string } = {};
-    if (Match) { 
+    if (Match) {
         for (const [teamID, team] of Object.entries(Match.Teams)) {
             sideToTeamID[team.Side] = teamID;
         }
@@ -15,15 +15,32 @@ function MatchPanel({ Match }: MatchPanelProps) {
 
     return (
         <div className="bg-gray-800">
+            
             <div className="p-1">
                 <div className="flex p-4 bg-gray-600">
                     <div className="text-s flex-1">{Match?.MapID}</div>
                     <div className="text-s flex-3">
                         Counter-Terrorists {Match?.Teams[sideToTeamID[3]].Score} | {Match?.Teams[sideToTeamID[2]].Score} Terrorists
-                    </div>
+                    </div>                    
+                </div>                
+            </div>
+
+            <div className="p-1 pt-0">
+                <div className="flex flex-wrap gap-1 justify-center bg-gray-600 p-1">
+                    {Match?.Rounds.map((round) => (
+                        <div
+                            key={round.RoundID}
+                            className={`py-1 px-2 rounded text-xs font-semibold ${round.WinnerSide === 3 ? 'text-blue-500' : 'text-orange-500'
+                                }`}
+                        >
+                            {(round.RoundID - Match?.Rounds[0].RoundID) + 1}
+                        </div>
+                    ))}
                 </div>
             </div>
 
+
+            {/* Player Stats for Counter-Terrorists */}
             <div className="p-1 pt-0">
                 <table className="min-w-full bg-gray-600 text-xs h-auto">
                     <thead>
@@ -41,7 +58,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                             <th className="py-2 px-4 border-b border-blue-500 w-12"> </th>
                             <th className="py-2 px-4 border-b border-blue-500 w-8"> KAST </th>
                             <th className="py-2 px-4 border-b border-blue-500 w-8"> Impact </th>
-                            <th className="py-2 px-4 border-b border-blue-500 w-8"> Rating 2.0 </th>
+                            <th className="py-2 px-4 border-b border-blue-500 w-8"> CS2S Rating </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +87,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                 </table>
             </div>
 
+            {/* Player Stats for Terrorists */}
             <div className="p-1 pt-0">
                 <table className="min-w-full bg-gray-600 text-xs h-auto">
                     <thead>
@@ -87,7 +105,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                             <th className="py-2 px-4 border-b border-orange-500 w-12"> </th>
                             <th className="py-2 px-4 border-b border-orange-500 w-8"> KAST </th>
                             <th className="py-2 px-4 border-b border-orange-500 w-8"> Impact </th>
-                            <th className="py-2 px-4 border-b border-orange-500 w-8"> Rating 2.0 </th>
+                            <th className="py-2 px-4 border-b border-orange-500 w-8"> CS2S Rating </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,10 +133,9 @@ function MatchPanel({ Match }: MatchPanelProps) {
                     </tbody>
                 </table>
             </div>
-
+            
         </div>
     );
-
 }
 
 export default MatchPanel;
