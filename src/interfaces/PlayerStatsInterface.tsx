@@ -11,22 +11,21 @@ interface PlayerStatsInterface {
     Kills: number;
     Headshots: number;
     Assists: number;
-    DamageAmount: number;
+    Damage: number;
     UtilityDamage: number;
-    EnemiesFlashed: number;
-    GrenadesThrown: number;
-    ClutchAttempts: number;
-    DuelWins: number;
-    DuelAttempts: number;
+    Blinds: {
+        Count: number;
+        TotalDuration: number;
+    };
     Deaths: number;
     KAST: number;
-    Rounds: number;
     ADR: number;
     KPR: number;
     APR: number;
     DPR: number;
     Rating: number;
     Impact: number;
+    RoundsPlayed: number;
 }
 
 export default CompletePlayerStatsInterface;
