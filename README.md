@@ -1,30 +1,46 @@
-# React + TypeScript + Vite
+<div align="center">
+  <a href="https://mapink.sarim.uk">
+    <img src="https://i.imgur.com/LUTaSX2.png" alt="CS2Stats" />
+  </a>
+  <a href="https://github.com/sarim-hk/CS2Stats">
+    <img src="https://img.shields.io/badge/CS2Stats-Plugin-red" alt="CS2Stats Plugin" />
+  </a>
+  <a href="https://github.com/sarim-hk/CS2StatsAPI">
+    <img src="https://img.shields.io/badge/CS2Stats-API-green" alt="CS2Stats API" />
+  </a>
+  <a href="https://github.com/sarim-hk/CS2StatsWeb">
+    <img src="https://img.shields.io/badge/CS2Stats-Web-blue" alt="CS2Stats Web" />
+  </a>
+  
+</div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Feature Highlights:
+* Automatic demo recording
+* Built in ELO system to rank players
+* Live match display
+* In-depth stat tracking, per match, per round:
+  *  ELO
+  *  Kills, Assists, Deaths
+  *  Utility Damage, Total Damage
+  *  Enemies Flashed, Grenades Thrown
+  *  Clutch Attempts and Clutches Won
+  *  KAST
+  *  Rounds Played and Matches Played
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Donation
+[!["Paypal"](https://i.imgur.com/7igL5rh.png)](https://paypal.me/SHKTV)‎ ‎ ‎ ‎ [!["Steam Trade Link"](https://i.imgur.com/33ijkjI.png)](https://steamcommunity.com/tradeoffer/new/?partner=317935564&token=ZBiuL2Ge)
 
-## Expanding the ESLint configuration
+## Prerequisites
+* [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp) installed on the game server
+* MySQL Server
+* Web server for hosting API
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Installation
+* Clone the repository
+* Rename `.env.development` file to `.env.production`
+* Fill out your API URL within the newly-renamed `.env.production`
+* Install dependencies with `npm install`
+* Compile with `npm run build`
+* Deploy the `dist` folder to any static site host - I use Cloudflare Pages but GitHub Pages is also suitable
+* Done!
