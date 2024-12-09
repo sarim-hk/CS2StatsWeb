@@ -9,7 +9,7 @@ import FilterPanel from '../components/Player/FilterPanel';
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
-    const [filter, setFilter] = useState<string>('');
+    const [filter, setFilter] = useState<string>("");
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
         return <div>Player ID is missing.</div>;

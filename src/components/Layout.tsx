@@ -20,7 +20,7 @@ function Layout({ children }: LayoutProps) {
                     <div className="ml-auto flex">
                         <a className="p-2 text-xl flex items-center" href="/matches">Matches</a>
                         <a className="p-2 text-xl flex items-center" href="/players">Players</a>
-                        <h1 className="p-2 text-xl flex items-center">Stats</h1>
+                        <a className="p-2 text-xl flex items-center" href="/balancer">Balancer</a>
                     </div>
                 </div>
                 
