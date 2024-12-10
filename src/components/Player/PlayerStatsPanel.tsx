@@ -7,9 +7,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 interface PlayerStatsPanelProps {
     PlayerID: string;
     filter: string;
+    onMatchIdsUpdate: (matchIds: number[]) => void;
 }
 
-function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
+function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPanelProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>();
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
@@ -17,9 +18,13 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
         const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${PlayerID}${filter ? `&${filter}` : ''}`;
         axios
             .get<CompletePlayerStatsInterface>(url)
-            .then((response) => setPlayerStats(response.data))
+            .then((response) => {
+                setPlayerStats(response.data);
+                const extractedMatchIds = response.data?.[PlayerID]?.MatchIDs || [];
+                onMatchIdsUpdate(extractedMatchIds);
+            })
             .catch((error) => console.error("Error fetching data:", error));
-    }, [PlayerID, filter]);
+    }, [PlayerID, filter, onMatchIdsUpdate]);
 
     const stats = playerStats?.[PlayerID][selectedStatType];
 

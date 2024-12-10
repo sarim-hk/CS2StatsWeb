@@ -9,9 +9,16 @@ interface MatchesPanelProps {
     fullscreen?: boolean;
     searchEnabled?: boolean;
     panelSize?: number;
+    filteredMatchIds?: number[]; // New prop to filter matches
 }
 
-function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false, panelSize }: MatchesPanelProps) {
+function MatchesPanel({
+    PlayerID,
+    fullscreen = false,
+    searchEnabled = false,
+    panelSize,
+    filteredMatchIds
+}: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -26,9 +33,12 @@ function MatchesPanel({ PlayerID, fullscreen = false, searchEnabled = false, pan
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);
 
-    const filteredMatches = matches.filter(match =>
-        match.MapID.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Filter matches based on both search term and filtered match IDs
+    const filteredMatches = matches.filter(match => {
+        const matchIdMatch = !filteredMatchIds || filteredMatchIds.length === 0 || filteredMatchIds.includes(Number(match.MatchID));
+        const searchMatch = match.MapID.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchIdMatch && searchMatch;
+    });
 
     return (
         <div

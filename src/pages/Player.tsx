@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+
 import Layout from "../components/Layout";
 import PlayerPanel from '../components/Player/PlayerPanel';
 import MatchesPanel from '../components/Match/MatchesPanel';
@@ -10,6 +11,7 @@ import FilterPanel from '../components/Player/FilterPanel';
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
     const [filter, setFilter] = useState<string>("");
+    const [matchIds, setMatchIds] = useState<number[]>([]);
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
         return <div>Player ID is missing.</div>;
@@ -34,11 +36,19 @@ function Player() {
 
                 <div className="flex-2">
                     <div>
-                        <MatchesPanel PlayerID={PlayerID} panelSize={550} />
+                        <MatchesPanel
+                            PlayerID={PlayerID}
+                            filteredMatchIds={matchIds}
+                            panelSize={550}
+                        />
                     </div>
 
                     <div className="pt-4">
-                        <PlayerStatsPanel PlayerID={PlayerID} filter={filter} />
+                        <PlayerStatsPanel
+                            PlayerID={PlayerID}
+                            filter={filter}
+                            onMatchIdsUpdate={setMatchIds}
+                        />
                     </div>
                 </div>
             </div>
