@@ -15,14 +15,13 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
 
     useEffect(() => {
         const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${PlayerID}${filter ? `&${filter}` : ''}`;
-
         axios
             .get<CompletePlayerStatsInterface>(url)
             .then((response) => setPlayerStats(response.data))
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID, filter]);
 
-    const stats = playerStats?.[selectedStatType];
+    const stats = playerStats?.[PlayerID][selectedStatType];
 
     return (
         <div className="p-1 bg-gray-800">
@@ -125,14 +124,14 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Matches Played </div>
-                        <div className="text-xl font-semibold"> {playerStats?.MatchesPlayed} </div>
+                        <div className="text-xl font-semibold"> {playerStats?.[PlayerID].MatchesPlayed} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Match Win Rate </div>
                         <div className="text-xl font-semibold">
                             {playerStats?.MatchesWon && playerStats?.MatchesPlayed
-                                ? ((playerStats.MatchesWon / playerStats.MatchesPlayed) * 100).toFixed(2) : "0"}%
+                                ? ((playerStats?.[PlayerID].MatchesWon / playerStats?.[PlayerID].MatchesPlayed) * 100).toFixed(2) : "0"}%
                         </div>
                     </div>
 

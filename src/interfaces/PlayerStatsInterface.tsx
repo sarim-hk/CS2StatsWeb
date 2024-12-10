@@ -1,4 +1,8 @@
 interface CompletePlayerStatsInterface {
+    [playerID: string]: FullPlayerStatsInterface;
+}
+
+interface FullPlayerStatsInterface {
     Overall: PlayerStatsInterface;
     Terrorist: PlayerStatsInterface;
     CounterTerrorist: PlayerStatsInterface;

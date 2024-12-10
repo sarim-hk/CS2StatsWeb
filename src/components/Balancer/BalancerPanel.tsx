@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-
+import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import CompletePlayerStatsInterface from '../../interfaces/PlayerStatsInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface BalancerContentProps {
-    selectedPlayers: string[];
+    selectedPlayers: PlayerInfoInterface[];
     filter: string;
 }
 
@@ -16,7 +16,7 @@ interface BalancedTeam {
 }
 
 function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
-    const [playerStats, setPlayerStats] = useState<{ [playerID: string]: CompletePlayerStatsInterface }>({});
+    const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>({});
     const [balancedTeams, setBalancedTeams] = useState<BalancedTeam | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -30,29 +30,24 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
         setBalancedTeams(null);
 
         try {
-            const allPlayerStats: { [playerID: string]: CompletePlayerStatsInterface } = {};
-
-            for (const playerID of selectedPlayers) {
-                const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${playerID}${filter ? `&${filter}` : ''}`;
-                const response = await axios.get<CompletePlayerStatsInterface>(url);
-                allPlayerStats[playerID] = response.data;
-            }
-
-            setPlayerStats(allPlayerStats);
-            setBalancedTeams(balanceTeams(selectedPlayers, allPlayerStats));
+            const playerIDs = selectedPlayers.map(player => player.PlayerID).join(',');
+            const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${playerIDs}${filter ? `&${filter}` : ''}`;
+            const response = await axios.get<CompletePlayerStatsInterface>(url);
+            
+            setPlayerStats(response.data);
+            setBalancedTeams(balanceTeams(selectedPlayers.map(p => p.PlayerID), response.data));
 
         } catch (error) {
             console.error("Error fetching player stats:", error);
-
         } finally {
             setIsLoading(false);
         }
     };
 
-    const balanceTeams = (playerIDs: string[], stats: { [playerID: string]: CompletePlayerStatsInterface }): BalancedTeam => {
+    const balanceTeams = (playerIDs: string[], stats: CompletePlayerStatsInterface): BalancedTeam => {
         const players = playerIDs.map(id => ({
             id,
-            rating: stats[id].Overall.Rating || 0,
+            rating: stats[id].Overall.Rating || 0
         }));
 
         let bestDifference = Infinity;
@@ -86,48 +81,71 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
     };
 
     return (
-        <div className="flex-1 bg-gray-800 p-1">
-            <div className="flex-1 bg-gray-700 p-2">
-
-                <div className="flex justify-center items-center">
-                    <button
-                        onClick={handleBalance}
-                        disabled={isLoading || selectedPlayers.length === 0}
-                        className={`px-4 py-2 ${isLoading || selectedPlayers.length === 0
-                            ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                            : 'bg-blue-500 text-white hover:bg-blue-600'
-                            }`}>
-                        {isLoading ? 'Balancing...' : 'Balance'}
-                    </button>
-                </div>
-
-                <div>
-                    {balancedTeams && (
-                        <div className="mt-4">
-
-                            <div className="flex gap-4">
-                                <div className="flex-1 bg-gray-700 p-2">
-                                    {balancedTeams.team1.map((playerID) => (
-                                        <div key={playerID} className="text-white">
-                                            {playerID} (Rating: {playerStats[playerID]?.Overall.Rating})
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="flex-1 bg-gray-700 p-2 pb-0">
-                                    {balancedTeams.team2.map((playerID) => (
-                                        <div key={playerID} className="text-white">
-                                            {playerID} (Rating: {playerStats[playerID]?.Overall.Rating})
-                                        </div>
-                                    ))}
-                                </div>
-                                
-                            </div>
-                        </div>
-                    )}
-                </div>
-
+        <div className="p-1 bg-gray-800">
+            <div className="p-4 bg-gray-700 flex justify-center items-center">
+                <button
+                    onClick={handleBalance}
+                    disabled={isLoading || selectedPlayers.length === 0}
+                    className={`px-4 py-2 ${isLoading || selectedPlayers.length === 0
+                        ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                        : 'bg-blue-500 text-white hover:bg-blue-600'
+                        }`}>
+                    {isLoading ? 'Balancing...' : 'Balance'}
+                </button>
             </div>
+
+            {balancedTeams && (
+                <div className="flex gap-1 mt-1">
+                    <div className="flex-1 bg-gray-700 divide-y divide-white">
+                        {balancedTeams.team1
+                            .sort((a, b) => (playerStats[b].Overall.Rating || 0) - (playerStats[a].Overall.Rating || 0))
+                            .map((playerID) => {
+                                const player = selectedPlayers.find(p => p.PlayerID === playerID);
+
+                                return (
+                                    <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
+                                        <a href={`/player/${player?.PlayerID}`} className="flex items-center pt-1 pb-1 w-full">
+                                            <img
+                                                className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2"
+                                                src={player?.AvatarM}
+                                                alt={player?.Username}
+                                            />
+                                            <div>
+                                                <div>{player?.Username}</div>
+                                                <div className="text-xs text-left">Rating: {playerStats[playerID]?.Overall.Rating}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+
+                    <div className="flex-1 bg-gray-700 divide-y divide-white">
+                        {balancedTeams.team2
+                            .sort((a, b) => (playerStats[b]?.Overall.Rating || 0) - (playerStats[a]?.Overall.Rating || 0))
+                            .map((playerID) => {
+                                const player = selectedPlayers.find(p => p.PlayerID === playerID);
+
+                                return (
+                                    <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
+                                        <a href={`/player/${player?.PlayerID}`} className="flex items-center pt-1 pb-1 w-full">
+                                            <img
+                                                className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2"
+                                                src={player?.AvatarM}
+                                                alt={player?.Username}
+                                            />
+                                            <div>
+                                                <div>{player?.Username}</div>
+                                                <div className="text-xs text-left">Rating: {playerStats?.[playerID].Overall.Rating}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
