@@ -88,21 +88,19 @@ function FilterPanel({ onFilterChange, horizontal = false }: FilterPanelProps) {
                 </div>
             </div>
 
-            {horizontal && (
-                <div className="bg-gray-700 p-1 mt-1">
-                    <div className="bg-gray-600 p-1">
-                        <input
-                            type="text"
-                            placeholder="Enter Map Name"
-                            value={mapId}
-                            onChange={(e) => setMapId(e.target.value)}
-                            className={`w-full p-1 bg-gray-700 text-white text-xs 
-                                border border-gray-500 focus:outline-none
-                                ${mapId.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
-                        />
-                    </div>
+            <div className={`bg-gray-700 p-1 ${!horizontal ? 'mt-1' : ''}`}>
+                <div className="bg-gray-600 p-1">
+                    <input
+                        type="text"
+                        placeholder="Enter Map Name"
+                        value={mapId}
+                        onChange={(e) => setMapId(e.target.value)}
+                        className={`w-full p-1 bg-gray-700 text-white text-xs 
+                            border border-gray-500 focus:outline-none
+                            ${mapId.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
+                    />
                 </div>
-            )}
+            </div>
         </div>
     );
 }
