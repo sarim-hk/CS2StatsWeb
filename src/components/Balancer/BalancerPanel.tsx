@@ -19,6 +19,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>({});
     const [balancedTeams, setBalancedTeams] = useState<BalancedTeam | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [lastBalancedPlayers, setLastBalancedPlayers] = useState<PlayerInfoInterface[]>([]);
 
     const handleBalance = async () => {
         if (selectedPlayers.length === 0) {
@@ -33,8 +34,9 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
             const playerIDs = selectedPlayers.map(player => player.PlayerID).join(',');
             const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${playerIDs}${filter ? `&${filter}` : ''}`;
             const response = await axios.get<CompletePlayerStatsInterface>(url);
-            
+
             setPlayerStats(response.data);
+            setLastBalancedPlayers(selectedPlayers);
             setBalancedTeams(balanceTeams(selectedPlayers.map(p => p.PlayerID), response.data));
 
         } catch (error) {
@@ -100,7 +102,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                         {balancedTeams.team1
                             .sort((a, b) => (playerStats[b].Overall.Rating || 0) - (playerStats[a].Overall.Rating || 0))
                             .map((playerID) => {
-                                const player = selectedPlayers.find(p => p.PlayerID === playerID);
+                                const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
 
                                 return (
                                     <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
@@ -125,7 +127,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                         {balancedTeams.team2
                             .sort((a, b) => (playerStats[b]?.Overall.Rating || 0) - (playerStats[a]?.Overall.Rating || 0))
                             .map((playerID) => {
-                                const player = selectedPlayers.find(p => p.PlayerID === playerID);
+                                const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
 
                                 return (
                                     <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
