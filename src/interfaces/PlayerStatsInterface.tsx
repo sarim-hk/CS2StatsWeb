@@ -8,6 +8,7 @@ interface FullPlayerStatsInterface {
     CounterTerrorist: PlayerStatsInterface;
     MatchesPlayed: number;
     MatchesWon: number;
+    MatchIDs: number[];
 }
 
 interface PlayerStatsInterface {
