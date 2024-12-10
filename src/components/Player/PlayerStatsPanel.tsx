@@ -64,17 +64,17 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> CS2S Rating 1.0 </div>
-                        <div className="text-xl font-semibold"> {stats?.Rating} </div>
+                        <div className="text-xl font-semibold"> {stats?.Rating ?? 0} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Impact </div>
-                        <div className="text-xl font-semibold"> {stats?.Impact} </div>
+                        <div className="text-xl font-semibold"> {stats?.Impact ?? 0} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> KAST </div>
-                        <div className="text-xl font-semibold"> {stats?.KAST}% </div>
+                        <div className="text-xl font-semibold"> {stats?.KAST ?? 0}% </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
@@ -95,7 +95,7 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> ADR </div>
-                        <div className="text-xl font-semibold"> {stats?.ADR} </div>
+                        <div className="text-xl font-semibold"> {stats?.ADR ?? 0} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
@@ -124,12 +124,12 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Rounds Played </div>
-                        <div className="text-xl font-semibold"> {stats?.RoundsPlayed} </div>
+                        <div className="text-xl font-semibold"> {stats?.RoundsPlayed ?? 0} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">
                         <div className="text-xs"> Matches Played </div>
-                        <div className="text-xl font-semibold"> {playerStats?.[PlayerID].MatchesPlayed} </div>
+                        <div className="text-xl font-semibold"> {playerStats?.[PlayerID].MatchesPlayed ?? 0} </div>
                     </div>
 
                     <div className="text-center p-1 bg-gray-600">

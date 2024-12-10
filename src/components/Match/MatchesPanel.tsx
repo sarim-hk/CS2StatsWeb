@@ -33,7 +33,6 @@ function MatchesPanel({
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);
 
-    // Filter matches based on both search term and filtered match IDs
     const filteredMatches = matches.filter(match => {
         const matchIdMatch = !filteredMatchIds || filteredMatchIds.length === 0 || filteredMatchIds.includes(Number(match.MatchID));
         const searchMatch = match.MapID.toLowerCase().includes(searchTerm.toLowerCase());
