@@ -47,16 +47,22 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
     };
 
     const balanceTeams = (playerIDs: string[], stats: CompletePlayerStatsInterface): BalancedTeam => {
+        if (playerIDs.length % 2 !== 0) {
+            console.warn("Odd number of players cannot be perfectly balanced");
+            return { team1: [], team2: [] };
+        }
+
         const players = playerIDs.map(id => ({
             id,
             rating: stats[id].Overall.Rating || 0
         }));
 
+        const teamSize = playerIDs.length / 2;
         let bestDifference = Infinity;
         let bestTeams: BalancedTeam = { team1: [], team2: [] };
 
         const backtrack = (index: number, team1: string[], team2: string[], team1Sum: number, team2Sum: number) => {
-            if (index === players.length) {
+            if (team1.length === teamSize && team2.length === teamSize) {
                 const difference = Math.abs(team1Sum - team2Sum);
                 if (difference < bestDifference) {
                     bestDifference = difference;
@@ -65,20 +71,30 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                 return;
             }
 
+            if (index === players.length ||
+                team1.length > teamSize ||
+                team2.length > teamSize) {
+                return;
+            }
+
             const player = players[index];
 
-            team1.push(player.id);
-            backtrack(index + 1, team1, team2, team1Sum + player.rating, team2Sum);
-            team1.pop();
+            if (team1.length < teamSize) {
+                team1.push(player.id);
+                backtrack(index + 1, team1, team2, team1Sum + player.rating, team2Sum);
+                team1.pop();
+            }
 
-            team2.push(player.id);
-            backtrack(index + 1, team1, team2, team1Sum, team2Sum + player.rating);
-            team2.pop();
+            if (team2.length < teamSize) {
+                team2.push(player.id);
+                backtrack(index + 1, team1, team2, team1Sum, team2Sum + player.rating);
+                team2.pop();
+            }
         };
 
         backtrack(0, [], [], 0, 0);
 
-        console.log(`Best Difference: ${bestDifference}`);
+        console.log(`Best Team Difference: ${bestDifference}`);
         return bestTeams;
     };
 
