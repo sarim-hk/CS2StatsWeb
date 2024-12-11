@@ -18,6 +18,7 @@ function Balancer() {
             <div className="flex gap-4">
                 <div className="flex-1">
                     <PlayersPanel
+                        searchEnabled={true}
                         selectionEnabled={true}
                         onPlayersSelected={handlePlayersSelected}
                     />
