@@ -48,13 +48,15 @@ function MatchesPanel({
             }}
         >
             {searchEnabled && (
-                <div className="p-4 bg-gray-700">
+                <div className="bg-gray-600 p-1">
                     <input
                         type="text"
                         placeholder="Search by Map Name"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full p-2 rounded bg-gray-600 text-white"
+                        className={`w-full p-1 bg-gray-700 text-white text-xs 
+                        border border-gray-500 focus:outline-none
+                        ${searchTerm.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
                     />
                 </div>
             )}
