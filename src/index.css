@@ -22,10 +22,30 @@
   }
 }
 
-.border-winning-team {
-  border: 2px solid #4CAF50; /* Green border for the winning team */
+@keyframes scrollLines {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
 }
 
-.border-losing-team {
-  border: 2px dashed #FF5722; /* Orange dashed border for the losing team */
+.pattern {
+    background: repeating-linear-gradient(
+        -45deg,                  /* Angle for diagonal lines */
+        transparent,             /* Start transparent */
+        transparent,         /* First transparent segment */
+        rgba(0, 0, 0, 0.2) 6.25%,   /* Line color with slight opacity */
+        rgba(0, 0, 0, 0.2) 12.5%   /* Line width */
+    );
+    background-size: 200% 200%;
+    animation: scrollLines 10s linear infinite;
+}
+
+.gold-text {
+    background: url('https://i.imgur.com/t7LNgUu.png') repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-blend-mode: difference;
 }
