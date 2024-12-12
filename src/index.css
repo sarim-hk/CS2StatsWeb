@@ -44,7 +44,21 @@
 }
 
 .gold-text {
-    background: url('https://i.imgur.com/t7LNgUu.png') repeat;
+    background: url("https://i.imgur.com/t7LNgUu.png") repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-blend-mode: difference;
+}
+
+.silver-text {
+    background: url("https://i.imgur.com/yWZKDUz.png") repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-blend-mode: difference;
+}
+
+.bronze-text {
+    background: url("https://i.imgur.com/YYXTpmg.png") repeat;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-blend-mode: difference;

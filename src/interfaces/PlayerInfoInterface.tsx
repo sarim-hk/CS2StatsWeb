@@ -1,6 +1,6 @@
 interface PlayerInfoInterface {
     PlayerID: string;
-    PlayerOfTheWeek: boolean;
+    PlayerOfTheWeek: number;
     Username: string;
     AvatarS: string;
     AvatarM: string;

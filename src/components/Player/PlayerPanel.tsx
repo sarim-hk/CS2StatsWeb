@@ -112,6 +112,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
             ) : (
 
                 <div className="flex p-1 bg-gray-600 items-center">
+
                     <div
                         style={{
                             background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})`
@@ -143,9 +144,22 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                         </div>
 
                         {/* MVP */}
-                        <div className="absolute text-6xl font-bold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
-                            MVP
-                        </div>
+                        {player?.PlayerOfTheWeek === 1 && (
+                            <div className="absolute text-6xl font-bold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
+                                #1
+                            </div>
+                        )}
+                        {player?.PlayerOfTheWeek === 2 && (
+                            <div className="absolute text-6xl font-bold bottom-4 silver-text drop-shadow-[0_3px_3px_#000000]">
+                                #2
+                            </div>
+                        )}
+                        {player?.PlayerOfTheWeek === 3 && (
+                            <div className="absolute text-6xl font-bold bottom-4 bronze-text drop-shadow-[0_3px_3px_#000000]">
+                                #3
+                            </div>
+                        )}
+
                     </div>
                 </div>
             )}
