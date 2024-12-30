@@ -14,10 +14,9 @@ function getPreviousWeek(date: Date): number {
     currentDate.setUTCDate(currentDate.getUTCDate() - dayNumber + 3);
     const firstThursday = new Date(Date.UTC(currentDate.getUTCFullYear(), 0, 4));
     const weekNumber = Math.round(((currentDate.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7 + 1);
-    
+
     return weekNumber === 1 ? 52 : weekNumber - 1;
 }
-
 
 function interpolateColor(color1: string, color2: string, factor: number): string {
     const r1 = parseInt(color1.slice(1, 3), 16);
@@ -51,17 +50,15 @@ function getWeekGradient(week: number): { from: string, to: string } {
         { start: 48, end: 53, from: '#40E0D0', to: '#8B0000' }    // Turquoise/Blue Topaz back to Dark Red/Garnet
     ];
 
-    // Find the appropriate color section
     const section = colorSections.find(s => week >= s.start && week < s.end);
 
     if (!section) {
         return {
             from: '#3f5a8c',
             to: '#9B1A9B'
-        }; // Default gradient
+        };
     }
 
-    // Calculate interpolation factor within the section
     const factor = (week - section.start) / (section.end - section.start);
 
     return {
@@ -81,8 +78,13 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
     useEffect(() => {
         axios
             .get<PlayerInfoInterface>(`${API_URL}/player_panel_by_player_id?player_id=${PlayerID}`)
-            .then((response) => setPlayer(response.data))
-            .catch((error) => console.error("Error fetching data:", error));
+            .then((response) => {
+                setPlayer(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+
     }, [PlayerID]);
 
     useEffect(() => {
@@ -93,7 +95,9 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
     return (
         <div className="p-1 bg-gray-800">
-            {!player?.PlayerOfTheWeek ? (
+
+            {(player?.WeekPosition == null || player?.WeekPosition > 3) ? (
+
                 <div className="flex p-4 bg-gray-600 items-center">
                     <>
                         <img
@@ -112,25 +116,20 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
             ) : (
 
                 <div className="flex p-1 bg-gray-600 items-center">
-
                     <div
                         style={{
                             background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})`
                         }}
                         className="overflow-hidden relative w-80 h-80 flex justify-center items-center outline outline-2 shadow-[0_0_25px_#FFFFFF]"
                     >
-
-                        {/* ELO */}
                         <div className="absolute top-4 text-xs text-white">
                             {player?.ELO} ELO
                         </div>
 
-                        {/* Week */}
                         <div className="absolute top-8 text-white text-4xl font-semibold drop-shadow-[0_1px_1px_#000000]">
                             Week {week}
                         </div>
 
-                        {/* Profile Picture */}
                         <div className="absolute inset-0 pattern">
                             <img
                                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 object-contain outline outline-2"
@@ -139,30 +138,32 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                         </div>
 
                         <div className="absolute inset-0">
-                            <img className="absolute top-1/2 left-1/2 transform -translate-x-2 -translate-y-16 object-contain w-48 h-48"
-                                src="https://i.imgur.com/OjaNoWp.png" />
+                            <img
+                                className="absolute top-1/2 left-1/2 transform -translate-x-2 -translate-y-16 object-contain w-48 h-48"
+                                src="https://i.imgur.com/OjaNoWp.png"
+                            />
                         </div>
 
-                        {/* MVP */}
-                        {player?.PlayerOfTheWeek === 1 && (
+                        {player?.WeekPosition === 1 && (
                             <div className="absolute text-6xl font-bold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
                                 #1
                             </div>
                         )}
-                        {player?.PlayerOfTheWeek === 2 && (
+                        {player?.WeekPosition === 2 && (
                             <div className="absolute text-6xl font-bold bottom-4 silver-text drop-shadow-[0_3px_3px_#000000]">
                                 #2
                             </div>
                         )}
-                        {player?.PlayerOfTheWeek === 3 && (
+                        {player?.WeekPosition === 3 && (
                             <div className="absolute text-6xl font-bold bottom-4 bronze-text drop-shadow-[0_3px_3px_#000000]">
                                 #3
                             </div>
                         )}
-
                     </div>
                 </div>
+
             )}
+
         </div>
     );
 }
