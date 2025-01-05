@@ -78,16 +78,6 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
             }, 0);
         };
 
-        // Additional constraint: limit the number of high-rated players per team
-        const isValidTeamComposition = (team: string[]): boolean => {
-            const highRatedPlayers = team.filter(id => {
-                const player = players.find(p => p.id === id);
-                return (player?.rating || 0) > 1.2; // Adjust this threshold as needed
-            }).length;
-
-            return highRatedPlayers <= Math.ceil(teamSize / 3); // Maximum 1/3 of team can be high-rated
-        };
-
         const backtrack = (
             index: number,
             team1: string[],
@@ -95,12 +85,8 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
             team1Sum: number,
             team2Sum: number
         ) => {
+            
             if (team1.length === teamSize && team2.length === teamSize) {
-                // Check if this distribution is valid
-                if (!isValidTeamComposition(team1) || !isValidTeamComposition(team2)) {
-                    return;
-                }
-
                 const difference = Math.abs(team1Sum - team2Sum);
                 if (difference < bestDifference) {
                     bestDifference = difference;
