@@ -52,17 +52,55 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
             return { team1: [], team2: [] };
         }
 
-        const players = playerIDs.map(id => ({
-            id,
-            rating: stats[id].Overall.Rating || 0
-        }));
+        // Convert ratings to exponential scale to better reflect skill differences
+        const players = playerIDs.map(id => {
+            const rating = stats[id].Overall.Rating || 0;
+            return {
+                id,
+                rating,
+                // Apply exponential scaling to ratings above 1.0
+                // This makes higher ratings count more towards team strength
+                scaledRating: rating <= 1.0
+                    ? rating
+                    : Math.pow(rating, 2.5) // You can adjust this exponent to tune the scaling
+            }
+        });
 
         const teamSize = playerIDs.length / 2;
         let bestDifference = Infinity;
         let bestTeams: BalancedTeam = { team1: [], team2: [] };
 
-        const backtrack = (index: number, team1: string[], team2: string[], team1Sum: number, team2Sum: number) => {
+        // Helper function to calculate team strength
+        const calculateTeamStrength = (team: string[]): number => {
+            return team.reduce((sum, id) => {
+                const player = players.find(p => p.id === id);
+                return sum + (player?.scaledRating || 0);
+            }, 0);
+        };
+
+        // Additional constraint: limit the number of high-rated players per team
+        const isValidTeamComposition = (team: string[]): boolean => {
+            const highRatedPlayers = team.filter(id => {
+                const player = players.find(p => p.id === id);
+                return (player?.rating || 0) > 1.2; // Adjust this threshold as needed
+            }).length;
+
+            return highRatedPlayers <= Math.ceil(teamSize / 3); // Maximum 1/3 of team can be high-rated
+        };
+
+        const backtrack = (
+            index: number,
+            team1: string[],
+            team2: string[],
+            team1Sum: number,
+            team2Sum: number
+        ) => {
             if (team1.length === teamSize && team2.length === teamSize) {
+                // Check if this distribution is valid
+                if (!isValidTeamComposition(team1) || !isValidTeamComposition(team2)) {
+                    return;
+                }
+
                 const difference = Math.abs(team1Sum - team2Sum);
                 if (difference < bestDifference) {
                     bestDifference = difference;
@@ -81,20 +119,37 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
 
             if (team1.length < teamSize) {
                 team1.push(player.id);
-                backtrack(index + 1, team1, team2, team1Sum + player.rating, team2Sum);
+                backtrack(
+                    index + 1,
+                    team1,
+                    team2,
+                    team1Sum + player.scaledRating,
+                    team2Sum
+                );
                 team1.pop();
             }
 
             if (team2.length < teamSize) {
                 team2.push(player.id);
-                backtrack(index + 1, team1, team2, team1Sum, team2Sum + player.rating);
+                backtrack(
+                    index + 1,
+                    team1,
+                    team2,
+                    team1Sum,
+                    team2Sum + player.scaledRating
+                );
                 team2.pop();
             }
         };
 
         backtrack(0, [], [], 0, 0);
 
-        console.log(`Best Team Difference: ${bestDifference}`);
+        // Log the actual team strengths for verification
+        if (bestTeams.team1.length > 0) {
+            console.log('Team 1 Strength:', calculateTeamStrength(bestTeams.team1));
+            console.log('Team 2 Strength:', calculateTeamStrength(bestTeams.team2));
+        }
+
         return bestTeams;
     };
 
