@@ -3,7 +3,9 @@ interface Match {
     MapID: string;
     MatchDate: string;
     WinningTeamID: string;
+    WinningTeamName: string;
     LosingTeamID: string;
+    LosingTeamName: string;
     WinningTeamScore: number;
     LosingTeamScore: number;
     WinningSide: number;

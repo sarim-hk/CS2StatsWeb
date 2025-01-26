@@ -15,6 +15,20 @@ interface DuelInterface {
     WinnerID: string;
 }
 
+interface DeathInterface {
+    DeathID: number;
+    AssisterID: string;
+    AssisterSide: number;
+    AttackerID: string;
+    AttackerSide: number;
+    VictimID: string;
+    VictimSide: number;
+    Hitgroup: number;
+    OpeningDeath: number;
+    RoundID: number;
+    Weapon: string;
+}
+
 interface RoundInterface {
     EndTick: number;
     LosingTeamID: string;
@@ -60,11 +74,13 @@ interface TeamInterface {
     Score: number;
     Side: number;
     TeamID: string;
+    TeamName: string;
 }
 
 interface FullMatchInterface {
     Clutches: ClutchInterface[];
     Duels: DuelInterface[];
+    Deaths: DeathInterface[]
     EndTick: number;
     MapID: string;
     MatchDate: string;

@@ -75,19 +75,19 @@ function MatchesPanel({
                                         {match.WinningSide === 2 ? (
                                             <>
                                                 <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-orange-500">
-                                                    Terrorists {match.WinningTeamScore}
+                                                    {match.WinningTeamName} {match.WinningTeamScore}
                                                 </a>
                                                 <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-blue-500">
-                                                    {match.LosingTeamScore} Counter-Terrorists
+                                                    {match.LosingTeamScore} {match.LosingTeamName}
                                                 </a>
                                             </>
                                         ) : (
                                             <>
                                                 <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-blue-500">
-                                                    Counter-Terrorists {match.WinningTeamScore}
+                                                    {match.WinningTeamName} {match.WinningTeamScore}
                                                 </a>
                                                 <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-orange-500">
-                                                    {match.LosingTeamScore} Terrorists
+                                                    {match.LosingTeamScore} {match.LosingTeamName}
                                                 </a>
                                             </>
                                         )}
