@@ -4,8 +4,8 @@ interface TeamSelectorPanelProps {
     Match: FullMatchInterface;
     selectedTeamId: string;
     onTeamSelect: (teamId: string) => void;
-    activePanel: "clutch" | "headtohead";
-    onPanelChange: (panel: "clutch" | "headtohead") => void;
+    activePanel: "clutch" | "openingduel";
+    onPanelChange: (panel: "clutch" | "openingduel") => void;
 }
 
 function TeamSelectorPanel({
@@ -15,6 +15,7 @@ function TeamSelectorPanel({
     activePanel,
     onPanelChange
 }: TeamSelectorPanelProps) {
+    
     return (
         <div className="bg-gray-700 flex flex-col items-center p-1">
             <div className="flex justify-center gap-2 p-1">
@@ -30,14 +31,14 @@ function TeamSelectorPanel({
                 </button>
 
                 <button
-                    key="headtoheadButton"
-                    onClick={() => onPanelChange("headtohead")}
+                    key="openingDuelButton"
+                    onClick={() => onPanelChange("openingduel")}
                     className={`w-40 py-1 text-xs text-white bg-gray-600 text-center
-                        ${activePanel === "headtohead"
+                        ${activePanel === "openingduel"
                             ? "border border-green-500 ring-1 ring-green-500"
                             : "border border-transparent"}`}
                 >
-                    Head-to-Head
+                    Opening Duels
                 </button>
             </div>
 

@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 import Layout from "../components/Layout";
-import MatchPanel from '../components/Match/MatchPanel';
-import FullMatchInterface from '../interfaces/FullMatchInterface';
-import ClutchPanel from '../components/Match/ClutchPanel';
-import TeamSelectorPanel from '../components/Match/TeamSelectorPanel';
+import MatchPanel from "../components/Match/MatchPanel";
+import FullMatchInterface from "../interfaces/FullMatchInterface";
+import ClutchPanel from "../components/Match/ClutchPanel";
+import TeamSelectorPanel from "../components/Match/TeamSelectorPanel";
+import OpeningDuelPanel from "../components/Match/OpeningDuelPanel";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -14,6 +15,7 @@ function Match() {
     const { MatchID } = useParams<{ MatchID: string }>();
     const [match, setMatch] = useState<FullMatchInterface>();
     const [selectedTeamId, setSelectedTeamId] = useState<string>();
+    const [activePanel, setActivePanel] = useState<"clutch" | "openingduel">("clutch");
 
     useEffect(() => {
         axios
@@ -33,18 +35,31 @@ function Match() {
 
     return (
         <Layout>
-            <div>
-                <MatchPanel Match={match} />
+            <div className="flex gap-4 flex-col">
+                <div className="bg-gray-800">
+                    <MatchPanel Match={match} />
+                </div>
 
-                <TeamSelectorPanel
-                    Match={match}
-                    selectedTeamId={selectedTeamId!}
-                    onTeamSelect={setSelectedTeamId}
-                />
+                <div className="bg-gray-800 p-1">
+                    <div>
+                        <TeamSelectorPanel
+                            Match={match}
+                            selectedTeamId={selectedTeamId!}
+                            onTeamSelect={setSelectedTeamId}
+                            activePanel={activePanel}
+                            onPanelChange={setActivePanel}
+                        />
+                    </div>
 
-                {selectedTeamId && <ClutchPanel Match={match} TeamID={selectedTeamId} />}
-
-
+                    <div className="pt-1">
+                        {selectedTeamId && activePanel === "clutch" && (
+                            <ClutchPanel Match={match} TeamID={selectedTeamId} />
+                        )}
+                        {selectedTeamId && activePanel === "openingduel" && (
+                            <OpeningDuelPanel Match={match} TeamID={selectedTeamId} />
+                        )}
+                    </div>
+                </div>
             </div>
         </Layout>
     );
