@@ -140,65 +140,93 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
     };
 
     return (
-        <div className="p-1 bg-gray-800">
-            <div className="p-4 bg-gray-700 flex justify-center items-center">
-                <button
-                    onClick={handleBalance}
-                    disabled={isLoading || selectedPlayers.length === 0}
-                    className={`px-4 py-2 ${isLoading || selectedPlayers.length === 0
-                        ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                        : 'bg-blue-500 text-white hover:bg-blue-600'
-                        }`}>
-                    {isLoading ? 'Balancing...' : 'Balance'}
-                </button>
+        <div className="bg-gray-800">
+            <div className="p-2 border-b border-gray-700">
+                <div className="flex items-center justify-center">
+                    <button
+                        onClick={handleBalance}
+                        disabled={isLoading || selectedPlayers.length === 0 || selectedPlayers.length % 2 !== 0}
+                        className={`px-3 py-1.5 text-sm font-medium transition-all duration-200 flex-shrink-0
+                            ${isLoading || selectedPlayers.length === 0 || selectedPlayers.length % 2 !== 0
+                                ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
+                                : 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50 hover:bg-green-500/30'
+                            }`}
+                    >
+                        {isLoading ? 'Balancing...' : `Balance Teams`}
+                    </button>
+                </div>
             </div>
 
             {balancedTeams && (
-                <div className="flex gap-1 mt-1">
-                    <div className="flex-1 bg-gray-700 divide-y divide-white">
+                <div className="grid grid-cols-2 divide-x divide-gray-700">
+
+                    {/* Team 1 */}
+                    <div className="divide-y divide-gray-700/50">
                         {balancedTeams.team1
-                            .sort((a, b) => (playerStats[b].Overall.Rating || 0) - (playerStats[a].Overall.Rating || 0))
+                            .sort((a, b) => (playerStats[b]?.Overall.Rating || 0) - (playerStats[a]?.Overall.Rating || 0))
                             .map((playerID) => {
                                 const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
+                                const rating = playerStats[playerID]?.Overall.Rating;
 
                                 return (
-                                    <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
-                                        <a href={`/player/${player?.PlayerID}`} className="flex items-center pt-1 pb-1 w-full">
-                                            <img
-                                                className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2"
-                                                src={player?.AvatarM}
-                                                alt={player?.Username}
-                                            />
-                                            <div>
-                                                <div>{player?.Username}</div>
-                                                <div className="text-xs text-left">Rating: {playerStats[playerID]?.Overall.Rating}</div>
+                                    <div key={playerID} className="hover:bg-gray-700/50 transition-colors duration-200">
+                                        <div className="p-2">
+                                            <div className="flex items-center gap-3">
+                                                <a href={`/player/${player?.PlayerID}`} className="flex items-center gap-3 flex-1">
+                                                    <div className="relative">
+                                                        <img
+                                                            className="h-12 w-12 object-cover border-2 border-gray-700 hover:border-gray-600 transition-colors"
+                                                            src={player?.AvatarM}
+                                                            alt={player?.Username}
+                                                        />
+                                                    </div>
+                                                    <div className="flex flex-col min-w-0">
+                                                        <div className="font-medium text-sm text-gray-300 truncate">
+                                                            {player?.Username}
+                                                        </div>
+                                                        <div className="text-xs font-medium text-gray-300 mt-0.5">
+                                                            Rating: {rating?.toFixed(2)}
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 );
-                            })
-                        }
+                            })}
                     </div>
 
-                    <div className="flex-1 bg-gray-700 divide-y divide-white">
+                    {/* Team 2 */}
+                    <div className="divide-y divide-gray-700/50">
                         {balancedTeams.team2
                             .sort((a, b) => (playerStats[b]?.Overall.Rating || 0) - (playerStats[a]?.Overall.Rating || 0))
                             .map((playerID) => {
                                 const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
+                                const rating = playerStats[playerID]?.Overall.Rating;
 
                                 return (
-                                    <div key={playerID} className="flex items-center justify-between pl-1 bg-gray-600">
-                                        <a href={`/player/${player?.PlayerID}`} className="flex items-center pt-1 pb-1 w-full">
-                                            <img
-                                                className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2"
-                                                src={player?.AvatarM}
-                                                alt={player?.Username}
-                                            />
-                                            <div>
-                                                <div>{player?.Username}</div>
-                                                <div className="text-xs text-left">Rating: {playerStats?.[playerID].Overall.Rating}</div>
+                                    <div key={playerID} className="hover:bg-gray-700/50 transition-colors duration-200">
+                                        <div className="p-2">
+                                            <div className="flex items-center gap-3">
+                                                <a href={`/player/${player?.PlayerID}`} className="flex items-center gap-3 flex-1">
+                                                    <div className="relative">
+                                                        <img
+                                                            className="h-12 w-12 object-cover border-2 border-gray-700 hover:border-gray-600 transition-colors"
+                                                            src={player?.AvatarM}
+                                                            alt={player?.Username}
+                                                        />
+                                                    </div>
+                                                    <div className="flex flex-col min-w-0">
+                                                        <div className="font-medium text-sm text-gray-300 truncate">
+                                                            {player?.Username}
+                                                        </div>
+                                                        <div className="text-xs font-medium text-gray-400 mt-0.5">
+                                                            Rating: {rating?.toFixed(2)}
+                                                        </div>
+                                                    </div>
+                                                </a>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 );
                             })}

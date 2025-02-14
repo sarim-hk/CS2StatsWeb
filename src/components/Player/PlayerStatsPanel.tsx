@@ -26,121 +26,155 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID, filter, onMatchIdsUpdate]);
 
+    const sharedStyles = {
+        container: "bg-gray-800",
+        header: "border-b border-gray-700",
+        headerContent: "p-2 flex justify-center space-x-2",
+        button: "px-3 py-1 text-xs font-medium transition-colors duration-200",
+        statsContainer: "p-4",
+        row: "border-b border-gray-700 last:border-b-0",
+        rowContent: "p-3 hover:bg-gray-700/50 transition-colors duration-200",
+        statLabel: "text-sm font-medium text-gray-400",
+        statValue: "text-base font-bold"
+    };
+
+    const getButtonStyle = (type: 'Overall' | 'Terrorist' | 'CounterTerrorist') => `
+        ${sharedStyles.button}
+        ${selectedStatType === type
+            ? type === 'Overall'
+                ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                : type === 'Terrorist'
+                    ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/50'
+                    : 'bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50'
+            : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+    }`;
+
     const stats = playerStats?.[PlayerID][selectedStatType];
 
+    const statRows = [
+        {
+            label: "Performance",
+            value: (
+                <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Rating</span>
+                        <span className="text-gray-300">{Number(stats?.Rating ?? 0).toFixed(2)}</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Impact</span>
+                        <span className="text-gray-300">{Number(stats?.Impact ?? 0).toFixed(2)}</span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            label: "Firepower",
+            value: (
+                <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">K/D</span>
+                        <span className="text-gray-300">
+                            {stats?.Kills && stats?.Deaths ? (Number(stats.Kills) / Number(stats.Deaths)).toFixed(2) : "0.00"}
+                        </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">ADR</span>
+                        <span className="text-gray-300">{Number(stats?.ADR ?? 0).toFixed(0)}</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">HS%</span>
+                        <span className="text-gray-300">
+                            {stats?.Headshots && stats?.Kills ? ((Number(stats.Headshots) / Number(stats.Kills)) * 100).toFixed(0) : "0"}%
+                        </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">KAST</span>
+                        <span className="text-gray-300">{Number(stats?.KAST ?? 0).toFixed(0)}%</span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            label: "Utility",
+            value: (
+                <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">EF / Round</span>
+                        <span className="text-gray-300">
+                            {stats?.Blinds?.Count && stats?.RoundsPlayed
+                                ? (Number(stats.Blinds.Count) / Number(stats.RoundsPlayed)).toFixed(1)
+                                : "0.0"}
+                        </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">UD / Round</span>
+                        <span className="text-gray-300">
+                            {stats?.UtilityDamage && stats?.RoundsPlayed
+                                ? (Number(stats.UtilityDamage) / Number(stats.RoundsPlayed)).toFixed(1)
+                                : "0.0"}
+                        </span>
+                    </div>
+                </div>
+            )
+        },
+        {
+            label: "Overview",
+            value: (
+                <div className="flex items-center space-x-4">
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Rounds</span>
+                        <span className="text-gray-300">{Number(stats?.RoundsPlayed ?? 0)}</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Matches</span>
+                        <span className="text-gray-300">{Number(playerStats?.[PlayerID]?.MatchesPlayed ?? 0)}</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Win Rate</span>
+                        <span className="text-gray-300">
+                            {playerStats?.[PlayerID]?.MatchesWon && playerStats?.[PlayerID]?.MatchesPlayed
+                                ? ((Number(playerStats[PlayerID].MatchesWon) / Number(playerStats[PlayerID].MatchesPlayed)) * 100).toFixed(0)
+                                : "0"}%
+                        </span>
+                    </div>
+                </div>
+            )
+        }
+    ];
+
     return (
-        <div className="p-1 bg-gray-800">
-            <div className="flex justify-center space-x-2 mb-1 bg-gray-700 p-2">
-                <button
-                    onClick={() => setSelectedStatType('Overall')}
-                    className={`px-3 py-1 text-xs text-white bg-gray-600
-                        ${selectedStatType === 'Overall'
-                            ? 'border border-green-500 ring-1 ring-green-500'
-                            : 'border border-transparent'}`}>
-                    Overall
-                </button>
-
-                <button
-                    onClick={() => setSelectedStatType('Terrorist')}
-                    className={`px-3 py-1 text-xs text-white bg-gray-600
-                        ${selectedStatType === 'Terrorist'
-                        ? 'border border-orange-500 ring-1 ring-orange-500'
-                            : 'border border-transparent'}`}>
-                    Terrorist
-                </button>
-
-                <button
-                    onClick={() => setSelectedStatType('CounterTerrorist')}
-                    className={`px-3 py-1 text-xs text-white bg-gray-600
-                        ${selectedStatType === 'CounterTerrorist'
-                        ? 'border border-blue-500 ring-1 ring-blue-500'
-                            : 'border border-transparent'}`}>
-                    Counter-Terrorist
-                </button>
+        <div className={sharedStyles.container}>
+            <div className={sharedStyles.header}>
+                <div className={sharedStyles.headerContent}>
+                    <button
+                        onClick={() => setSelectedStatType('Overall')}
+                        className={getButtonStyle('Overall')}>
+                        Overall
+                    </button>
+                    <button
+                        onClick={() => setSelectedStatType('Terrorist')}
+                        className={getButtonStyle('Terrorist')}>
+                        Terrorist
+                    </button>
+                    <button
+                        onClick={() => setSelectedStatType('CounterTerrorist')}
+                        className={getButtonStyle('CounterTerrorist')}>
+                        Counter-Terrorist
+                    </button>
+                </div>
             </div>
 
-            <div className="bg-gray-700 p-1">
-                <div className="grid grid-cols-3 gap-1">
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> CS2S Rating 1.0 </div>
-                        <div className="text-xl font-semibold"> {stats?.Rating ?? 0} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Impact </div>
-                        <div className="text-xl font-semibold"> {stats?.Impact ?? 0} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> KAST </div>
-                        <div className="text-xl font-semibold"> {stats?.KAST ?? 0}% </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> K/D </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.Kills && stats?.Deaths
-                                ? ((stats?.Kills / stats?.Deaths)).toFixed(2) : "0"}
+            <div>
+                {statRows.map((row, index) => (
+                    <div key={index} className={sharedStyles.row}>
+                        <div className={sharedStyles.rowContent}>
+                            <div className="flex items-center justify-between">
+                                <div className={sharedStyles.statLabel}>{row.label}</div>
+                                <div className={sharedStyles.statValue}>{row.value}</div>
+                            </div>
                         </div>
                     </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Headshots </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.Headshots && stats?.Kills
-                                ? ((stats?.Headshots / stats?.Kills) * 100).toFixed(2) : "0"}%
-                        </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> ADR </div>
-                        <div className="text-xl font-semibold"> {stats?.ADR ?? 0} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Enemies Flashed / Round </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.Blinds?.Count && stats?.RoundsPlayed
-                                ? ((stats?.Blinds.Count / stats?.RoundsPlayed)).toFixed(2) : "0"}
-                        </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Time / Enemy Flashed </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.Blinds?.TotalDuration && stats?.Blinds?.Count
-                                ? ((stats?.Blinds.TotalDuration / stats?.Blinds.Count)).toFixed(2) : "0"}s
-                        </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Utility Damage / Round </div>
-                        <div className="text-xl font-semibold">
-                            {stats?.UtilityDamage && stats?.RoundsPlayed
-                                ? ((stats?.UtilityDamage / stats?.RoundsPlayed)).toFixed(2) : "0"}
-                        </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Rounds Played </div>
-                        <div className="text-xl font-semibold"> {stats?.RoundsPlayed ?? 0} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Matches Played </div>
-                        <div className="text-xl font-semibold"> {playerStats?.[PlayerID].MatchesPlayed ?? 0} </div>
-                    </div>
-
-                    <div className="text-center p-1 bg-gray-600">
-                        <div className="text-xs"> Match Win Rate </div>
-                        <div className="text-xl font-semibold">
-                            {playerStats?.[PlayerID].MatchesWon && playerStats?.[PlayerID].MatchesPlayed
-                                ? ((playerStats?.[PlayerID].MatchesWon / playerStats?.[PlayerID].MatchesPlayed) * 100).toFixed(2) : "0"}%
-                        </div>
-                    </div>
-
-                </div>
+                ))}
             </div>
         </div>
     );

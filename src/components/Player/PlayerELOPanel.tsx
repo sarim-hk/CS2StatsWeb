@@ -51,44 +51,85 @@ function PlayerELOPanel({ PlayerID }: PlayerELOPanelProps) {
         datasets: [
             {
                 data: eloData,
-                borderColor: "white",
-                backgroundColor: "grey",
+                borderColor: "#22c55e", // green-500
+                backgroundColor: "rgba(34, 197, 94, 0.2)", // green-500 with opacity
                 borderWidth: 2,
-                tension: 0,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: "#22c55e",
+                pointHoverBorderColor: "#ffffff",
+                pointHoverBorderWidth: 2,
             },
         ],
     };
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
+
             legend: {
                 display: false,
             },
+
             tooltip: {
+                backgroundColor: "rgba(17, 24, 39, 0.9)",
+                titleColor: "#9ca3af",
+                bodyColor: "#ffffff",
+                padding: 8,
+                displayColors: false,
                 callbacks: {
-                    label: (context: any) => `ELO: ${context.raw}`,
+                    title: () => "ELO",
+                    label: (context: any) => context.raw,
                 },
             },
         },
-        
+
         scales: {
             x: {
                 display: false,
+                grid: {
+                    display: false,
+                },
             },
             y: {
-                display: true,
+                border: {
+                    display: false,
+                },
+                grid: {
+                    color: "rgba(75, 85, 99, 0.2)",
+                },
                 ticks: {
-                    color: "white",
+                    color: "#9ca3af",
+                    font: {
+                        size: 11,
+                    },
+                    padding: 8,
                 },
             },
         },
+
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+        
+        layout: {
+            padding: {
+                left: 0,
+                right: 8,
+                top: 8,
+                bottom: 8
+            }
+        }
     };
 
     return (
-        <div className="p-1 bg-gray-800 text-white">
-            <div className="bg-gray-700 p-2">
-                <Line data={data} options={options} />
+        <div className="bg-gray-800">
+            <div className="h-48">
+                <Line data={data} options={options as any} />
             </div>
         </div>
     );

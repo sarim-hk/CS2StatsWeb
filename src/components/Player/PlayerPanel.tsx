@@ -94,27 +94,33 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
     }, []);
 
     return (
-        <div className="p-1 bg-gray-800">
-
+        <div className="bg-gray-800">
             {(player?.WeekPosition == null || player?.WeekPosition > 3) ? (
-
-                <div className="flex p-4 bg-gray-600 items-center">
-                    <>
-                        <img
-                            className="object-fill w-24 h-24 mr-2 border-gray-800 border-solid border-2"
-                            src={player?.AvatarL}
-                        />
-                        <div className="pl-1">
-                            <a href={`https://steamcommunity.com/profiles/${PlayerID}`}>
-                                <h1 className="text-3xl">{player?.Username}</h1>
-                                <div>ELO: {player?.ELO}</div>
-                            </a>
-                        </div>
-                    </>
+                <div className="p-4">
+                    <div className="flex items-center justify-between gap-4">
+                        <a href={`https://steamcommunity.com/profiles/${PlayerID}`} 
+                           className="flex items-center gap-4 flex-1">
+                            <div className="relative">
+                                <img
+                                    className="h-24 w-24 object-cover border-2 border-gray-700 hover:border-gray-600 transition-colors"
+                                    src={player?.AvatarL}
+                                    alt={player?.Username}
+                                />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                                <div className="font-medium text-xl text-gray-300 truncate">
+                                    {player?.Username}
+                                </div>
+                                <div className="text-base font-medium text-gray-300 mt-1.5">
+                                    <span className="bg-gray-700/50 px-3 py-1">
+                                        ELO: {player?.ELO}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-
             ) : (
-
                 <div className="flex p-1 bg-gray-600 items-center">
                     <div
                         style={{
@@ -161,9 +167,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                         )}
                     </div>
                 </div>
-
             )}
-
         </div>
     );
 }

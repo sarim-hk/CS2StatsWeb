@@ -15,7 +15,7 @@ function Balancer() {
 
     return (
         <Layout>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
                 <div className="flex-1">
                     <PlayersPanel
                         searchEnabled={true}

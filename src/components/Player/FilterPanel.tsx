@@ -51,54 +51,56 @@ function FilterPanel({ onFilterChange, horizontal = false }: FilterPanelProps) {
     };
 
     return (
-        <div className={`p-1 bg-gray-800 ${horizontal ? 'flex flex-col' : ''}`}>
-            <div className={`flex ${horizontal ? 'flex-row' : 'flex-col'}`}>
-                <div className={`bg-gray-700 p-1 ${horizontal ? 'flex-grow mr-1' : ''}`}>
-                    <div className="flex flex-col p-1 bg-gray-600">
-                        {["7days", "14days", "1month", "3months", "6months", "1year"].map((period) => (
+        <div className="bg-gray-800">
+            <div className="flex flex-col">
+                <div className={`${horizontal ? 'flex divide-x divide-gray-700' : 'divide-y divide-gray-700'}`}>
+                    <div className={`${horizontal ? 'flex-1' : ''}`}>
+                        {Object.entries(timePeriodLabels).map(([period, label]) => (
                             <button
                                 key={period}
-                                className={`flex p-1 m-0.5 ml-0 mr-0 text-xs bg-gray-700
+                                className={`w-full px-2 py-2 text-xs font-medium text-left border-b border-gray-700 last:border-b-0
+                                    transition-colors duration-200
                                     ${selectedFilter === period
-                                        ? "border border-green-500 ring-1 ring-green-500"
-                                        : "border border-transparent"}`}
+                                        ? 'bg-green-500/20 text-green-400 border-l-2 border-l-green-500'
+                                        : 'text-gray-300 hover:bg-gray-700/50 border-l-2 border-l-transparent'
+                                    }`}
                                 onClick={() => handleFilterClick(period as TimePeriod)}
                             >
-                                {timePeriodLabels[period as TimePeriod]}
+                                {label}
                             </button>
                         ))}
                     </div>
-                </div>
 
-                <div className={`bg-gray-700 p-1 ${horizontal ? 'flex-grow ml-1' : ''}`}>
-                    <div className="flex flex-col p-1 bg-gray-600">
-                        {["5matches", "10matches", "15matches", "20matches", "25matches", "50matches"].map((match) => (
+                    <div className={`${horizontal ? 'flex-1' : ''}`}>
+                        {Object.entries(matchCountLabels).map(([match, label]) => (
                             <button
                                 key={match}
-                                className={`flex p-1 m-0.5 ml-0 mr-0 text-xs bg-gray-700
+                                className={`w-full px-2 py-2 text-xs font-medium text-left border-b border-gray-700 last:border-b-0
+                                    transition-colors duration-200
                                     ${selectedFilter === match
-                                        ? "border border-green-500 ring-1 ring-green-500"
-                                        : "border border-transparent"}`}
+                                        ? 'bg-green-500/20 text-green-400 border-l-2 border-l-green-500'
+                                        : 'text-gray-300 hover:bg-gray-700/50 border-l-2 border-l-transparent'
+                                    }`}
                                 onClick={() => handleFilterClick(match as MatchCount)}
                             >
-                                {matchCountLabels[match as MatchCount]}
+                                {label}
                             </button>
                         ))}
                     </div>
                 </div>
-            </div>
 
-            <div className={`bg-gray-700 p-1 ${!horizontal ? 'mt-1' : ''}`}>
-                <div className="bg-gray-600 p-1">
-                    <input
-                        type="text"
-                        placeholder="Enter Map Name"
-                        value={mapId}
-                        onChange={(e) => setMapId(e.target.value)}
-                        className={`w-full p-1 bg-gray-700 text-white text-xs 
-                            border border-gray-500 focus:outline-none
-                            ${mapId.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
-                    />
+                <div className="border-t border-gray-700">
+                    <div className="p-2">
+                        <input
+                            type="text"
+                            placeholder="Search by Map Name"
+                            value={mapId}
+                            onChange={(e) => setMapId(e.target.value)}
+                            className={`w-full px-2 py-1 bg-gray-700/50 text-white text-sm font-medium
+                            focus:outline-none transition-all duration-200 hover:bg-gray-700
+                            ${mapId.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

@@ -19,18 +19,18 @@ function Player() {
 
     return (
         <Layout>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
                 <div className="flex-1">
                     <div>
                         <PlayerPanel PlayerID={PlayerID} />
                     </div>
                     
 
-                    <div className="pt-1">
+                    <div className="pt-2">
                         <PlayerELOPanel PlayerID={PlayerID} />
                     </div>
 
-                    <div className="pt-1">
+                    <div className="pt-2">
                         <FilterPanel onFilterChange={setFilter} />
                     </div>
                 </div>
@@ -40,11 +40,11 @@ function Player() {
                         <MatchesPanel
                             PlayerID={PlayerID}
                             filteredMatchIds={matchIds}
-                            panelSize={550}
+                            panelSize={500}
                         />
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-2">
                         <PlayerStatsPanel
                             PlayerID={PlayerID}
                             filter={filter}
