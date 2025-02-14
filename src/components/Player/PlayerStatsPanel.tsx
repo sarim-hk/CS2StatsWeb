@@ -97,6 +97,7 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
         {
             label: "Utility",
             value: (
+
                 <div className="flex items-center space-x-4">
                     <div className="flex flex-col items-center">
                         <span className="text-xs text-gray-500">EF / Round</span>
@@ -106,6 +107,16 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
                                 : "0.0"}
                         </span>
                     </div>
+
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">Time / EF</span>
+                        <span className="text-gray-300">
+                            {stats?.UtilityDamage && stats?.RoundsPlayed
+                                ? (Number(stats.Blinds.TotalDuration) / Number(stats.Blinds.Count)).toFixed(1)
+                                : "0.0"}s
+                        </span>
+                    </div>
+
                     <div className="flex flex-col items-center">
                         <span className="text-xs text-gray-500">UD / Round</span>
                         <span className="text-gray-300">
@@ -114,6 +125,7 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
                                 : "0.0"}
                         </span>
                     </div>
+
                 </div>
             )
         },
