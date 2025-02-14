@@ -64,7 +64,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-12`}> </th>
                                 <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> KAST </th>
                                 <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Impact </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> CS2S Rating </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Rating </th>
                             </tr>
                         </thead>
                         <tbody>
