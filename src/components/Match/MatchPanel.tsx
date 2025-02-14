@@ -44,27 +44,27 @@ function MatchPanel({ Match }: MatchPanelProps) {
                 </div>
             </div>
 
-            {[winningTeamId, losingTeamId].map((teamId, index) => (
+            {[winningTeamId, losingTeamId].map((teamId) => (
                 <div key={teamId} className="p-1 pt-0">
                     <table className="min-w-full bg-gray-600 text-xs h-auto">
                         <thead>
                             <tr>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-96 text-left`}>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-96 text-left`}>
                                     {Match?.Teams[teamId].TeamName}
                                 </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> Kills </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> Assists </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> Deaths </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> K/D </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> ADR </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-12`}> </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> UD </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> EF </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> Time/EF </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-12`}> </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> KAST </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> Impact </th>
-                                <th className={`py-2 px-4 border-b ${index === 0 ? 'border-blue-500' : 'border-orange-500'} w-8`}> CS2S Rating </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Kills </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Assists </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Deaths </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> K/D </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> ADR </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-12`}> </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> UD </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> EF </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Time/EF </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-12`}> </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> KAST </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Impact </th>
+                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> CS2S Rating </th>
                             </tr>
                         </thead>
                         <tbody>
