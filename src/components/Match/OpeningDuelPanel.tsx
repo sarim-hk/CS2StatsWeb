@@ -1,7 +1,5 @@
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
 
-import React from 'react';
-
 interface OpeningDuelProps {
     Match: FullMatchInterface | undefined;
     TeamID: string;
@@ -72,58 +70,73 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
             successPercentage: successRate.toFixed(1),
             mostKilledPlayerName: mostKilledPlayerName || 'N/A',
             totalSuccesses: playerSuccesses,
-            totalAttempts: playerAttempts
+            totalAttempts: playerAttempts,
+            totalOpeningDeaths: totalOpeningDeaths
         };
     };
 
+    const sharedStyles = {
+        container: "bg-gray-800",
+        row: "border-b border-gray-700 last:border-b-0",
+        rowContent: "p-4 hover:bg-gray-700/50 transition-colors duration-200",
+        avatarContainer: "flex flex-col items-center justify-center w-24",
+        avatar: "w-16 h-16 ring-2 ring-gray-600 shadow-md",
+        username: "mt-2 text-sm font-medium text-gray-200",
+        gridContainer: "flex-1 grid grid-cols-3 gap-6",
+        card: "bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200",
+        cardLabel: "text-sm font-medium text-gray-400 mb-1",
+        statValue: "text-2xl font-bold",
+        statSecondary: "text-sm text-gray-500"
+    };
+    
     return (
-        <div className="bg-gray-800 rounded-lg shadow-lg">
+        <div className={sharedStyles.container}>
             {Object.values(team.Players).map(player => {
                 const stats = calculateOpeningDuelStats(player.PlayerID);
 
                 return (
-                    <div key={player.PlayerID} className="border-b border-gray-700 last:border-b-0">
-                        <div className="p-4 hover:bg-gray-700/50 transition-colors duration-200">
+                    <div key={player.PlayerID} className={sharedStyles.row}>
+                        <div className={sharedStyles.rowContent}>
                             <div className="flex items-center space-x-6">
-                                <div className="flex-shrink-0 flex flex-col items-center justify-center w-20">
+                                <div className={sharedStyles.avatarContainer}>
                                     <div className="relative">
                                         <img
                                             src={player.AvatarL}
-                                            className="w-16 h-16 rounded-full ring-2 ring-gray-600 shadow-md"
+                                            className={sharedStyles.avatar}
                                             alt={player.Username}
                                         />
                                     </div>
-                                    <div className="mt-2 text-sm font-medium text-gray-200">{player.Username}</div>
+                                    <div className={sharedStyles.username}>{player.Username}</div>
                                 </div>
 
-                                <div className="flex-1 grid grid-cols-3 gap-6">
-                                    <div className="bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200">
-                                        <div className="text-sm font-medium text-gray-400 mb-1">Attempt Rate</div>
+                                <div className={sharedStyles.gridContainer}>
+                                    <div className={sharedStyles.card}>
+                                        <div className={sharedStyles.cardLabel}>Attempt Rate</div>
                                         <div className="flex items-baseline space-x-2">
-                                            <span className="text-2xl font-bold text-blue-400">
+                                            <span className={`${sharedStyles.statValue} text-blue-400`}>
                                                 {stats.attemptPercentage}%
                                             </span>
-                                            <span className="text-sm text-gray-500">
-                                                ({stats.totalAttempts})
+                                            <span className={sharedStyles.statSecondary}>
+                                                ({stats.totalAttempts}/{stats.totalOpeningDeaths})
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200">
-                                        <div className="text-sm font-medium text-gray-400 mb-1">Success Rate</div>
+                                    <div className={sharedStyles.card}>
+                                        <div className={sharedStyles.cardLabel}>Success Rate</div>
                                         <div className="flex items-baseline space-x-2">
-                                            <span className="text-2xl font-bold text-green-400">
+                                            <span className={`${sharedStyles.statValue} text-green-400`}>
                                                 {stats.successPercentage}%
                                             </span>
-                                            <span className="text-sm text-gray-500">
-                                                ({stats.totalSuccesses})
+                                            <span className={sharedStyles.statSecondary}>
+                                                ({stats.totalSuccesses}/{stats.totalAttempts})
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200">
-                                        <div className="text-sm font-medium text-gray-400 mb-1">Most Killed</div>
-                                        <div className="text-lg font-semibold text-purple-400 truncate">
+                                    <div className={sharedStyles.card}>
+                                        <div className={sharedStyles.cardLabel}>Most Killed</div>
+                                        <div className={`${sharedStyles.statValue} text-purple-400 truncate`}>
                                             {stats.mostKilledPlayerName}
                                         </div>
                                     </div>

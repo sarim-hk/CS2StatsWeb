@@ -50,73 +50,80 @@ function PlayersPanel({ searchEnabled = false, selectionEnabled = false, onPlaye
     };
 
     return (
-        <div className="p-1 bg-gray-800">
-            {/* Only render the top bar if search or selection is enabled */}
+        <div className="bg-gray-800">
             {(searchEnabled || selectionEnabled) && (
-                <div className="bg-gray-600 p-1 flex items-center gap-2 mb-1">
-                    {searchEnabled && (
-                        <input
-                            type="text"
-                            placeholder="Search by Username"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className={`flex-1 p-1 bg-gray-700 text-white text-xs 
-                            border border-gray-500 focus:outline-none
-                            ${searchTerm.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
-                        />
-                    )}
+                <div className="p-2 border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                        {searchEnabled && (
+                            <input
+                                type="text"
+                                placeholder="Search by Username"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className={`flex-1 px-2 py-1 bg-gray-700/50 text-white text-sm font-medium
+                                focus:outline-none transition-all duration-200 hover:bg-gray-700
+                                ${searchTerm.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
+                            />
+                        )}
 
-                    {selectionEnabled && (
-                        <div
-                            className={`flex-3 p-1 bg-gray-700 border text-white text-xs focus:outline-none
-                            ${selectedPlayerIDs.length === 0
-                                    ? 'border-gray-500'
+                        {selectionEnabled && (
+                            <div className={`px-2 py-1 text-sm font-medium
+                                ${selectedPlayerIDs.length === 0
+                                    ? 'text-gray-400 bg-gray-700/50'
                                     : selectedPlayerIDs.length % 2 === 0
-                                        ? 'border-green-500'
-                                        : 'border-red-500'
+                                        ? 'text-green-400 bg-green-500/20 ring-1 ring-green-500/50'
+                                        : 'text-red-400 bg-red-500/20 ring-1 ring-red-500/50'
                                 }`}
-                        >
-                            Selected: {selectedPlayerIDs.length}
-                        </div>
-                    )}
-
-
+                            >
+                                Selected: {selectedPlayerIDs.length}
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
-            <div className="divide-y divide-white">
+            <div>
                 {filteredPlayers.length > 0 ? (
-                    filteredPlayers.map((player, index) => (
-                        <div key={index} className="flex items-center justify-between pl-1 bg-gray-600">
-                            <div>
-                                <a href={`/player/${player.PlayerID}`} className="flex items-center pt-1 pb-1">
-                                    <img
-                                        className="object-contain h-12 w-12 mr-2 border-gray-800 border-solid border-2"
-                                        src={player.AvatarM}
-                                        alt={player.Username}
-                                    />
-                                    <div>
-                                        <div>{player.Username}</div>
-                                        <div className="text-xs text-left">ELO: {player.ELO}</div>
-                                    </div>
-                                </a>
-                            </div>
+                    filteredPlayers.map((player) => (
+                        <div key={player.PlayerID} className="border-b border-gray-700 last:border-b-0">
+                            <div className="p-2 hover:bg-gray-700/50 transition-colors duration-200">
+                                <div className="flex items-center justify-between gap-3">
+                                    <a href={`/player/${player.PlayerID}`} className="flex items-center gap-3 flex-1">
+                                        <div className="relative">
+                                            <img
+                                                className="h-12 w-12 object-cover border-2 border-gray-700 hover:border-gray-600 transition-colors"
+                                                src={player.AvatarM}
+                                                alt={player.Username}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                            <div className="font-medium text-sm text-gray-300 truncate">
+                                                {player.Username}
+                                            </div>
+                                            <div className="text-xs font-medium text-gray-300 mt-0.5">
+                                                ELO: {player.ELO}
+                                            </div>
+                                        </div>
+                                    </a>
 
-                            {selectionEnabled && (
-                                <button
-                                    onClick={() => togglePlayerSelection(player)}
-                                    className={`mr-2 px-2 py-1 rounded ${selectedPlayerIDs.includes(player.PlayerID)
-                                        ? 'bg-green-500 text-white'
-                                        : 'bg-blue-500 text-white'
-                                        }`}
-                                >
-                                    {selectedPlayerIDs.includes(player.PlayerID) ? 'Deselect' : 'Select'}
-                                </button>
-                            )}
+                                    {selectionEnabled && (
+                                        <button
+                                            onClick={() => togglePlayerSelection(player)}
+                                            className={`px-2 py-1 text-sm font-medium transition-all duration-200 flex-shrink-0
+                                                ${selectedPlayerIDs.includes(player.PlayerID)
+                                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+                                                }`}
+                                        >
+                                            {selectedPlayerIDs.includes(player.PlayerID) ? 'Deselect' : 'Select'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     ))
                 ) : (
-                    <div className="p-2 text-white">No players found with that username.</div>
+                    <div className="p-3 text-gray-300 text-sm font-medium">No players found for the given username.</div>
                 )}
             </div>
         </div>

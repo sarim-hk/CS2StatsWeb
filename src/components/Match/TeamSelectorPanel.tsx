@@ -17,46 +17,58 @@ function TeamSelectorPanel({
 }: TeamSelectorPanelProps) {
     
     return (
-        <div className="bg-gray-700 flex flex-col items-center p-1">
-            <div className="flex justify-center gap-2 p-1">
-                <button
-                    key="clutchButton"
-                    onClick={() => onPanelChange("clutch")}
-                    className={`w-40 py-1 text-xs text-white bg-gray-600 text-center
-                        ${activePanel === "clutch"
-                            ? "border border-green-500 ring-1 ring-green-500"
-                            : "border border-transparent"}`}
-                >
-                    Clutches
-                </button>
-
-                <button
-                    key="openingDuelButton"
-                    onClick={() => onPanelChange("openingduel")}
-                    className={`w-40 py-1 text-xs text-white bg-gray-600 text-center
-                        ${activePanel === "openingduel"
-                            ? "border border-green-500 ring-1 ring-green-500"
-                            : "border border-transparent"}`}
-                >
-                    Opening Duels
-                </button>
-            </div>
-
-            <div className="flex justify-center gap-2 p-1">
-                {Object.entries(Match.Teams).map(([teamId, team]) => (
+        <div className="bg-gray-800 p-3 border-b border-gray-700">
+            <div className="flex flex-col gap-3">
+                
+                {/* Panel Type Selector */}
+                <div className="flex justify-center gap-2">
                     <button
-                        key={teamId}
-                        onClick={() => onTeamSelect(teamId)}
-                        className={`w-40 py-1 text-xs text-white bg-gray-600 text-center
-                            ${selectedTeamId === teamId
-                                ? team.Side === 2
-                                    ? "border border-orange-500 ring-1 ring-orange-500"
-                                    : "border border-blue-500 ring-1 ring-blue-500"
-                                : "border border-transparent"}`}
+                        onClick={() => onPanelChange("clutch")}
+                        className={`
+                            px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                            ${activePanel === "clutch"
+                                ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
+                                : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                            }
+                        `}
                     >
-                        {team.TeamName}
+                        Clutches
                     </button>
-                ))}
+
+                    <button
+                        onClick={() => onPanelChange("openingduel")}
+                        className={`
+                            px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                            ${activePanel === "openingduel"
+                                ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
+                                : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                            }
+                        `}
+                    >
+                        Opening Duels
+                    </button>
+                </div>
+
+                {/* Team Selector */}
+                <div className="flex justify-center gap-2">
+                    {Object.entries(Match.Teams).map(([teamId, team]) => (
+                        <button
+                            key={teamId}
+                            onClick={() => onTeamSelect(teamId)}
+                            className={`
+                                px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                                ${selectedTeamId === teamId
+                                    ? team.Side === 2
+                                        ? "bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/50"
+                                        : "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50"
+                                    : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                }
+                            `}
+                        >
+                            {team.TeamName}
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );

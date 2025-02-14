@@ -40,68 +40,79 @@ function MatchesPanel({
     });
 
     return (
-        <div
-            className={`p-1 bg-gray-800 divide-y divide-white ${panelSize ? '' : 'h-full'} scrollbar-hide`}
+        <div 
+            className={`bg-gray-800 ${panelSize ? '' : 'h-full'} scrollbar-hide`}
             style={{
                 height: panelSize ? `${panelSize}px` : 'auto',
                 overflowY: "auto",
             }}
         >
             {searchEnabled && (
-                <div className="bg-gray-600 p-1">
-                    <input
-                        type="text"
-                        placeholder="Search by Map Name"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full p-1 bg-gray-700 text-white text-xs 
-                        border border-gray-500 focus:outline-none
-                        ${searchTerm.trim() ? "border-green-500 ring-1 ring-green-500" : ""}`}
-                    />
+                <div className="p-2 border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="text"
+                            placeholder="Search by Map Name"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={`flex-1 px-2 py-1 bg-gray-700/50 text-white text-sm font-medium
+                            focus:outline-none transition-all duration-200 hover:bg-gray-700
+                            ${searchTerm.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
+                        />
+                    </div>
                 </div>
             )}
 
             {filteredMatches.length > 0 ? (
                 filteredMatches.map((match, index) => (
-                    <div key={index} className="flex items-start p-4 bg-gray-600">
-                        <div className="grid grid-cols-4 flex-1">
-                            <a href={`/match/${match.MatchID}`} className={`flex justify-start ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
-                                <div className="flex items-center justify-center">{match.MatchDate}</div>
-                            </a>
+                    <div key={index} className="border-b border-gray-700 last:border-b-0">
+                        <div className="p-3 hover:bg-gray-700/50 transition-colors duration-200">
+                            <div className="grid grid-cols-4 gap-4">
+                                <a href={`/match/${match.MatchID}`} className={`flex items-center ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
+                                    <div className="text-base font-medium text-gray-300 w-full">{match.MatchDate}</div>
+                                </a>
 
-                            <a href={`/match/${match.MatchID}`} className={`flex justify-end ${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
-                                <div>
-                                    <div className="flex items-center justify-center">
-                                        {match.WinningSide === 2 ? (
-                                            <>
-                                                <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-orange-500">
-                                                    {match.WinningTeamName} {match.WinningTeamScore}
-                                                </a>
-                                                <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-blue-500">
-                                                    {match.LosingTeamScore} {match.LosingTeamName}
-                                                </a>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <a href={`/team/${match.WinningTeamID}`} className="pr-1 flex font-semibold text-blue-500">
-                                                    {match.WinningTeamName} {match.WinningTeamScore}
-                                                </a>
-                                                <a href={`/team/${match.LosingTeamID}`} className="pl-1 font-semibold text-orange-500">
-                                                    {match.LosingTeamScore} {match.LosingTeamName}
-                                                </a>
-                                            </>
-                                        )}
+                                <a href={`/match/${match.MatchID}`} className={`${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
+                                    <div className="flex flex-col items-end">
+                                        <div className="flex items-center gap-2 font-medium">
+                                            {match.WinningSide === 2 ? (
+                                                <>
+                                                    <a href={`/team/${match.WinningTeamID}`} 
+                                                       className="text-orange-400 hover:text-orange-300 transition-colors">
+                                                        {match.WinningTeamName} <span className="font-bold">{match.WinningTeamScore}</span>
+                                                    </a>
+                                                    <a href={`/team/${match.LosingTeamID}`} 
+                                                       className="text-blue-400 hover:text-blue-300 transition-colors">
+                                                        <span className="font-bold">{match.LosingTeamScore}</span> {match.LosingTeamName}
+                                                    </a>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <a href={`/team/${match.WinningTeamID}`} 
+                                                       className="text-blue-400 hover:text-blue-300 transition-colors">
+                                                        {match.WinningTeamName} <span className="font-bold">{match.WinningTeamScore}</span>
+                                                    </a>
+                                                    <a href={`/team/${match.LosingTeamID}`} 
+                                                       className="text-orange-400 hover:text-orange-300 transition-colors">
+                                                        <span className="font-bold">{match.LosingTeamScore}</span> {match.LosingTeamName}
+                                                    </a>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        <div className="text-[12px] font-medium text-gray-300">{match.MapID}</div>
+                                        
+                                        <div className="text-[10px] font-medium text-gray-300">
+                                            {match.WinningDeltaELO > 0 ? '+' : ''}{match.WinningDeltaELO} / {match.LosingDeltaELO}
+                                        </div>
                                     </div>
-
-                                    <div className="text-xs text-right">+{match.WinningDeltaELO} / {match.LosingDeltaELO}</div>
-                                    <div className="text-xs text-right">{match.MapID}</div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 ))
             ) : (
-                <div className="p-2 text-white">No matches found for the given map name.</div>
+                <div className="p-3 text-gray-300 text-sm font-medium">No matches found for the given map name.</div>
             )}
         </div>
     );
