@@ -50,7 +50,7 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
         avatar: "w-16 h-16 ring-2 ring-gray-600 shadow-md",
         username: "mt-2 text-xs font-medium text-gray-200",
         gridContainer: "flex-1 grid grid-cols-3 gap-6",
-        card: "bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200",
+        card: "bg-gray-700/50 rounded-sm p-4 hover:bg-gray-700 transition-colors duration-200",
         cardLabel: "text-sm font-medium text-gray-400 mb-1",
         statValue: "text-2xl font-bold",
         statSecondary: "text-sm text-gray-500"
@@ -93,7 +93,7 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
                                         </div>
                                     </div>
 
-                                    <div className="col-span-2 bg-gray-700/50 rounded-lg p-4 hover:bg-gray-700 transition-colors duration-200">
+                                    <div className="col-span-2 bg-gray-700/50 rounded-sm p-4 hover:bg-gray-700 transition-colors duration-200">
                                         <div className={sharedStyles.cardLabel}>Clutch Timeline</div>
                                         <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap h-8">
                                             <div className="inline-flex gap-2">
