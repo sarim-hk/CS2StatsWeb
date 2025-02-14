@@ -78,22 +78,22 @@ function MatchesPanel({
                                             {match.WinningSide === 2 ? (
                                                 <>
                                                     <a href={`/team/${match.WinningTeamID}`} 
-                                                       className="text-orange-400 hover:text-orange-300 transition-colors">
+                                                       className="text-orange-500 hover:text-orange-400 transition-colors">
                                                         {match.WinningTeamName} <span className="font-bold">{match.WinningTeamScore}</span>
                                                     </a>
                                                     <a href={`/team/${match.LosingTeamID}`} 
-                                                       className="text-blue-400 hover:text-blue-300 transition-colors">
+                                                       className="text-blue-500 hover:text-blue-400 transition-colors">
                                                         <span className="font-bold">{match.LosingTeamScore}</span> {match.LosingTeamName}
                                                     </a>
                                                 </>
                                             ) : (
                                                 <>
                                                     <a href={`/team/${match.WinningTeamID}`} 
-                                                       className="text-blue-400 hover:text-blue-300 transition-colors">
+                                                       className="text-blue-500 hover:text-blue-400 transition-colors">
                                                         {match.WinningTeamName} <span className="font-bold">{match.WinningTeamScore}</span>
                                                     </a>
                                                     <a href={`/team/${match.LosingTeamID}`} 
-                                                       className="text-orange-400 hover:text-orange-300 transition-colors">
+                                                       className="text-orange-500 hover:text-orange-400 transition-colors">
                                                         <span className="font-bold">{match.LosingTeamScore}</span> {match.LosingTeamName}
                                                     </a>
                                                 </>

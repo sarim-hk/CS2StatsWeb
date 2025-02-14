@@ -59,8 +59,8 @@ function TeamSelectorPanel({
                                 px-3 py-1 rounded text-xs font-medium transition-all duration-200
                                 ${selectedTeamId === teamId
                                     ? team.Side === 2
-                                        ? "bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/50"
-                                        : "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50"
+                                        ? "bg-orange-500/20 text-orange-500 ring-1 ring-orange-500/50"
+                                        : "bg-blue-500/20 text-blue-500 ring-1 ring-blue-500/50"
                                     : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
                                 }
                             `}
