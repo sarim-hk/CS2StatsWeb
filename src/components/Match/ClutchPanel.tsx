@@ -59,25 +59,25 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
     return (
         <div className={sharedStyles.container}>
             {Object.values(team.Players).map(player => {
-                const stats = calculateClutchStats(player.PlayerID);
+                const stats = calculateClutchStats(player.Overall.PlayerID);
                 const events = [
-                    ...Match.Clutches.filter(clutch => clutch.PlayerID === player.PlayerID),
-                    ...Match.Duels.filter(duel => duel.WinnerID === player.PlayerID),
+                    ...Match.Clutches.filter(clutch => clutch.PlayerID === player.Overall.PlayerID),
+                    ...Match.Duels.filter(duel => duel.WinnerID === player.Overall.PlayerID),
                 ].sort((a, b) => a.RoundID - b.RoundID);
 
                 return (
-                    <div key={player.PlayerID} className={sharedStyles.row}>
+                    <div key={player.Overall.PlayerID} className={sharedStyles.row}>
                         <div className={sharedStyles.rowContent}>
                             <div className="flex items-center space-x-6">
                                 <div className={sharedStyles.avatarContainer}>
                                     <div className="relative">
                                         <img
-                                            src={player.AvatarL}
+                                            src={player.Overall.AvatarL}
                                             className={sharedStyles.avatar}
-                                            alt={player.Username}
+                                            alt={player.Overall.Username}
                                         />
                                     </div>
-                                    <div className={sharedStyles.username}>{player.Username}</div>
+                                    <div className={sharedStyles.username}>{player.Overall.Username}</div>
                                 </div>
 
                                 <div className={sharedStyles.gridContainer}>

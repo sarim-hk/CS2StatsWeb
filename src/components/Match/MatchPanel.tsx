@@ -94,27 +94,27 @@ function MatchPanel({ Match }: MatchPanelProps) {
                             <tbody>
                                 {Match?.Teams[teamId]?.Players && (
                                     Object.values(Match.Teams[teamId].Players)
-                                        .sort((a, b) => b.Rating - a.Rating)
+                                        .sort((a, b) => b.Overall.Rating - a.Overall.Rating)
                                         .map((player, playerIndex) => (
                                             <tr key={playerIndex} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
                                                 <td className="py-1.5 px-3">
-                                                    <a href={`/player/${player.PlayerID}`} className="text-xs text-gray-200 hover:text-blue-400 transition-colors">
-                                                        {player.Username}
+                                                    <a href={`/player/${player.Overall.PlayerID}`} className="text-xs text-gray-200 hover:text-blue-400 transition-colors">
+                                                        {player.Overall.Username}
                                                     </a>
                                                 </td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.Kills}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.Assists}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.Deaths}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Kills / player.Deaths).toFixed(2)}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{(player?.Damage / Match?.Rounds.length).toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.Kills}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.Assists}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.Deaths}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Overall.Kills / player.Overall.Deaths).toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Overall.Damage / Match?.Rounds.length).toFixed(2)}</td>
                                                 <td className="py-1.5 px-3"></td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.UtilityDamage}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.Blinds.Count}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Blinds.Count > 0 ? (player.Blinds.TotalDuration / player.Blinds.Count).toFixed(2) : 0)}s</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.UtilityDamage}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.Blinds.Count}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Overall.Blinds.Count > 0 ? (player.Overall.Blinds.TotalDuration / player.Overall.Blinds.Count).toFixed(2) : 0)}s</td>
                                                 <td className="py-1.5 px-3"></td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.KAST.toFixed(2)}%</td>
-                                                <td className="py-1.5 px-3 text-center text-xs">{player.Impact.toFixed(2)}</td>
-                                                <td className="py-1.5 px-3 text-center text-xs font-medium">{player.Rating.toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.KAST.toFixed(2)}%</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Overall.Impact.toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs font-medium">{player.Overall.Rating.toFixed(2)}</td>
                                             </tr>
                                         ))
                                 )}

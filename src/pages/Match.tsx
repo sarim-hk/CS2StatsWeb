@@ -8,14 +8,14 @@ import FullMatchInterface from "../interfaces/FullMatchInterface";
 import ClutchPanel from "../components/Match/ClutchPanel";
 import TeamSelectorPanel from "../components/Match/TeamSelectorPanel";
 import OpeningDuelPanel from "../components/Match/OpeningDuelPanel";
-
+import RatingBreakdownPanel from "../components/Match/RatingBreakdownPanel";
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Match() {
     const { MatchID } = useParams<{ MatchID: string }>();
     const [match, setMatch] = useState<FullMatchInterface>();
     const [selectedTeamId, setSelectedTeamId] = useState<string>();
-    const [activePanel, setActivePanel] = useState<"clutch" | "openingduel">("clutch");
+    const [activePanel, setActivePanel] = useState<"clutch" | "openingduel" | "ratingbreakdown">("clutch");
 
     useEffect(() => {
         axios
@@ -57,6 +57,9 @@ function Match() {
                         )}
                         {selectedTeamId && activePanel === "openingduel" && (
                             <OpeningDuelPanel Match={match} TeamID={selectedTeamId} />
+                        )}
+                        {selectedTeamId && activePanel === "ratingbreakdown" && (
+                            <RatingBreakdownPanel Match={match} TeamID={selectedTeamId} />
                         )}
                     </div>
                 </div>

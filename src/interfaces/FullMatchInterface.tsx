@@ -41,6 +41,12 @@ interface RoundInterface {
 }
 
 interface PlayerInterface {
+    Overall: PlayerInterfacePerSide;
+    CounterTerrorist: PlayerInterfacePerSide;
+    Terrorist: PlayerInterfacePerSide;
+}
+
+interface PlayerInterfacePerSide {
     PlayerID: string;
     ADR: number;
     Assists: number;
@@ -49,7 +55,6 @@ interface PlayerInterface {
         Count: number;
         TotalDuration: number;
     };
-    
     DPR: number;
     Damage: number;
     Deaths: number;
