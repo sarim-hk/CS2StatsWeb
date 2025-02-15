@@ -25,7 +25,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
             {/* Match Header */}
             <div className="p-3 bg-gray-700 border-b border-gray-600">
                 <div className="flex items-center">
-                    <div className="text-sm font-medium text-gray-300">{Match?.MapID}</div>
+                    <div className="text-base font-semibold text-gray-300">{Match?.MapID}</div>
                     <div className="flex-1 flex justify-center">
                         <div className="flex flex-wrap gap-1">
                             {Match?.Rounds.map((round) => (
@@ -78,14 +78,14 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         <table className="w-full">
                             <thead>
                                 <tr className={`border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500/50' : 'border-blue-500/50'}`}>
-                                    <th className="py-2 px-3 text-left font-medium text-gray-300">
+                                    <th className="py-2 px-3 text-left font-medium text-gray-300 w-48">
                                         <div className="flex items-center space-x-2">
                                             <span className={`w-1.5 h-1.5 rounded-full ${Match?.Teams[teamId].Side === 2 ? 'bg-orange-500' : 'bg-blue-500'}`}></span>
-                                            <span className="text-xs">{Match?.Teams[teamId].TeamName}</span>
+                                            <span className="text-xs truncate">{Match?.Teams[teamId].TeamName}</span>
                                         </div>
                                     </th>
                                     {['K', 'A', 'D', 'K/D', 'ADR', '', 'UD', 'EF', 'Time/EF', '', 'KAST', 'Impact', 'Rating'].map((header, index) => (
-                                        <th key={index} className="py-2 px-3 text-center text-[10px] font-medium text-gray-400">
+                                        <th key={index} className="py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16">
                                             {header}
                                         </th>
                                     ))}
