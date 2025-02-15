@@ -93,7 +93,7 @@ function FilterPanel({ onFilterChange, horizontal = false }: FilterPanelProps) {
                     <div className="p-2">
                         <input
                             type="text"
-                            placeholder="Search by Map Name"
+                            placeholder="Filter by Map Name"
                             value={mapId}
                             onChange={(e) => setMapId(e.target.value)}
                             className={`w-full px-2 py-1 bg-gray-700/50 text-white text-sm font-medium
