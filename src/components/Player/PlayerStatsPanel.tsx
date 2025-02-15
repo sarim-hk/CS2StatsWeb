@@ -35,7 +35,7 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
         row: "border-b border-gray-700 last:border-b-0",
         rowContent: "p-3 hover:bg-gray-700/50 transition-colors duration-200",
         statLabel: "text-sm font-medium text-gray-400",
-        statValue: "text-base font-bold"
+        statValue: "text-base font-semibold"
     };
 
     const getButtonStyle = (type: 'Overall' | 'Terrorist' | 'CounterTerrorist') => `

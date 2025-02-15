@@ -151,17 +151,17 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                         </div>
 
                         {player?.WeekPosition === 1 && (
-                            <div className="absolute text-6xl font-bold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
+                            <div className="absolute text-6xl font-semibold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
                                 #1
                             </div>
                         )}
                         {player?.WeekPosition === 2 && (
-                            <div className="absolute text-6xl font-bold bottom-4 silver-text drop-shadow-[0_3px_3px_#000000]">
+                            <div className="absolute text-6xl font-semibold bottom-4 silver-text drop-shadow-[0_3px_3px_#000000]">
                                 #2
                             </div>
                         )}
                         {player?.WeekPosition === 3 && (
-                            <div className="absolute text-6xl font-bold bottom-4 bronze-text drop-shadow-[0_3px_3px_#000000]">
+                            <div className="absolute text-6xl font-semibold bottom-4 bronze-text drop-shadow-[0_3px_3px_#000000]">
                                 #3
                             </div>
                         )}

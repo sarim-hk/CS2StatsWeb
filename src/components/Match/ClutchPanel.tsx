@@ -52,7 +52,7 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
         gridContainer: "flex-1 grid grid-cols-3 gap-6",
         card: "bg-gray-700/50 rounded-sm p-4 hover:bg-gray-700 transition-colors duration-200",
         cardLabel: "text-sm font-medium text-gray-400 mb-1",
-        statValue: "text-2xl font-bold",
+        statValue: "text-2xl font-semibold",
         statSecondary: "text-sm text-gray-500"
     };
 
