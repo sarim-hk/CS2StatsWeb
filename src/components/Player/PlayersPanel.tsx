@@ -123,7 +123,7 @@ function PlayersPanel({ searchEnabled = false, selectionEnabled = false, onPlaye
                         </div>
                     ))
                 ) : (
-                    <div className="p-3 text-gray-300 text-sm font-medium">No players found for the given username.</div>
+                    <div className="p-3 text-gray-300 text-sm font-medium">No players found.</div>
                 )}
             </div>
         </div>
