@@ -20,77 +20,107 @@ function MatchPanel({ Match }: MatchPanelProps) {
     const [winningTeamId, losingTeamId] = sortedTeams.map(team => team[0]);
 
     return (
-        <div className="bg-gray-800">
-            <div className="p-1">
-                <div className="flex p-4 bg-gray-600">
-                    <div className="text-s flex-1">{Match?.MapID}</div>
-                    <div className="text-s flex-3">
-                        {Match?.Teams[winningTeamId].TeamName} {Match?.Teams[winningTeamId].Score} | {Match?.Teams[losingTeamId].Score} {Match?.Teams[losingTeamId].TeamName}
+        <div className="rounded-sm overflow-hidden shadow-lg bg-gray-800 border border-gray-700">
+            
+            {/* Match Header */}
+            <div className="p-3 bg-gray-700 border-b border-gray-600">
+                <div className="flex items-center">
+                    <div className="text-sm font-medium text-gray-300">{Match?.MapID}</div>
+                    <div className="flex-1 flex justify-center">
+                        <div className="flex flex-wrap gap-1">
+                            {Match?.Rounds.map((round) => (
+                                <div
+                                    key={round.RoundID}
+                                    className={`h-6 w-6 flex items-center justify-center rounded-full 
+                                        ${round.WinnerSide === 3 
+                                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50' 
+                                            : 'bg-orange-500/20 text-orange-400 border border-orange-500/50'
+                                        } text-[10px] font-medium`}
+                                >
+                                    {(round.RoundID - Match?.Rounds[0].RoundID) + 1}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 justify-center">
+
+                        <div className={`text-base font-semibold ${
+                            Match?.Teams[winningTeamId].Side === 3 ? 'text-blue-400' : 'text-orange-400'
+                        }`}>
+                            {Match?.Teams[winningTeamId].TeamName}
+                        </div>
+
+                        <div className="flex items-center space-x-2 px-2 py-0.5 bg-gray-800 rounded-sm">
+                            <span className={`text-base font-semibold ${
+                                Match?.Teams[winningTeamId].Side === 3 ? 'text-blue-400' : 'text-orange-400'
+                            }`}>{Match?.Teams[winningTeamId].Score}</span>
+                            <span className="text-gray-400">:</span>
+                            <span className={`text-base font-semibold ${
+                                Match?.Teams[losingTeamId].Side === 3 ? 'text-blue-400' : 'text-orange-400'
+                            }`}>{Match?.Teams[losingTeamId].Score}</span>
+                        </div>
+                        
+                        <div className={`text-base font-semibold ${
+                            Match?.Teams[losingTeamId].Side === 3 ? 'text-blue-400' : 'text-orange-400'
+                        }`}>
+                            {Match?.Teams[losingTeamId].TeamName}
+                        </div>
+
                     </div>
                 </div>
             </div>
 
-            <div className="p-1 pt-0">
-                <div className="flex flex-wrap gap-1 justify-center bg-gray-600 p-1">
-                    {Match?.Rounds.map((round) => (
-                        <div
-                            key={round.RoundID}
-                            className={`py-1 px-2 rounded text-xs font-semibold ${round.WinnerSide === 3 ? 'text-blue-500' : 'text-orange-500'
-                                }`}
-                        >
-                            {(round.RoundID - Match?.Rounds[0].RoundID) + 1}
-                        </div>
-                    ))}
-                </div>
-            </div>
-
+            {/* Team Tables */}
             {[winningTeamId, losingTeamId].map((teamId) => (
-                <div key={teamId} className="p-1 pt-0">
-                    <table className="min-w-full bg-gray-600 text-xs h-auto">
-                        <thead>
-                            <tr>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-96 text-left`}>
-                                    {Match?.Teams[teamId].TeamName}
-                                </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Kills </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Assists </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Deaths </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> K/D </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> ADR </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-12`}> </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> UD </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> EF </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Time/EF </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-12`}> </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> KAST </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Impact </th>
-                                <th className={`py-2 px-4 border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500' : 'border-blue-500'} w-8`}> Rating </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Match?.Teams[teamId]?.Players && (
-                                Object.values(Match.Teams[teamId].Players)
-                                    .sort((a, b) => b.Rating - a.Rating)
-                                    .map((player, playerIndex) => (
-                                        <tr key={playerIndex} className="text-center">
-                                            <td className="py-2 px-4 text-left"> <a href={`/player/${player.PlayerID}`}>{player.Username}</a> </td>
-                                            <td className="py-2 px-4"> {player.Kills} </td>
-                                            <td className="py-2 px-4"> {player.Assists} </td>
-                                            <td className="py-2 px-4"> {player.Deaths} </td>
-                                            <td className="py-2 px-4"> {(player.Kills / player.Deaths).toFixed(2)} </td>
-                                            <td className="py-2 px-4"> {(player?.Damage / Match?.Rounds.length).toFixed(2)} </td>
-                                            <td></td>
-                                            <td className="py-2 px-4"> {player.UtilityDamage} </td>
-                                            <td className="py-2 px-4"> {player.Blinds.Count} </td>
-                                            <td className="py-2 px-4"> {(player.Blinds.Count > 0 ? (player.Blinds.TotalDuration / player.Blinds.Count).toFixed(2) : 0)}s </td>
-                                            <td></td>
-                                            <td className="py-2 px-4"> {player.KAST.toFixed(2)}% </td>
-                                            <td className="py-2 px-4"> {player.Impact.toFixed(2)} </td>
-                                            <td className="py-2 px-4"> {player.Rating.toFixed(2)} </td>
-                                        </tr>
-                                    )))}
-                        </tbody>
-                    </table>
+                <div key={teamId} className="p-2">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className={`border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500/50' : 'border-blue-500/50'}`}>
+                                    <th className="py-2 px-3 text-left font-medium text-gray-300">
+                                        <div className="flex items-center space-x-2">
+                                            <span className={`w-1.5 h-1.5 rounded-full ${Match?.Teams[teamId].Side === 2 ? 'bg-orange-500' : 'bg-blue-500'}`}></span>
+                                            <span className="text-xs">{Match?.Teams[teamId].TeamName}</span>
+                                        </div>
+                                    </th>
+                                    {['K', 'A', 'D', 'K/D', 'ADR', '', 'UD', 'EF', 'Time/EF', '', 'KAST', 'Impact', 'Rating'].map((header, index) => (
+                                        <th key={index} className="py-2 px-3 text-center text-[10px] font-medium text-gray-400">
+                                            {header}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Match?.Teams[teamId]?.Players && (
+                                    Object.values(Match.Teams[teamId].Players)
+                                        .sort((a, b) => b.Rating - a.Rating)
+                                        .map((player, playerIndex) => (
+                                            <tr key={playerIndex} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                                                <td className="py-1.5 px-3">
+                                                    <a href={`/player/${player.PlayerID}`} className="text-xs text-gray-200 hover:text-blue-400 transition-colors">
+                                                        {player.Username}
+                                                    </a>
+                                                </td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Kills}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Assists}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Deaths}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Kills / player.Deaths).toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player?.Damage / Match?.Rounds.length).toFixed(2)}</td>
+                                                <td className="py-1.5 px-3"></td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.UtilityDamage}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Blinds.Count}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{(player.Blinds.Count > 0 ? (player.Blinds.TotalDuration / player.Blinds.Count).toFixed(2) : 0)}s</td>
+                                                <td className="py-1.5 px-3"></td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.KAST.toFixed(2)}%</td>
+                                                <td className="py-1.5 px-3 text-center text-xs">{player.Impact.toFixed(2)}</td>
+                                                <td className="py-1.5 px-3 text-center text-xs font-medium">{player.Rating.toFixed(2)}</td>
+                                            </tr>
+                                        ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ))}
         </div>
