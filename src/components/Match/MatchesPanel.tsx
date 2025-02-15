@@ -34,7 +34,7 @@ function MatchesPanel({
     }, [PlayerID]);
 
     const filteredMatches = matches.filter(match => {
-        const matchIdMatch = !filteredMatchIds || filteredMatchIds.length === 0 || filteredMatchIds.includes(Number(match.MatchID));
+        const matchIdMatch = filteredMatchIds ? filteredMatchIds.includes(Number(match.MatchID)) : true;
         const searchMatch = match.MapID.toLowerCase().includes(searchTerm.toLowerCase());
         return matchIdMatch && searchMatch;
     });
@@ -112,7 +112,7 @@ function MatchesPanel({
                     </div>
                 ))
             ) : (
-                <div className="p-3 text-gray-300 text-sm font-medium">No matches found for the given map name.</div>
+                <div className="p-3 text-gray-300 text-sm font-medium">No matches found.</div>
             )}
         </div>
     );
