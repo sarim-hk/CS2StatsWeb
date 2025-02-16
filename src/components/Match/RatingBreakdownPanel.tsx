@@ -68,7 +68,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                                     <span className="font-medium">i</span>
                                                 </div>
                                                 <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-md shadow-lg z-10">
-                                                    Counter-Terrorist ratings for matches before 15/02/2024 may be inaccurate.
+                                                    Per-side ratings for matches before 15/02/2024 may be slightly inaccurate.
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +87,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                                     <span className="font-medium">i</span>
                                                 </div>
                                                 <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-md shadow-lg z-10">
-                                                    Per-side ratings for matches before 15/02/2024 may be inaccurate.
+                                                    Per-side ratings for matches before 15/02/2024 may be slightly inaccurate.
                                                 </div>
                                             </div>
                                         </div>
