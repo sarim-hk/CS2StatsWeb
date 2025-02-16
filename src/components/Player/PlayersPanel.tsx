@@ -100,7 +100,7 @@ function PlayersPanel({ searchEnabled = false, selectionEnabled = false, onPlaye
                                             <div className="font-medium text-sm text-gray-300 truncate">
                                                 {player.Username}
                                             </div>
-                                            <div className="text-xs font-medium text-gray-300 mt-0.5">
+                                            <div className="text-xs font-medium text-gray-300 mt-1">
                                                 ELO: {player.ELO}
                                             </div>
                                         </div>
