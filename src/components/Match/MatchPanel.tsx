@@ -81,7 +81,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                     <th className="py-2 px-3 text-left font-medium text-gray-300 w-48">
                                         <div className="flex items-center space-x-2">
                                             <span className={`w-1.5 h-1.5 rounded-full ${Match?.Teams[teamId].Side === 2 ? 'bg-orange-500' : 'bg-blue-500'}`}></span>
-                                            <span className="text-xs truncate">{Match?.Teams[teamId].TeamName}</span>
+                                            <span>
+                                                <span className="text-xs truncate">{Match?.Teams[teamId].TeamName}</span>
+                                                <span className="text-[10px] truncate text-gray-400 pl-1">{(Match?.Teams[teamId].DeltaELO ?? 0) >= 0 ? '+' : ''}{Match?.Teams[teamId].DeltaELO ?? 0}</span>
+                                            </span>
                                         </div>
                                     </th>
                                     {['K', 'A', 'D', 'K/D', 'ADR', '', 'UD', 'EF', 'Time/EF', '', 'KAST', 'Impact', 'Rating'].map((header, index) => (
