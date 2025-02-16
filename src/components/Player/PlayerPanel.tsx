@@ -121,50 +121,58 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                     </div>
                 </div>
             ) : (
+
                 <div className="flex p-1 bg-gray-600 items-center">
-                    <div
-                        style={{
-                            background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})`
-                        }}
-                        className="overflow-hidden relative w-80 h-80 flex justify-center items-center outline outline-2 shadow-[0_0_25px_#FFFFFF]"
+                    
+                    
+                    <div style={{background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})`}}
+                        className="overflow-hidden relative w-full h-48 flex justify-between items-center outline outline-2 shadow-[0_0_25px_#FFFFFF]"
                     >
-                        <div className="absolute top-4 text-xs text-white">
-                            {player?.ELO} ELO
+
+                        {/* position number */}
+                        <div className="relative flex-1 h-full flex items-center justify-center">
+
+                            {player?.WeekPosition === 1 && (
+                                <div className="text-7xl font-semibold gold-text drop-shadow-[0_3px_3px_#000000] z-10">
+                                    #1
+                                </div>
+                            )}
+
+                            {player?.WeekPosition === 2 && (
+                                <div className="text-7xl font-semibold silver-text drop-shadow-[0_3px_3px_#000000] z-10">
+                                    #2
+                                </div>
+                            )}
+
+                            {player?.WeekPosition === 3 && (
+                                <div className="text-7xl font-semibold bronze-text drop-shadow-[0_3px_3px_#000000] z-10">
+                                    #3
+                                </div>
+                            )}
+
+                            <div className="bottom-6 text-lg text-white absolute z-10">
+                                {player?.ELO} ELO
+                            </div>
+
+                            <div className="text-white top-6 text-3xl font-semibold drop-shadow-[0_1px_1px_#000000] absolute z-10">
+                                Week {week}
+                            </div>
+
                         </div>
 
-                        <div className="absolute top-8 text-white text-4xl font-semibold drop-shadow-[0_1px_1px_#000000]">
-                            Week {week}
-                        </div>
-
-                        <div className="absolute inset-0 pattern">
+                        <div className="relative flex-1 h-full flex items-center justify-center">
                             <img
-                                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 object-contain outline outline-2"
+                                className="absolute w-36 h-36 object-contain transform -translate-x-20 z-20"
+                                src="https://i.imgur.com/OjaNoWp.png"
+                            />
+                            <img
+                                className="w-32 h-32 object-contain outline outline-2 z-10"
                                 src={player?.AvatarL}
                             />
                         </div>
 
-                        <div className="absolute inset-0">
-                            <img
-                                className="absolute top-1/2 left-1/2 transform -translate-x-2 -translate-y-16 object-contain w-48 h-48"
-                                src="https://i.imgur.com/OjaNoWp.png"
-                            />
-                        </div>
+                        <div className="absolute inset-0 pattern" />
 
-                        {player?.WeekPosition === 1 && (
-                            <div className="absolute text-6xl font-semibold bottom-4 gold-text drop-shadow-[0_3px_3px_#000000]">
-                                #1
-                            </div>
-                        )}
-                        {player?.WeekPosition === 2 && (
-                            <div className="absolute text-6xl font-semibold bottom-4 silver-text drop-shadow-[0_3px_3px_#000000]">
-                                #2
-                            </div>
-                        )}
-                        {player?.WeekPosition === 3 && (
-                            <div className="absolute text-6xl font-semibold bottom-4 bronze-text drop-shadow-[0_3px_3px_#000000]">
-                                #3
-                            </div>
-                        )}
                     </div>
                 </div>
             )}
