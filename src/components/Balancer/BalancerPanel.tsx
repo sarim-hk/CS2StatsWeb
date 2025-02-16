@@ -167,6 +167,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                             .map((playerID) => {
                                 const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
                                 const rating = playerStats[playerID]?.Overall.Rating;
+                                const matchesPlayed = playerStats[playerID]?.MatchesPlayed;
 
                                 return (
                                     <div key={playerID} className="hover:bg-gray-700/50 transition-colors duration-200">
@@ -184,8 +185,10 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                                                         <div className="font-medium text-sm text-gray-300 truncate">
                                                             {player?.Username}
                                                         </div>
-                                                        <div className="text-xs font-medium text-gray-300 mt-0.5">
-                                                            Rating: {rating?.toFixed(2)}
+                                                        <div className="flex gap-2 text-xs font-medium text-gray-300 mt-0.5">
+                                                            <span>Rating: {rating?.toFixed(2)}</span>
+                                                            <span className="text-gray-400">•</span>
+                                                            <span>Matches: {matchesPlayed}</span>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -203,6 +206,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                             .map((playerID) => {
                                 const player = lastBalancedPlayers.find(p => p.PlayerID === playerID);
                                 const rating = playerStats[playerID]?.Overall.Rating;
+                                const matchesPlayed = playerStats[playerID]?.MatchesPlayed || 0;
 
                                 return (
                                     <div key={playerID} className="hover:bg-gray-700/50 transition-colors duration-200">
@@ -220,8 +224,10 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
                                                         <div className="font-medium text-sm text-gray-300 truncate">
                                                             {player?.Username}
                                                         </div>
-                                                        <div className="text-xs font-medium text-gray-400 mt-0.5">
-                                                            Rating: {rating?.toFixed(2)}
+                                                        <div className="flex gap-2 text-xs font-medium text-gray-300 mt-0.5">
+                                                            <span>Rating: {rating?.toFixed(2)}</span>
+                                                            <span className="text-gray-400">•</span>
+                                                            <span>Matches: {matchesPlayed}</span>
                                                         </div>
                                                     </div>
                                                 </a>
