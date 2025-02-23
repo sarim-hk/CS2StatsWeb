@@ -162,10 +162,6 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
                         <div className="relative flex-1 h-full flex items-center justify-center">
                             <img
-                                className="absolute w-36 h-36 object-contain transform -translate-x-20 z-20"
-                                src="https://i.imgur.com/OjaNoWp.png"
-                            />
-                            <img
                                 className="w-32 h-32 object-contain outline outline-2 z-10"
                                 src={player?.AvatarL}
                             />
