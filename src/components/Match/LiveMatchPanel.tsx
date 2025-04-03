@@ -13,7 +13,7 @@ function LiveMatchPanel() {
         return () => clearInterval(intervalId);
     }, []);
 
-    if (!liveMatch || liveMatch.InsertDate < Math.floor(Date.now() / 1000) - 120) {
+    if (!liveMatch || Math.floor(Date.now() / 1000) - liveMatch.InsertDate > 120) {
         return null;
     }
 
