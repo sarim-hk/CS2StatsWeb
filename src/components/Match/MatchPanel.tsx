@@ -31,7 +31,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                             {Match?.Rounds.map((round) => (
                                 <div
                                     key={round.RoundID}
-                                    className={`h-6 w-6 flex items-center justify-center rounded-full 
+                                    className={`h-6 w-6 flex items-center justify-center rounded-sm 
                                         ${round.WinnerSide === 3 
                                             ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50' 
                                             : 'bg-orange-500/20 text-orange-400 border border-orange-500/50'
@@ -80,7 +80,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 <tr className={`border-b ${Match?.Teams[teamId].Side === 2 ? 'border-orange-500/50' : 'border-blue-500/50'}`}>
                                     <th className="py-2 px-3 text-left font-medium text-gray-300 w-48">
                                         <div className="flex items-center space-x-2">
-                                            <span className={`w-1.5 h-1.5 rounded-full ${Match?.Teams[teamId].Side === 2 ? 'bg-orange-500' : 'bg-blue-500'}`}></span>
+                                            <span className={`w-1.5 h-1.5 rounded-sm ${Match?.Teams[teamId].Side === 2 ? 'bg-orange-500' : 'bg-blue-500'}`}></span>
                                             <span>
                                                 <span className="text-xs truncate">{Match?.Teams[teamId].TeamName}</span>
                                                 <span className="text-[10px] truncate text-gray-400 pl-1">{(Match?.Teams[teamId].DeltaELO ?? 0) >= 0 ? '+' : ''}{Match?.Teams[teamId].DeltaELO ?? 0}</span>

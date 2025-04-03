@@ -25,7 +25,7 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("clutch")}
                         className={`
-                            px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
                             ${activePanel === "clutch"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
                                 : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
@@ -38,7 +38,7 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("openingduel")}
                         className={`
-                            px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
                             ${activePanel === "openingduel"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
                                 : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
@@ -51,7 +51,7 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("ratingbreakdown")}
                         className={`
-                            px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
                             ${activePanel === "ratingbreakdown"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
                                 : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
@@ -70,7 +70,7 @@ function TeamSelectorPanel({
                             key={teamId}
                             onClick={() => onTeamSelect(teamId)}
                             className={`
-                                px-3 py-1 rounded text-xs font-medium transition-all duration-200
+                                px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
                                 ${selectedTeamId === teamId
                                     ? team.Side === 2
                                         ? "bg-orange-500/20 text-orange-500 ring-1 ring-orange-500/50"

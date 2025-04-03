@@ -67,7 +67,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                                 <div className="w-4 h-4 flex items-center justify-center text-gray-400 text-sm cursor-help">
                                                     <span className="font-medium">i</span>
                                                 </div>
-                                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-md shadow-lg z-10">
+                                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-sm shadow-lg z-10">
                                                     Per-side ratings for matches before 15/02/2024 may be slightly inaccurate.
                                                 </div>
                                             </div>
@@ -86,7 +86,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                                 <div className="w-4 h-4 flex items-center justify-center text-gray-400 text-sm cursor-help">
                                                     <span className="font-medium">i</span>
                                                 </div>
-                                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-md shadow-lg z-10">
+                                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-sm shadow-lg z-10">
                                                     Per-side ratings for matches before 15/02/2024 may be slightly inaccurate.
                                                 </div>
                                             </div>

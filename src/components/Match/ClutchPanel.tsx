@@ -103,7 +103,7 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
                                                         <div
                                                             key={`${event.RoundID}-${index}`}
                                                             className={`
-                                                                px-3 py-1 rounded-full text-xs font-medium flex-shrink-0
+                                                                px-3 py-1 rounded-sm text-xs font-medium flex-shrink-0
                                                                 ${isClutch
                                                                     ? (event as any).Result === 'Win'
                                                                         ? 'bg-green-500/20 text-green-400'

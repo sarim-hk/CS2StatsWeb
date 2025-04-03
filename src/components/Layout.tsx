@@ -51,7 +51,7 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
     return (
         <a
             href={href}
-            className="px-4 py-2 rounded-md text-[18px] font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
+            className="px-4 py-2 rounded-sm text-[18px] font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
         >
             {children}
         </a>
