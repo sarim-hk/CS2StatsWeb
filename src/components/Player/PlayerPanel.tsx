@@ -77,7 +77,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
 
     useEffect(() => {
         axios
-            .get<PlayerInfoInterface>(`${API_URL}/player_panel_by_player_id?player_id=${PlayerID}`)
+            .get<PlayerInfoInterface>(`${API_URL}/player_panel?player_id=${PlayerID}`)
             .then((response) => {
                 setPlayer(response.data);
             })

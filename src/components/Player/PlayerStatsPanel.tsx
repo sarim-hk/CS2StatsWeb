@@ -15,7 +15,7 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
     useEffect(() => {
-        const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${PlayerID}${filter ? `&${filter}` : ''}`;
+        const url = `${API_URL}/playerstats_panel?player_id=${PlayerID}${filter ? `&${filter}` : ''}`;
         axios
             .get<CompletePlayerStatsInterface>(url)
             .then((response) => {
