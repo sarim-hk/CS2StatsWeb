@@ -24,7 +24,7 @@ function MatchesPanel({
 
     useEffect(() => {
         const url = PlayerID
-            ? `${API_URL}/matches_panel_by_player_id?player_id=${PlayerID}`
+            ? `${API_URL}/matches_panel?player_id=${PlayerID}`
             : `${API_URL}/matches_panel`;
 
         axios

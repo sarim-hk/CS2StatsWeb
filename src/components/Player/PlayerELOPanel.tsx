@@ -25,7 +25,7 @@ function PlayerELOPanel({ PlayerID }: PlayerELOPanelProps) {
 
     useEffect(() => {
         axios
-            .get(`${API_URL}/playerelo_panel_bp_by_player_id?player_id=${PlayerID}`)
+            .get(`${API_URL}/playerelo_panel?player_id=${PlayerID}`)
             .then((response) => setPlayerELOHistory(response.data))
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID]);

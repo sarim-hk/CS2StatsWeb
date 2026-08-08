@@ -19,7 +19,7 @@ function Match() {
 
     useEffect(() => {
         axios
-            .get<FullMatchInterface>(`${API_URL}/match_panel_by_match_id?match_id=${MatchID}`)
+            .get<FullMatchInterface>(`${API_URL}/match_panel?match_id=${MatchID}`)
             .then((response) => {
                 setMatch(response.data);
                 if (response.data?.Teams) {

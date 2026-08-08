@@ -32,7 +32,7 @@ function BalancerPanel({ selectedPlayers, filter }: BalancerContentProps) {
 
         try {
             const playerIDs = selectedPlayers.map(player => player.PlayerID).join(',');
-            const url = `${API_URL}/playerstats_panel_by_player_id?player_id=${playerIDs}${filter ? `&${filter}` : ''}`;
+            const url = `${API_URL}/playerstats_panel?player_id=${playerIDs}${filter ? `&${filter}` : ''}`;
             const response = await axios.get<CompletePlayerStatsInterface>(url);
 
             setPlayerStats(response.data);
