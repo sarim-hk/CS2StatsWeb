@@ -69,7 +69,21 @@ function MatchesPanel({
                         <div className="p-3 hover:bg-gray-700/50 transition-colors duration-200">
                             <div className="grid grid-cols-4 gap-4">
                                 <a href={`/match/${match.MatchID}`} className={`flex items-center ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
-                                    <div className="text-base font-medium text-gray-300 w-full">{match.MatchDate}</div>
+                                    <div className="text-base font-medium text-gray-300 w-full">
+                                    {(() => {
+                                        const d = new Date(match.MatchDate + 'Z');
+                                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                        const pad = (n: number) => String(n).padStart(2, '0');
+                                        return (
+                                            <>
+                                                {days[d.getUTCDay()]}, {pad(d.getUTCDate())} {months[d.getUTCMonth()]} {d.getUTCFullYear()}
+                                                <br />
+                                                {pad(d.getUTCHours())}:{pad(d.getUTCMinutes())}:{pad(d.getUTCSeconds())} GMT
+                                            </>
+                                        );
+                                        })()}
+                                    </div>
                                 </a>
 
                                 <a href={`/match/${match.MatchID}`} className={`${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
