@@ -1,5 +1,4 @@
 import Layout from "../components/Layout";
-import LiveMatchPanel from "../components/Match/LiveMatchPanel";
 import MatchesPanel from "../components/Match/MatchesPanel";
 import PlayersPanel from "../components/Player/PlayersPanel";
 
@@ -12,7 +11,6 @@ function Home() {
 				</div>
 
 				<div className="flex-2">
-					<LiveMatchPanel />
 					<MatchesPanel />
 				</div>
 				
