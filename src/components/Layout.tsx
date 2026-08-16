@@ -24,8 +24,6 @@ function Layout({ children }: LayoutProps) {
 
                         {/* Navigation Links */}
                         <div className="flex space-x-1">
-                            <NavLink href="/matches">Matches</NavLink>
-                            <NavLink href="/players">Players</NavLink>
                             <NavLink href="/stats">Stats</NavLink>
                             <NavLink href="/balancer">Balancer</NavLink>
                         </div>
