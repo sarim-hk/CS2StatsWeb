@@ -41,9 +41,18 @@ function PlayersPanel({
             .filter(player =>
                 player.Username.toLowerCase().includes(searchTerm.toLowerCase())
             )
-            .filter(player =>
-                !ratingMode || (player.MatchesPlayed ?? 0) >= 9
-            )
+            .filter(player => {
+                if (ratingMode) {
+                    // Rating: needs 9+ matches
+                    return (player.MatchesPlayed ?? 0) >= 9;
+                }
+
+                // ELO: needs 1+ match AND must have a Rating
+                return (
+                    (player.MatchesPlayed ?? 0) >= 1 &&
+                    player.Rating != null
+                );
+            })
             .sort((a, b) => {
                 if (ratingMode) {
                     return (b.Rating ?? 0) - (a.Rating ?? 0);
@@ -114,6 +123,7 @@ function PlayersPanel({
                             </button>
                         </div>
 
+                        {/* Rating tooltip */}
                         {ratingMode && (
                             <div className="relative group flex items-center justify-center">
                                 <span className="flex items-center justify-center w-4 h-4 rounded-full border border-gray-500 text-[10px] font-bold text-gray-400 cursor-help">
@@ -132,6 +142,21 @@ function PlayersPanel({
                                             ).toLocaleString()}
                                         </div>
                                     )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ELO tooltip */}
+                        {!ratingMode && (
+                            <div className="relative group flex items-center justify-center">
+                                <span className="flex items-center justify-center w-4 h-4 rounded-full border border-gray-500 text-[10px] font-bold text-gray-400 cursor-help">
+                                    i
+                                </span>
+
+                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-sm shadow-lg z-10 top-full">
+                                    <div>
+                                        Only players with a game in the last 90 days are included.
+                                    </div>
                                 </div>
                             </div>
                         )}
