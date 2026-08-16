@@ -81,6 +81,8 @@ function PlayersPanel({
             {/* Controls */}
             <div className="p-2 border-b border-gray-700">
                 <div className="flex items-center gap-2">
+
+                    {/* Search */}
                     {searchEnabled && (
                         <input
                             type="text"
@@ -98,30 +100,31 @@ function PlayersPanel({
                     )}
 
                     {/* Rating / ELO switcher */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center bg-gray-700/50 p-0.5 text-xs font-medium">
-                            <button
-                                onClick={() => setRatingMode(true)}
-                                className={`px-3 py-1 transition-colors ${
-                                    ratingMode
-                                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                        : 'text-gray-400 hover:text-gray-300'
-                                }`}
-                            >
-                                Rating
-                            </button>
+                    <div className="flex items-center space-x-2">
 
-                            <button
-                                onClick={() => setRatingMode(false)}
-                                className={`px-3 py-1 transition-colors ${
-                                    !ratingMode
-                                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                        : 'text-gray-400 hover:text-gray-300'
-                                }`}
-                            >
-                                ELO
-                            </button>
-                        </div>
+                        {/* Rating button */}
+                        <button
+                            onClick={() => setRatingMode(true)}
+                            className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
+                                ratingMode
+                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+                            }`}
+                        >
+                            Rating
+                        </button>
+
+                        {/* ELO button */}
+                        <button
+                            onClick={() => setRatingMode(false)}
+                            className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
+                                !ratingMode
+                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+                            }`}
+                        >
+                            ELO
+                        </button>
 
                         {/* Rating tooltip */}
                         {ratingMode && (
@@ -162,14 +165,15 @@ function PlayersPanel({
                         )}
                     </div>
 
+                    {/* Selected count */}
                     {selectionEnabled && (
                         <div
                             className={`px-2 py-1 text-sm font-medium ${
                                 selectedPlayerIDs.length === 0
                                     ? 'text-gray-400 bg-gray-700/50'
                                     : selectedPlayerIDs.length % 2 === 0
-                                        ? 'text-green-400 bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                        : 'text-red-400 bg-red-500/20 text-red-400 ring-1 ring-red-500/50'
+                                        ? 'text-green-400 bg-green-500/20 ring-1 ring-green-500/50'
+                                        : 'text-red-400 bg-red-500/20 ring-1 ring-red-500/50'
                             }`}
                         >
                             Selected: {selectedPlayerIDs.length}
@@ -188,6 +192,8 @@ function PlayersPanel({
                         >
                             <div className="p-2 hover:bg-gray-700/50 transition-colors duration-200">
                                 <div className="flex items-center justify-between gap-3">
+
+                                    {/* Player info */}
                                     <a
                                         href={`/player/${player.PlayerID}`}
                                         className="flex items-center gap-3 flex-1"
@@ -219,6 +225,7 @@ function PlayersPanel({
                                         </div>
                                     </a>
 
+                                    {/* Select button */}
                                     {selectionEnabled && (
                                         <button
                                             onClick={() => togglePlayerSelection(player)}
