@@ -132,24 +132,6 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
                         {/* position number */}
                         <div className="relative flex-1 h-full flex items-center justify-center">
 
-                            {player?.WeekPosition === 1 && (
-                                <div className="text-7xl font-semibold gold-text drop-shadow-[0_3px_3px_#000000] z-10">
-                                    #1
-                                </div>
-                            )}
-
-                            {player?.WeekPosition === 2 && (
-                                <div className="text-7xl font-semibold silver-text drop-shadow-[0_3px_3px_#000000] z-10">
-                                    #2
-                                </div>
-                            )}
-
-                            {player?.WeekPosition === 3 && (
-                                <div className="text-7xl font-semibold bronze-text drop-shadow-[0_3px_3px_#000000] z-10">
-                                    #3
-                                </div>
-                            )}
-
                             <div className="bottom-6 text-lg text-white absolute z-10">
                                 {player?.ELO} ELO
                             </div>
