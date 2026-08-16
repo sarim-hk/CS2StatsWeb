@@ -89,8 +89,8 @@ function PlayersPanel({
                             placeholder="Search by Username"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className={`flex-1 px-2 py-1 bg-gray-700/50 text-white text-sm font-medium
-                            focus:outline-none transition-all duration-200 hover:bg-gray-700
+                            className={`flex-1 px-3 py-1 text-xs font-medium bg-gray-700/50 text-white
+                            focus:outline-none transition-colors duration-200 hover:bg-gray-700
                             ${
                                 searchTerm.trim()
                                     ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400"

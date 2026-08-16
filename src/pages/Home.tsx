@@ -7,11 +7,11 @@ function Home() {
 		<Layout>
 			<div className="flex gap-2">
 				<div className="flex-1">
-					<PlayersPanel />
+					<PlayersPanel searchEnabled={true} />
 				</div>
 
 				<div className="flex-2">
-					<MatchesPanel />
+					<MatchesPanel searchEnabled={true} />
 				</div>
 				
 			</div>
