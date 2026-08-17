@@ -22,48 +22,7 @@
   }
 }
 
-@keyframes scrollLines {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 100% 100%;
-    }
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
 
-.pattern {
-    background: repeating-linear-gradient(
-        -45deg,                  /* Angle for diagonal lines */
-        transparent,             /* Start transparent */
-        transparent,         /* First transparent segment */
-        rgba(0, 0, 0, 0.2) 6.25%,   /* Line color with slight opacity */
-        rgba(0, 0, 0, 0.2) 12.5%   /* Line width */
-    );
-    background-size: 200% 200%;
-    animation: scrollLines 10s linear infinite;
-}
-
-.gold-text {
-    background: url("https://i.imgur.com/t7LNgUu.png") repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-blend-mode: difference;
-}
-
-.silver-text {
-    background: url("https://i.imgur.com/yWZKDUz.png") repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-blend-mode: difference;
-}
-
-.bronze-text {
-    background: url("https://i.imgur.com/YYXTpmg.png") repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-blend-mode: difference;
-}
