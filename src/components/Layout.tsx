@@ -6,7 +6,9 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-zinc-900 to-zinc-950 text-white">
+        <div className="relative min-h-screen text-white">
+            
+            <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-[#030D19] via-[#050B13] to-[#07090C]" />
 
             {/* Navigation Bar */}
             <nav className="sticky top-0 z-50 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700/50 shadow-lg">
@@ -44,7 +46,7 @@ function Layout({ children }: LayoutProps) {
 }
 
 // Navigation Link Component
-function NavLink({ href, children }: { href: string; children: ReactNode }) {
+function NavLink({ href, children }: { href: string, children: ReactNode }) {
     return (
         <a
             href={href}
