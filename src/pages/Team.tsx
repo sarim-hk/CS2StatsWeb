@@ -20,7 +20,6 @@ function Team() {
                         <TeamPanel TeamID={TeamID} />
                     </div>
                     
-
                     <div className="pt-2">
                         <TeamELOPanel TeamID={TeamID} />
                     </div>

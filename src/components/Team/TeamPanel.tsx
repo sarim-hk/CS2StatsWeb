@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TeamInfoInterface from '../../interfaces/TeamInfoInterface';
+import PlayersPanel from '../Player/PlayersPanel';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -25,7 +26,7 @@ function TeamPanel({ TeamID }: TeamPanelProps) {
 
     return (
         <div className="bg-gray-800">
-            <div className="p-4">
+            <div className="p-4 pb-0">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 flex-1">
                         <div className="relative">
@@ -50,6 +51,11 @@ function TeamPanel({ TeamID }: TeamPanelProps) {
                     </div>
                 </div>
             </div>
+            
+            <div>
+                <PlayersPanel TeamID={TeamID} switcherModeEnabled={false} />
+            </div>
+        
         </div>
     );
 }
