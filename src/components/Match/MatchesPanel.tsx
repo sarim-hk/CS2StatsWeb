@@ -6,14 +6,16 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 interface MatchesPanelProps {
     PlayerID?: string;
+    TeamID?: string;
     fullscreen?: boolean;
     searchEnabled?: boolean;
     panelSize?: number;
-    filteredMatchIds?: number[]; // New prop to filter matches
+    filteredMatchIds?: number[];
 }
 
 function MatchesPanel({
     PlayerID,
+    TeamID,
     fullscreen = false,
     searchEnabled = false,
     panelSize,
@@ -23,27 +25,38 @@ function MatchesPanel({
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
-        const url = PlayerID
-            ? `${API_URL}/matches_panel?player_id=${PlayerID}`
-            : `${API_URL}/matches_panel`;
+        let url = `${API_URL}/matches_panel`;
+
+        // PlayerID takes priority if both PlayerID and TeamID are specified
+        if (PlayerID) {
+            url += `?player_id=${PlayerID}`;
+        } else if (TeamID) {
+            url += `?team_id=${TeamID}`;
+        }
 
         axios
             .get<MatchInterface[]>(url)
             .then((response) => setMatches(response.data))
             .catch((error) => console.error("Error fetching data:", error));
-    }, [PlayerID]);
+    }, [PlayerID, TeamID]);
 
-    const filteredMatches = matches.filter(match => {
-        const matchIdMatch = filteredMatchIds ? filteredMatchIds.includes(Number(match.MatchID)) : true;
-        const searchMatch = match.MapID.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredMatches = matches.filter((match) => {
+        const matchIdMatch = filteredMatchIds
+            ? filteredMatchIds.includes(Number(match.MatchID))
+            : true;
+
+        const searchMatch = match.MapID
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
         return matchIdMatch && searchMatch;
     });
 
     return (
-        <div 
-            className={`bg-gray-800 ${panelSize ? '' : 'h-full'} scrollbar-hide`}
+        <div
+            className={`bg-gray-800 ${panelSize ? "" : "h-full"} scrollbar-hide`}
             style={{
-                height: panelSize ? `${panelSize}px` : 'auto',
+                height: panelSize ? `${panelSize}px` : "auto",
                 overflowY: "auto",
             }}
         >
@@ -62,65 +75,150 @@ function MatchesPanel({
                                     ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400"
                                     : ""
                             }`}
-                        />                    </div>
+                        />
+                    </div>
                 </div>
             )}
 
             {filteredMatches.length > 0 ? (
                 filteredMatches.map((match, index) => (
-                    <div key={index} className="border-b border-gray-700 last:border-b-0">
+                    <div
+                        key={index}
+                        className="border-b border-gray-700 last:border-b-0"
+                    >
                         <div className="p-3 hover:bg-gray-700/50 transition-colors duration-200">
                             <div className="grid grid-cols-4 gap-4">
-                                <a href={`/match/${match.MatchID}`} className={`flex items-center ${fullscreen ? 'col-span-2' : 'col-span-1'}`}>
+                                <a
+                                    href={`/match/${match.MatchID}`}
+                                    className={`flex items-center ${
+                                        fullscreen ? "col-span-2" : "col-span-1"
+                                    }`}
+                                >
                                     <div className="text-base font-medium text-gray-300 w-full">
-                                    {(() => {
-                                        const d = new Date(match.MatchDate + 'Z');
-                                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                        const pad = (n: number) => String(n).padStart(2, '0');
-                                        return (
-                                            <>
-                                                {days[d.getUTCDay()]}, {pad(d.getUTCDate())} {months[d.getUTCMonth()]} {d.getUTCFullYear()}
-                                                <br />
-                                                {pad(d.getUTCHours())}:{pad(d.getUTCMinutes())}:{pad(d.getUTCSeconds())} GMT
-                                            </>
-                                        );
+                                        {(() => {
+                                            const d = new Date(
+                                                match.MatchDate + "Z"
+                                            );
+
+                                            const days = [
+                                                "Sun",
+                                                "Mon",
+                                                "Tue",
+                                                "Wed",
+                                                "Thu",
+                                                "Fri",
+                                                "Sat",
+                                            ];
+
+                                            const months = [
+                                                "Jan",
+                                                "Feb",
+                                                "Mar",
+                                                "Apr",
+                                                "May",
+                                                "Jun",
+                                                "Jul",
+                                                "Aug",
+                                                "Sep",
+                                                "Oct",
+                                                "Nov",
+                                                "Dec",
+                                            ];
+
+                                            const pad = (n: number) =>
+                                                String(n).padStart(2, "0");
+
+                                            return (
+                                                <>
+                                                    {days[d.getUTCDay()]},{" "}
+                                                    {pad(d.getUTCDate())}{" "}
+                                                    {months[d.getUTCMonth()]}{" "}
+                                                    {d.getUTCFullYear()}
+                                                    <br />
+                                                    {pad(d.getUTCHours())}:
+                                                    {pad(d.getUTCMinutes())}:
+                                                    {pad(d.getUTCSeconds())} GMT
+                                                </>
+                                            );
                                         })()}
                                     </div>
                                 </a>
 
-                                <a href={`/match/${match.MatchID}`} className={`${fullscreen ? 'col-span-2' : 'col-span-3'}`}>
+                                <a
+                                    href={`/match/${match.MatchID}`}
+                                    className={`${
+                                        fullscreen
+                                            ? "col-span-2"
+                                            : "col-span-3"
+                                    }`}
+                                >
                                     <div className="flex flex-col items-end">
                                         <div className="flex items-center gap-2 font-medium">
                                             {match.WinningSide === 2 ? (
                                                 <>
-                                                    <a href={`/team/${match.WinningTeamID}`} 
-                                                       className="text-orange-500 hover:text-orange-400 transition-colors">
-                                                        {match.WinningTeamName} <span className="font-semibold">{match.WinningTeamScore}</span>
+                                                    <a
+                                                        href={`/team/${match.WinningTeamID}`}
+                                                        className="text-orange-500 hover:text-orange-400 transition-colors"
+                                                    >
+                                                        {match.WinningTeamName}{" "}
+                                                        <span className="font-semibold">
+                                                            {
+                                                                match.WinningTeamScore
+                                                            }
+                                                        </span>
                                                     </a>
-                                                    <a href={`/team/${match.LosingTeamID}`} 
-                                                       className="text-blue-500 hover:text-blue-400 transition-colors">
-                                                        <span className="font-semibold">{match.LosingTeamScore}</span> {match.LosingTeamName}
+
+                                                    <a
+                                                        href={`/team/${match.LosingTeamID}`}
+                                                        className="text-blue-500 hover:text-blue-400 transition-colors"
+                                                    >
+                                                        <span className="font-semibold">
+                                                            {
+                                                                match.LosingTeamScore
+                                                            }
+                                                        </span>{" "}
+                                                        {match.LosingTeamName}
                                                     </a>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <a href={`/team/${match.WinningTeamID}`} 
-                                                       className="text-blue-500 hover:text-blue-400 transition-colors">
-                                                        {match.WinningTeamName} <span className="font-semibold">{match.WinningTeamScore}</span>
+                                                    <a
+                                                        href={`/team/${match.WinningTeamID}`}
+                                                        className="text-blue-500 hover:text-blue-400 transition-colors"
+                                                    >
+                                                        {match.WinningTeamName}{" "}
+                                                        <span className="font-semibold">
+                                                            {
+                                                                match.WinningTeamScore
+                                                            }
+                                                        </span>
                                                     </a>
-                                                    <a href={`/team/${match.LosingTeamID}`} 
-                                                       className="text-orange-500 hover:text-orange-400 transition-colors">
-                                                        <span className="font-semibold">{match.LosingTeamScore}</span> {match.LosingTeamName}
+
+                                                    <a
+                                                        href={`/team/${match.LosingTeamID}`}
+                                                        className="text-orange-500 hover:text-orange-400 transition-colors"
+                                                    >
+                                                        <span className="font-semibold">
+                                                            {
+                                                                match.LosingTeamScore
+                                                            }
+                                                        </span>{" "}
+                                                        {match.LosingTeamName}
                                                     </a>
                                                 </>
                                             )}
                                         </div>
 
-                                        <div className="text-[12px] font-medium text-gray-300">{match.MapID}</div>
-                                        
+                                        <div className="text-[12px] font-medium text-gray-300">
+                                            {match.MapID}
+                                        </div>
+
                                         <div className="text-[10px] font-medium text-gray-300">
-                                            {match.WinningDeltaELO > 0 ? '+' : ''}{match.WinningDeltaELO} / {match.LosingDeltaELO}
+                                            {match.WinningDeltaELO > 0
+                                                ? "+"
+                                                : ""}
+                                            {match.WinningDeltaELO} /{" "}
+                                            {match.LosingDeltaELO}
                                         </div>
                                     </div>
                                 </a>
@@ -129,7 +227,9 @@ function MatchesPanel({
                     </div>
                 ))
             ) : (
-                <div className="p-3 text-gray-300 text-sm font-medium">No matches found.</div>
+                <div className="p-3 text-gray-300 text-sm font-medium">
+                    No matches found.
+                </div>
             )}
         </div>
     );
