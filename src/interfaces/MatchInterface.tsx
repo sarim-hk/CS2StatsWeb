@@ -11,6 +11,7 @@ interface Match {
     WinningSide: number;
     WinningDeltaELO: number;
     LosingDeltaELO: number;
+    MatchResult: "Win" | "Loss" | "Tie" | null;
     }
 
 export default Match;

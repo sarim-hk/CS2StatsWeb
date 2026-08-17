@@ -19,7 +19,7 @@ function MatchesPanel({
     fullscreen = false,
     searchEnabled = false,
     panelSize,
-    filteredMatchIds
+    filteredMatchIds,
 }: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -84,14 +84,22 @@ function MatchesPanel({
                 filteredMatches.map((match, index) => (
                     <div
                         key={index}
-                        className="border-b border-gray-700 last:border-b-0"
+                        className={`border-b border-gray-700 last:border-b-0 ${
+                            match.MatchResult === "Win"
+                                ? "bg-gradient-to-r from-gray-800 via-gray-800/80 to-green-500/10"
+                                : match.MatchResult === "Loss"
+                                ? "bg-gradient-to-r from-gray-800 via-gray-800/80 to-red-500/10"
+                                : ""
+                        }`}
                     >
                         <div className="p-3 hover:bg-gray-700/50 transition-colors duration-200">
                             <div className="grid grid-cols-4 gap-4">
                                 <a
                                     href={`/match/${match.MatchID}`}
                                     className={`flex items-center ${
-                                        fullscreen ? "col-span-2" : "col-span-1"
+                                        fullscreen
+                                            ? "col-span-2"
+                                            : "col-span-1"
                                     }`}
                                 >
                                     <div className="text-base font-medium text-gray-300 w-full">
