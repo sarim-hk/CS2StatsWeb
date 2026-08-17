@@ -1,6 +1,5 @@
 interface PlayerInfoInterface {
     PlayerID: string;
-    WeekPosition: number;
     Username: string;
     AvatarS: string;
     AvatarM: string;
