@@ -5,36 +5,41 @@ import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface PlayersPanelProps {
+    TeamID?: string;
     searchEnabled?: boolean;
-    selectionEnabled?: boolean;
-    onPlayersSelected?: (players: PlayerInfoInterface[]) => void;
+    switcherModeEnabled?: boolean;
 }
 
 function PlayersPanel({
+    TeamID,
     searchEnabled = false,
-    selectionEnabled = false,
-    onPlayersSelected
+    switcherModeEnabled = true
 }: PlayersPanelProps) {
     const [players, setPlayers] = useState<PlayerInfoInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [selectedPlayerIDs, setSelectedPlayerIDs] = useState<string[]>([]);
-    const [selectedPlayers, setSelectedPlayers] = useState<PlayerInfoInterface[]>([]);
-    const [ratingMode, setRatingMode] = useState<boolean>(true);
+    const [switcherEnabled, setswitcherEnabled] = useState<boolean>(switcherModeEnabled);
 
     useEffect(() => {
+        let url = `${API_URL}/players_panel`;
+
+        if (TeamID) {
+            url += `?team_id=${encodeURIComponent(TeamID)}`;
+        }
+
         axios
-            .get<PlayerInfoInterface[]>(`${API_URL}/players_panel`)
+            .get<PlayerInfoInterface[]>(url)
             .then((response) => {
                 setPlayers(response.data);
             })
             .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+    }, [TeamID]);
 
     useEffect(() => {
-        if (onPlayersSelected) {
-            onPlayersSelected(selectedPlayers);
+        // If the selector is disabled, always use ELO mode.
+        if (!switcherModeEnabled) {
+            setswitcherEnabled(false);
         }
-    }, [selectedPlayers, onPlayersSelected]);
+    }, [switcherModeEnabled]);
 
     const filteredPlayers = useMemo(() => {
         return players
@@ -42,39 +47,23 @@ function PlayersPanel({
                 player.Username.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .filter(player => {
-                if (ratingMode) {
-                    // Rating: needs 9+ matches
+                if (switcherEnabled) {
                     return (player.MatchesPlayed ?? 0) >= 9;
                 }
 
-                // ELO: needs 1+ match AND must have a Rating
                 return (
                     (player.MatchesPlayed ?? 0) >= 1 &&
                     player.Rating != null
                 );
             })
             .sort((a, b) => {
-                if (ratingMode) {
+                if (switcherEnabled) {
                     return (b.Rating ?? 0) - (a.Rating ?? 0);
                 }
 
                 return (b.ELO ?? 0) - (a.ELO ?? 0);
             });
-    }, [players, searchTerm, ratingMode]);
-
-    const togglePlayerSelection = (player: PlayerInfoInterface) => {
-        setSelectedPlayerIDs(prevSelected =>
-            prevSelected.includes(player.PlayerID)
-                ? prevSelected.filter(id => id !== player.PlayerID)
-                : [...prevSelected, player.PlayerID]
-        );
-
-        setSelectedPlayers(prevSelected =>
-            prevSelected.some(p => p.PlayerID === player.PlayerID)
-                ? prevSelected.filter(p => p.PlayerID !== player.PlayerID)
-                : [...prevSelected, player]
-        );
-    };
+    }, [players, searchTerm, switcherEnabled]);
 
     return (
         <div className="bg-gray-800">
@@ -100,83 +89,62 @@ function PlayersPanel({
                     )}
 
                     {/* Rating / ELO switcher */}
-                    <div className="flex items-center space-x-2">
+                    {switcherModeEnabled && (
+                        <div className="flex items-center space-x-2">
 
-                        {/* Rating button */}
-                        <button
-                            onClick={() => setRatingMode(true)}
-                            className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
-                                ratingMode
-                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
-                            }`}
-                        >
-                            Rating
-                        </button>
+                            {/* Rating button */}
+                            <button
+                                onClick={() => setswitcherEnabled(true)}
+                                className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
+                                    switcherEnabled
+                                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                                        : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+                                }`}
+                            >
+                                Rating
+                            </button>
 
-                        {/* ELO button */}
-                        <button
-                            onClick={() => setRatingMode(false)}
-                            className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
-                                !ratingMode
-                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
-                            }`}
-                        >
-                            ELO
-                        </button>
+                            {/* ELO button */}
+                            <button
+                                onClick={() => setswitcherEnabled(false)}
+                                className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${
+                                    !switcherEnabled
+                                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
+                                        : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+                                }`}
+                            >
+                                ELO
+                            </button>
 
-                        {/* Rating tooltip */}
-                        {ratingMode && (
+                            {/* Tooltip */}
                             <div className="relative group flex items-center justify-center">
                                 <span className="flex items-center justify-center w-4 h-4 rounded-full border border-gray-500 text-[10px] font-bold text-gray-400 cursor-help">
                                     i
                                 </span>
 
                                 <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-sm shadow-lg z-10 top-full">
-                                    <div>
-                                        Only players with 9 or more games in the last 90 days are included.
-                                    </div>
+                                    {switcherEnabled ? (
+                                        <>
+                                            <div>
+                                                Only players with 9 or more games in the last 90 days are included.
+                                            </div>
 
-                                    {players.length > 0 && players[0].RatingUpdateDate && (
-                                        <div className="text-gray-500 mt-1">
-                                            Rating updated: {new Date(
-                                                players[0].RatingUpdateDate
-                                            ).toLocaleString()}
+                                            {players.length > 0 && players[0].RatingUpdateDate && (
+                                                <div className="text-gray-500 mt-1">
+                                                    Rating updated:{" "}
+                                                    {new Date(
+                                                        players[0].RatingUpdateDate
+                                                    ).toLocaleString()}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div>
+                                            Only players with a game in the last 90 days are included.
                                         </div>
                                     )}
                                 </div>
                             </div>
-                        )}
-
-                        {/* ELO tooltip */}
-                        {!ratingMode && (
-                            <div className="relative group flex items-center justify-center">
-                                <span className="flex items-center justify-center w-4 h-4 rounded-full border border-gray-500 text-[10px] font-bold text-gray-400 cursor-help">
-                                    i
-                                </span>
-
-                                <div className="absolute hidden group-hover:block right-0 w-64 p-2 mt-1 text-xs text-gray-300 bg-gray-900 rounded-sm shadow-lg z-10 top-full">
-                                    <div>
-                                        Only players with a game in the last 90 days are included.
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Selected count */}
-                    {selectionEnabled && (
-                        <div
-                            className={`px-2 py-1 text-sm font-medium ${
-                                selectedPlayerIDs.length === 0
-                                    ? 'text-gray-400 bg-gray-700/50'
-                                    : selectedPlayerIDs.length % 2 === 0
-                                        ? 'text-green-400 bg-green-500/20 ring-1 ring-green-500/50'
-                                        : 'text-red-400 bg-red-500/20 ring-1 ring-red-500/50'
-                            }`}
-                        >
-                            Selected: {selectedPlayerIDs.length}
                         </div>
                     )}
                 </div>
@@ -212,7 +180,7 @@ function PlayersPanel({
                                             </div>
 
                                             <div className="text-xs font-medium text-gray-300 mt-1">
-                                                {ratingMode ? (
+                                                {switcherEnabled ? (
                                                     <>
                                                         Rating: {player.Rating ?? 'N/A'}
                                                     </>
@@ -224,22 +192,6 @@ function PlayersPanel({
                                             </div>
                                         </div>
                                     </a>
-
-                                    {/* Select button */}
-                                    {selectionEnabled && (
-                                        <button
-                                            onClick={() => togglePlayerSelection(player)}
-                                            className={`px-2 py-1 text-sm font-medium transition-all duration-200 flex-shrink-0 ${
-                                                selectedPlayerIDs.includes(player.PlayerID)
-                                                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
-                                                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
-                                            }`}
-                                        >
-                                            {selectedPlayerIDs.includes(player.PlayerID)
-                                                ? 'Deselect'
-                                                : 'Select'}
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         </div>
