@@ -126,12 +126,12 @@ function PlayersPanel({
                                     {switcherEnabled ? (
                                         <>
                                             <div>
-                                                Only players with 9 or more games in the last 90 days are included.
+                                                Only players with 9 or more matches played in the last 90 days are included.
                                             </div>
 
                                             {players.length > 0 && players[0].RatingUpdateDate && (
                                                 <div className="text-gray-500 mt-1">
-                                                    Rating updated:{" "}
+                                                    Last updated:{" "}
                                                     {new Date(
                                                         players[0].RatingUpdateDate
                                                     ).toLocaleString()}
@@ -139,10 +139,20 @@ function PlayersPanel({
                                             )}
                                         </>
                                     ) : (
-                                        <div>
-                                            Only players with a game in the last 90 days are included.
-                                        </div>
-                                    )}
+                                        <>
+                                            <div>
+                                                Only players with a match played in the last 90 days are included.
+                                            </div>
+
+                                            {players.length > 0 && players[0].RatingUpdateDate && (
+                                                <div className="text-gray-500 mt-1">
+                                                    Last updated:{" "}
+                                                    {new Date(
+                                                        players[0].RatingUpdateDate
+                                                    ).toLocaleString()}
+                                                </div>
+                                            )}
+                                        </>                                    )}
                                 </div>
                             </div>
                         </div>
