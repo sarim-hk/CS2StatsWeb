@@ -47,6 +47,12 @@ function PlayersPanel({
                 player.Username.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .filter(player => {
+                // When a team is supplied, show all players regardless
+                // of matches played or rating eligibility.
+                if (TeamID) {
+                    return true;
+                }
+
                 if (switcherEnabled) {
                     return (player.MatchesPlayed ?? 0) >= 9;
                 }
@@ -63,7 +69,7 @@ function PlayersPanel({
 
                 return (b.ELO ?? 0) - (a.ELO ?? 0);
             });
-    }, [players, searchTerm, switcherEnabled]);
+    }, [players, searchTerm, switcherEnabled, TeamID]);
 
     return (
         <div className="bg-gray-800">
