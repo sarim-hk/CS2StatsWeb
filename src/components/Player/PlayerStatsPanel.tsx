@@ -7,10 +7,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 interface PlayerStatsPanelProps {
     PlayerID: string;
     filter: string;
-    onMatchIdsUpdate: (matchIds: number[]) => void;
 }
 
-function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPanelProps) {
+function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>();
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
@@ -20,11 +19,9 @@ function PlayerStatsPanel({ PlayerID, filter, onMatchIdsUpdate }: PlayerStatsPan
             .get<CompletePlayerStatsInterface>(url)
             .then((response) => {
                 setPlayerStats(response.data);
-                const extractedMatchIds = response.data?.[PlayerID]?.MatchIDs || [];
-                onMatchIdsUpdate(extractedMatchIds);
             })
             .catch((error) => console.error("Error fetching data:", error));
-    }, [PlayerID, filter, onMatchIdsUpdate]);
+    }, [PlayerID, filter]);
 
     const sharedStyles = {
         container: "bg-gray-800",

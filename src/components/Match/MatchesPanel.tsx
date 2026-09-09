@@ -10,7 +10,7 @@ interface MatchesPanelProps {
     fullscreen?: boolean;
     searchEnabled?: boolean;
     panelSize?: number;
-    filteredMatchIds?: number[];
+    filter?: string;
 }
 
 function MatchesPanel({
@@ -19,7 +19,7 @@ function MatchesPanel({
     fullscreen = false,
     searchEnabled = false,
     panelSize,
-    filteredMatchIds,
+    filter = "",
 }: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -34,22 +34,22 @@ function MatchesPanel({
             url += `?team_id=${TeamID}`;
         }
 
+        if (filter) {
+            url += `${url.includes("?") ? "&" : "?"}${filter}`;
+        }
+
         axios
             .get<MatchInterface[]>(url)
             .then((response) => setMatches(response.data))
             .catch((error) => console.error("Error fetching data:", error));
-    }, [PlayerID, TeamID]);
+    }, [PlayerID, TeamID, filter]);
 
     const filteredMatches = matches.filter((match) => {
-        const matchIdMatch = filteredMatchIds
-            ? filteredMatchIds.includes(Number(match.MatchID))
-            : true;
-
         const searchMatch = match.MapID
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
 
-        return matchIdMatch && searchMatch;
+        return searchMatch;
     });
 
     return (

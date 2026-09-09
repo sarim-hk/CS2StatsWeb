@@ -12,7 +12,6 @@ import PlayerWeaponsPanel from '../components/Player/PlayerWeaponsPanel';
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
     const [filter, setFilter] = useState<string>("");
-    const [matchIds, setMatchIds] = useState<number[]>([]);
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
         return <div>Player ID is missing.</div>;
@@ -25,7 +24,6 @@ function Player() {
                     <div>
                         <PlayerPanel PlayerID={PlayerID} />
                     </div>
-                    
 
                     <div className="pt-2">
                         <PlayerELOPanel PlayerID={PlayerID} />
@@ -43,19 +41,11 @@ function Player() {
 
                 <div className="flex-2">
                     <div>
-                        <MatchesPanel
-                            PlayerID={PlayerID}
-                            filteredMatchIds={matchIds}
-                            panelSize={500}
-                        />
+                        <MatchesPanel PlayerID={PlayerID} filter={filter} panelSize={500} />
                     </div>
 
                     <div className="pt-2">
-                        <PlayerStatsPanel
-                            PlayerID={PlayerID}
-                            filter={filter}
-                            onMatchIdsUpdate={setMatchIds}
-                        />
+                        <PlayerStatsPanel PlayerID={PlayerID} filter={filter} />
                     </div>
 
                 </div>
