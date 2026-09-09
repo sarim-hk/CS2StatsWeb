@@ -7,6 +7,7 @@ import MatchesPanel from '../components/Match/MatchesPanel';
 import PlayerStatsPanel from '../components/Player/PlayerStatsPanel';
 import PlayerELOPanel from '../components/Player/PlayerELOPanel';
 import FilterPanel from '../components/Player/FilterPanel';
+import PlayerWeaponsPanel from '../components/Player/PlayerWeaponsPanel';
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
@@ -31,8 +32,13 @@ function Player() {
                     </div>
 
                     <div className="pt-2">
+                        <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} />
+                    </div>
+
+                    <div className="pt-2">
                         <FilterPanel onFilterChange={setFilter} />
                     </div>
+
                 </div>
 
                 <div className="flex-2">
@@ -51,6 +57,7 @@ function Player() {
                             onMatchIdsUpdate={setMatchIds}
                         />
                     </div>
+
                 </div>
             </div>
         </Layout>
