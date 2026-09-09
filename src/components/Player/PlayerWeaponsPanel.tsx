@@ -48,30 +48,53 @@ function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) 
     if (!playerWeapons) return null;
 
     const weapons = playerWeapons.Weapons ?? [];
-    const totalKills = weapons.reduce((total, weapon) => total + Number(weapon.Kills), 0);
-    const visibleWeapons = weapons.filter(
-        (weapon) => totalKills > 0 && Number(weapon.Kills) / totalKills >= 0.01
+    const totalKills = weapons.reduce(
+        (total, weapon) => total + Number(weapon.Kills),
+        0
     );
-    const colors = ["#22c55e", "#3b82f6", "#f97316", "#a855f7", "#eab308", "#ef4444"];
+
+    const visibleWeapons = weapons.filter(
+        (weapon) =>
+            totalKills > 0 &&
+            Number(weapon.Kills) / totalKills >= 0.01
+    );
+
+    const colors = [
+        "#22c55e",
+        "#3b82f6",
+        "#f97316",
+        "#a855f7",
+        "#eab308",
+        "#ef4444",
+    ];
 
     const data = {
         labels: visibleWeapons.map((weapon) => weapon.Weapon),
-        datasets: [{
-            data: visibleWeapons.map((weapon) => weapon.Kills),
-            backgroundColor: visibleWeapons.map((_, index) => colors[index % colors.length]),
-            borderColor: "#1f2937",
-            borderWidth: 3,
-        }],
+        datasets: [
+            {
+                data: visibleWeapons.map((weapon) => weapon.Kills),
+                backgroundColor: visibleWeapons.map(
+                    (_, index) => colors[index % colors.length]
+                ),
+                borderColor: "#1f2937",
+                borderWidth: 2,
+            },
+        ],
     };
 
     return (
-        <div className="bg-gray-800 p-4">
-            <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-medium text-gray-300">Kills / Weapon</h2>
-                <span className="text-xs text-gray-500">{totalKills} total</span>
+        <div className="bg-gray-800 p-3 h-48 flex flex-col">
+            <div className="mb-2 flex shrink-0 items-center justify-between">
+                <h2 className="text-xs font-medium text-gray-300">
+                    Kills / Weapon
+                </h2>
+                <span className="text-[10px] text-gray-500">
+                    {totalKills} total
+                </span>
             </div>
+
             {weapons.length > 0 ? (
-                <div className="mx-auto h-56 max-w-sm">
+                <div className="mx-auto min-h-0 w-full max-w-[220px] flex-1">
                     <Doughnut
                         data={data}
                         options={{
@@ -79,13 +102,18 @@ function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) 
                             maintainAspectRatio: false,
                             plugins: {
                                 legend: { display: false },
-                                tooltip: { callbacks: { label: (context) => ` ${context.label}: ${context.raw} kills` } },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) =>
+                                            ` ${context.label}: ${context.raw} kills`,
+                                    },
+                                },
                             },
                         }}
                     />
                 </div>
             ) : (
-                <div className="py-8 text-center text-sm font-medium text-gray-400">
+                <div className="flex flex-1 items-center justify-center text-center text-xs font-medium text-gray-400">
                     No weapon kills found.
                 </div>
             )}
