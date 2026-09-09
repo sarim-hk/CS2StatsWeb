@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-function ChevronDownIcon({ className }: { className?: string }) {
+function ChevronIcon({ direction }: { direction: "left" | "right" }) {
     return (
         <svg
-            className={className}
-            width="12"
-            height="12"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -13,134 +12,210 @@ function ChevronDownIcon({ className }: { className?: string }) {
             strokeLinecap="round"
             strokeLinejoin="round"
         >
-            <polyline points="6 9 12 15 18 9" />
+            <polyline points={direction === "left" ? "15 18 9 12 15 6" : "9 18 15 12 9 6"} />
         </svg>
     );
 }
 
-type TimePeriod = "7days" | "14days" | "1month" | "3months" | "6months" | "1year";
-type MatchCount = "5matches" | "10matches" | "15matches" | "20matches" | "25matches" | "50matches";
-
-type Filter = TimePeriod | MatchCount | null;
+interface DateRange {
+    start: Date | null;
+    end: Date | null;
+}
 
 interface FilterPanelProps {
     onFilterChange: (filter: string) => void;
 }
 
-const timePeriodLabels: { [key in TimePeriod]: string } = {
-    "7days": "7 Days",
-    "14days": "14 Days",
-    "1month": "1 Month",
-    "3months": "3 Months",
-    "6months": "6 Months",
-    "1year": "1 Year",
-};
+const monthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" });
+const datePresets = [
+    { key: "7days", label: "7 Days" },
+    { key: "1month", label: "1 Month" },
+    { key: "3months", label: "3 Months" },
+    { key: "6months", label: "6 Months" },
+    { key: "1year", label: "1 Year" },
+] as const;
 
-const matchCountLabels: { [key in MatchCount]: string } = {
-    "5matches": "5 Matches",
-    "10matches": "10 Matches",
-    "15matches": "15 Matches",
-    "20matches": "20 Matches",
-    "25matches": "25 Matches",
-    "50matches": "50 Matches",
-};
+type DatePreset = (typeof datePresets)[number]["key"];
 
-const timePeriods = Object.keys(timePeriodLabels) as TimePeriod[];
-const matchCounts = Object.keys(matchCountLabels) as MatchCount[];
-
-function isTimePeriod(value: Filter): value is TimePeriod {
-    return value !== null && value in timePeriodLabels;
+function sameDay(first: Date | null, second: Date | null) {
+    return Boolean(
+        first &&
+            second &&
+            first.getFullYear() === second.getFullYear() &&
+            first.getMonth() === second.getMonth() &&
+            first.getDate() === second.getDate(),
+    );
 }
 
-function isMatchCount(value: Filter): value is MatchCount {
-    return value !== null && value in matchCountLabels;
+function formatDateForFilter(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 }
 
-/** A single compact dropdown that can select from either the time-period or match-count set. */
-function FilterDropdown({
-    label,
-    activeValue,
-    options,
-    optionLabels,
-    onSelect,
+function DateRangePicker({
+    value,
+    mapId,
+    onChange,
+    onMapIdChange,
 }: {
-    label: string;
-    activeValue: Filter;
-    options: (TimePeriod | MatchCount)[];
-    optionLabels: Record<string, string>;
-    onSelect: (value: Filter) => void;
+    value: DateRange;
+    mapId: string;
+    onChange: (range: DateRange) => void;
+    onMapIdChange: (value: string) => void;
 }) {
-    const [open, setOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const [activePreset, setActivePreset] = useState<DatePreset | null>(null);
+    const [visibleMonth, setVisibleMonth] = useState(() => {
+        const date = value.start ?? new Date();
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    });
 
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setOpen(false);
-            }
+    function selectPreset(preset: DatePreset) {
+        const end = new Date();
+        end.setHours(0, 0, 0, 0);
+
+        const start = new Date(end);
+        if (preset === "7days") {
+            start.setDate(start.getDate() - 6);
+        } else {
+            const months = preset === "1month" ? 1 : preset === "3months" ? 3 : preset === "6months" ? 6 : 12;
+            const targetMonth = start.getMonth() - months;
+            const targetYear = start.getFullYear() + Math.floor(targetMonth / 12);
+            const normalizedMonth = ((targetMonth % 12) + 12) % 12;
+            const lastDayOfTargetMonth = new Date(targetYear, normalizedMonth + 1, 0).getDate();
+            start.setFullYear(targetYear, normalizedMonth, Math.min(start.getDate(), lastDayOfTargetMonth));
         }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
 
-    const isActive = activeValue !== null && activeValue in optionLabels;
-    const displayLabel = isActive ? optionLabels[activeValue as string] : label;
+        setActivePreset(preset);
+        setVisibleMonth(new Date(start.getFullYear(), start.getMonth(), 1));
+        onChange({ start, end });
+    }
+
+    const daysInMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 0).getDate();
+    const days = Array.from({ length: 35 }, (_, index) => {
+        const currentMonth = index < daysInMonth;
+        return {
+            date: currentMonth
+                ? new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), index + 1)
+                : new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, index - daysInMonth + 1),
+            currentMonth,
+        };
+    });
+    function selectDate(date: Date) {
+        if (!value.start || value.end || date < value.start) {
+            setActivePreset(null);
+            onChange({ start: date, end: null });
+            return;
+        }
+
+        setActivePreset(null);
+        onChange({ start: value.start, end: date });
+    }
 
     return (
-        <div ref={containerRef} className="relative flex-1">
-            <button
-                type="button"
-                onClick={() => setOpen((prev) => !prev)}
-                className={`flex w-full items-center justify-between gap-1.5 whitespace-nowrap px-3 py-1 text-xs font-medium
-                    transition-colors duration-200
-                    ${isActive
-                        ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
-                        : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
-                    }`}
-            >
-                {displayLabel}
-                <ChevronDownIcon
-                    className={`shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-                />
-            </button>
+        <div className="flex-1 min-w-0">
+            <div className="w-full rounded-sm border border-gray-700 bg-gray-800 p-2 shadow-lg">
 
-            {open && (
-                <div className="absolute z-10 mt-1 w-full min-w-[9rem] overflow-hidden rounded-sm border border-gray-700 bg-gray-800 shadow-lg">
-                    {options.map((option) => {
-                        const selected = activeValue === option;
-                        return (
+                    <div className="mb-2 flex items-center justify-between">
+                        <button
+                            type="button"
+                            aria-label="Previous month"
+                            onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() - 1, 1))}
+                            className="p-1 text-gray-400 transition-colors hover:bg-gray-700 hover:text-gray-200"
+                        >
+                            <ChevronIcon direction="left" />
+                        </button>
+                        <span className="text-xs font-medium text-gray-300">{monthFormatter.format(visibleMonth)}</span>
+                        <button
+                            type="button"
+                            aria-label="Next month"
+                            onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1))}
+                            className="p-1 text-gray-400 transition-colors hover:bg-gray-700 hover:text-gray-200"
+                        >
+                            <ChevronIcon direction="right" />
+                        </button>
+                    </div>
+
+                    <div className="mb-2 flex flex-wrap gap-1">
+                        {datePresets.map((preset) => (
                             <button
-                                key={option}
+                                key={preset.key}
                                 type="button"
-                                onClick={() => {
-                                    onSelect(selected ? null : option);
-                                    setOpen(false);
-                                }}
-                                className={`block w-full px-3 py-1.5 text-left text-xs font-medium transition-colors duration-200
-                                    ${selected
-                                        ? "bg-green-500/20 text-green-400"
-                                        : "text-gray-300 hover:bg-gray-700/50"
-                                    }`}
+                                onClick={() => selectPreset(preset.key)}
+                                className={`flex-1 whitespace-nowrap px-1.5 py-1 text-[10px] font-medium transition-colors ${
+                                    activePreset === preset.key
+                                        ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
+                                        : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                }`}
                             >
-                                {optionLabels[option]}
+                                {preset.label}
                             </button>
-                        );
-                    })}
-                </div>
-            )}
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-y-1.5 text-center">
+                        {days.map(({ date, currentMonth }) => {
+                            const inRange = Boolean(value.start && value.end && date > value.start && date < value.end);
+                            const selected = sameDay(date, value.start) || sameDay(date, value.end);
+                            return (
+                                <button
+                                    key={date.toISOString()}
+                                    type="button"
+                                    onClick={() => selectDate(date)}
+                                    className={`h-6 text-xs transition-colors ${
+                                        selected
+                                            ? "bg-green-500 font-semibold text-gray-900"
+                                            : inRange
+                                                ? "bg-green-500/20 text-green-300"
+                                                : currentMonth
+                                                    ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                                                    : "text-gray-600 hover:bg-gray-700 hover:text-gray-400"
+                                    }`}
+                                >
+                                    {date.getDate()}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <div className="mt-1.5 flex items-center gap-2 border-t border-gray-700 pt-2">
+                        <input
+                            type="text"
+                            placeholder="Filter by Map Name"
+                            value={mapId}
+                            onChange={(event) => onMapIdChange(event.target.value)}
+                            className={`min-w-0 flex-1 px-3 py-1 text-xs font-medium bg-gray-700/50 text-white
+                                focus:outline-none transition-colors duration-200 hover:bg-gray-700
+                                ${mapId.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setActivePreset(null);
+                                onChange({ start: null, end: null });
+                                onMapIdChange("");
+                            }}
+                            disabled={!value.start && !mapId.trim()}
+                            className="text-[10px] font-medium text-gray-400 transition-colors hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                            Clear
+                        </button>
+                    </div>
+            </div>
         </div>
     );
 }
 
 function FilterPanel({ onFilterChange }: FilterPanelProps) {
-    const [selectedFilter, setSelectedFilter] = useState<Filter>(null);
+    const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
     const [mapId, setMapId] = useState<string>("");
 
     useEffect(() => {
         let generatedFilter = "";
 
-        if (selectedFilter) {
-            generatedFilter += `range=${selectedFilter}&`;
+        if (dateRange.start && dateRange.end) {
+            generatedFilter += `range=${formatDateForFilter(dateRange.start)},${formatDateForFilter(dateRange.end)}&`;
         }
 
         if (mapId.trim()) {
@@ -148,38 +223,17 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
         }
 
         onFilterChange(generatedFilter.replace(/&$/, ""));
-    }, [selectedFilter, mapId, onFilterChange]);
+    }, [dateRange, mapId, onFilterChange]);
 
     return (
         <div className="bg-gray-800">
             <div className="p-2">
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                        <FilterDropdown
-                            label="Time Range"
-                            activeValue={isTimePeriod(selectedFilter) ? selectedFilter : null}
-                            options={timePeriods}
-                            optionLabels={timePeriodLabels}
-                            onSelect={setSelectedFilter}
-                        />
-
-                        <FilterDropdown
-                            label="Match Count"
-                            activeValue={isMatchCount(selectedFilter) ? selectedFilter : null}
-                            options={matchCounts}
-                            optionLabels={matchCountLabels}
-                            onSelect={setSelectedFilter}
-                        />
-                    </div>
-
-                    <input
-                        type="text"
-                        placeholder="Filter by Map Name"
-                        value={mapId}
-                        onChange={(e) => setMapId(e.target.value)}
-                        className={`flex-1 px-3 py-1 text-xs font-medium bg-gray-700/50 text-white
-                            focus:outline-none transition-colors duration-200 hover:bg-gray-700
-                            ${mapId.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
+                    <DateRangePicker
+                        value={dateRange}
+                        mapId={mapId}
+                        onChange={setDateRange}
+                        onMapIdChange={setMapId}
                     />
                 </div>
             </div>
