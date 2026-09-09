@@ -196,7 +196,7 @@ function PlayersPanel({
                                             <div className="text-xs font-medium text-gray-300 mt-1">
                                                 {switcherEnabled ? (
                                                     <>
-                                                        Rating: {player.Rating ?? 'N/A'}
+                                                        Rating: {player.Rating != null ? Number(player.Rating).toFixed(2) : 'N/A'}
                                                     </>
                                                 ) : (
                                                     <>
