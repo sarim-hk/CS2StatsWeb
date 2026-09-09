@@ -18,17 +18,21 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 interface PlayerELOPanelProps {
     PlayerID: string;
+    filter?: string;
 }
 
-function PlayerELOPanel({ PlayerID }: PlayerELOPanelProps) {
+function PlayerELOPanel({ PlayerID, filter = "" }: PlayerELOPanelProps) {
     const [playerELOHistory, setPlayerELOHistory] = useState<any>(null);
 
     useEffect(() => {
+        const query = new URLSearchParams({ player_id: PlayerID });
+        new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
+
         axios
-            .get(`${API_URL}/playerelo_panel?player_id=${PlayerID}`)
+            .get(`${API_URL}/playerelo_panel?${query}`)
             .then((response) => setPlayerELOHistory(response.data))
             .catch((error) => console.error("Error fetching data:", error));
-    }, [PlayerID]);
+    }, [PlayerID, filter]);
 
     if (!playerELOHistory) {
         return null;

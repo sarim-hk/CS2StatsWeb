@@ -26,7 +26,7 @@ function Player() {
                     </div>
 
                     <div className="pt-2">
-                        <PlayerELOPanel PlayerID={PlayerID} />
+                        <PlayerELOPanel PlayerID={PlayerID} filter={filter} />
                     </div>
 
                     <div className="pt-2">
