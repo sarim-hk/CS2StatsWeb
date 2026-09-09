@@ -57,10 +57,8 @@ function PlayersPanel({
                     return (player.MatchesPlayed ?? 0) >= 9;
                 }
 
-                return (
-                    (player.MatchesPlayed ?? 0) >= 1 &&
-                    player.Rating != null
-                );
+                // ELO mode should include every player returned by the API.
+                return true;
             })
             .sort((a, b) => {
                 if (switcherEnabled) {
@@ -147,7 +145,7 @@ function PlayersPanel({
                                     ) : (
                                         <>
                                             <div>
-                                                Only players with a match played in the last 90 days are included.
+                                                All players are included, regardless of match count.
                                             </div>
 
                                             {players.length > 0 && players[0].RatingUpdateDate && (
