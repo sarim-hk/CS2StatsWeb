@@ -41,7 +41,7 @@ function Player() {
 
                 <div className="flex-2">
                     <div>
-                        <MatchesPanel PlayerID={PlayerID} filter={filter} panelSize={500} />
+                        <MatchesPanel PlayerID={PlayerID} filter={filter} panelSize={506} />
                     </div>
 
                     <div className="pt-2">
