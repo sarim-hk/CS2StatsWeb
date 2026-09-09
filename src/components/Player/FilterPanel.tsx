@@ -29,10 +29,10 @@ interface FilterPanelProps {
 const monthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" });
 const datePresets = [
     { key: "7days", label: "7 Days" },
+    { key: "14days", label: "14 Days" },
     { key: "1month", label: "1 Month" },
     { key: "3months", label: "3 Months" },
     { key: "6months", label: "6 Months" },
-    { key: "1year", label: "1 Year" },
 ] as const;
 
 type DatePreset = (typeof datePresets)[number]["key"];
@@ -76,10 +76,10 @@ function DateRangePicker({
         end.setHours(0, 0, 0, 0);
 
         const start = new Date(end);
-        if (preset === "7days") {
-            start.setDate(start.getDate() - 6);
+        if (preset === "7days" || preset === "14days") {
+            start.setDate(start.getDate() - (preset === "7days" ? 6 : 13));
         } else {
-            const months = preset === "1month" ? 1 : preset === "3months" ? 3 : preset === "6months" ? 6 : 12;
+            const months = preset === "1month" ? 1 : preset === "3months" ? 3 : 6;
             const targetMonth = start.getMonth() - months;
             const targetYear = start.getFullYear() + Math.floor(targetMonth / 12);
             const normalizedMonth = ((targetMonth % 12) + 12) % 12;
