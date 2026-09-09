@@ -83,7 +83,7 @@ function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) 
     };
 
     return (
-        <div className="bg-gray-800 p-3 h-48 flex flex-col">
+        <div className="bg-gray-800 p-4 h-[230px] flex flex-col">
             <div className="mb-2 flex shrink-0 items-center justify-between">
                 <h2 className="text-xs font-medium text-gray-300">
                     Kills / Weapon
