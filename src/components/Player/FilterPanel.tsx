@@ -137,13 +137,13 @@ function DateRangePicker({
                         </button>
                     </div>
 
-                    <div className="mb-2 flex flex-wrap gap-1">
+                    <div className="mb-2 flex flex-nowrap gap-1 overflow-x-auto">
                         {datePresets.map((preset) => (
                             <button
                                 key={preset.key}
                                 type="button"
                                 onClick={() => selectPreset(preset.key)}
-                                className={`flex-1 whitespace-nowrap px-1.5 py-1 text-[10px] font-medium transition-colors ${
+                                className={`flex-1 shrink-0 whitespace-nowrap px-1.5 py-1 text-[10px] font-medium transition-colors ${
                                     activePreset === preset.key
                                         ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
                                         : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
