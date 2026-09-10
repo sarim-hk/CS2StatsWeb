@@ -78,7 +78,7 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
     const sharedStyles = {
         container: "bg-gray-800",
         row: "border-b border-gray-700 last:border-b-0",
-        rowContent: "p-4 hover:bg-gray-700/50 transition-colors duration-200",
+        rowContent: "p-[11px] hover:bg-gray-700/50 transition-colors duration-200",
         avatarContainer: "flex flex-col items-center pt-2 w-24",
         avatarWrapper: "relative",
         avatar: "w-16 h-16 ring-2 ring-gray-600 shadow-md",
