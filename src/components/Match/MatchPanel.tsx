@@ -30,12 +30,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         {Match?.MapID}
                     </div>
 
-                    <div className="flex-1 flex justify-center">
-                        <div className="flex flex-wrap gap-1">
+                    <div className="flex-1 flex justify-center mx-4 overflow-hidden">
+                        <div className="flex flex-nowrap gap-1 overflow-x-auto scrollbar-none">
                             {Match?.Rounds.map((round) => (
                                 <div
                                     key={round.RoundID}
-                                    className={`h-6 w-6 flex items-center justify-center rounded-sm 
+                                    className={`h-6 w-6 flex-shrink-0 flex items-center justify-center rounded-sm 
                                         ${
                                             round.WinnerSide === 3
                                                 ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
