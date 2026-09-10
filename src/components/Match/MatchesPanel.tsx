@@ -61,7 +61,7 @@ function MatchesPanel({
             }}
         >
             {searchEnabled && (
-                <div className="p-2 border-b border-gray-700">
+                <div className="sticky top-0 z-10 p-2 border-b border-gray-700 bg-gray-800">
                     <div className="flex items-center gap-2">
                         <input
                             type="text"
@@ -145,7 +145,7 @@ function MatchesPanel({
                                                     <br />
                                                     {pad(d.getUTCHours())}:
                                                     {pad(d.getUTCMinutes())}:
-                                                    {pad(d.getUTCSeconds())} GMT
+                                                    {pad(d.getUTCSeconds())} UTC
                                                 </>
                                             );
                                         })()}
