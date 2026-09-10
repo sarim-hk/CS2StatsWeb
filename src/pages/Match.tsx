@@ -35,7 +35,7 @@ function Match() {
 
     return (
         <Layout>
-            <div className="flex gap-2 flex-col">
+            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:h-[calc(100dvh_-_6rem_-_2px)]">
                 <div className="bg-gray-800">
                     <MatchPanel Match={match} />
                 </div>
