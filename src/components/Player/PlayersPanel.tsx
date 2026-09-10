@@ -130,7 +130,7 @@ function PlayersPanel({
 
                             {/* Tooltip */}
                             <div className="relative group flex items-center justify-center">
-                                <span className="flex items-center justify-center w-4 h-4 rounded-full border border-gray-500 text-[10px] font-bold text-gray-400 cursor-help">
+                                <span className="font-medium text-gray-400 text-sm cursor-help">
                                     i
                                 </span>
 
