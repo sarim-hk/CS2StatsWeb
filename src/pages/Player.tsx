@@ -19,8 +19,8 @@ function Player() {
 
     return (
         <Layout>
-            <div className="flex gap-2">
-                <div className="flex-1">
+            <div className="flex min-h-0 gap-2 overflow-y-auto md:h-[calc(100dvh_-_6rem_-_2px)]">
+                <div className="min-w-0 flex-1">
                     <div>
                         <PlayerPanel PlayerID={PlayerID} />
                     </div>
@@ -39,7 +39,7 @@ function Player() {
 
                 </div>
 
-                <div className="flex-2">
+                <div className="min-w-0 flex-2">
                     <div>
                         <MatchesPanel PlayerID={PlayerID} filter={filter} panelSize={544} />
                     </div>
