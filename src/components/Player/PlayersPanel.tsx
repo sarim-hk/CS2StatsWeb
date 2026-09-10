@@ -75,7 +75,7 @@ function PlayersPanel({
         <div
             className={`bg-gray-800 ${panelSize ? "" : "h-full"} scrollbar-hide`}
             style={{
-                height: panelSize ? `${panelSize}px` : "auto",
+                height: panelSize ? `${panelSize}px` : undefined,
                 overflowY: "auto",
             }}
         >

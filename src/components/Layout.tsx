@@ -11,7 +11,7 @@ function Layout({ children }: LayoutProps) {
             <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-[#030D19] via-[#050B13] to-[#07090C]" />
 
             {/* Navigation Bar */}
-            <nav className="sticky top-0 z-50 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700/50 shadow-lg">
+            <nav className="sticky top-0 z-50 h-16 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700/50 shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
 
