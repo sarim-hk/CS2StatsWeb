@@ -80,7 +80,7 @@ function PlayersPanel({
             }}
         >
             {/* Controls */}
-            <div className="p-2 border-b border-gray-700">
+            <div className="sticky top-0 z-10 p-2 border-b border-gray-700 bg-gray-800">
                 <div className="flex items-center gap-2">
 
                     {/* Search */}
@@ -146,7 +146,7 @@ function PlayersPanel({
                                                     Last updated:{" "}
                                                     {new Date(
                                                         players[0].RatingUpdateDate
-                                                    ).toLocaleString()}
+                                                    ).toLocaleString()} UTC
                                                 </div>
                                             )}
                                         </>
@@ -161,7 +161,7 @@ function PlayersPanel({
                                                     Last updated:{" "}
                                                     {new Date(
                                                         players[0].RatingUpdateDate
-                                                    ).toLocaleString()}
+                                                    ).toLocaleString()} UTC
                                                 </div>
                                             )}
                                         </>                                    )}
