@@ -8,12 +8,14 @@ interface PlayersPanelProps {
     TeamID?: string;
     searchEnabled?: boolean;
     switcherModeEnabled?: boolean;
+    panelSize?: number;
 }
 
 function PlayersPanel({
     TeamID,
     searchEnabled = false,
-    switcherModeEnabled = true
+    switcherModeEnabled = true,
+    panelSize,
 }: PlayersPanelProps) {
     const [players, setPlayers] = useState<PlayerInfoInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -70,7 +72,13 @@ function PlayersPanel({
     }, [players, searchTerm, switcherEnabled, TeamID]);
 
     return (
-        <div className="bg-gray-800">
+        <div
+            className={`bg-gray-800 ${panelSize ? "" : "h-full"} scrollbar-hide`}
+            style={{
+                height: panelSize ? `${panelSize}px` : "auto",
+                overflowY: "auto",
+            }}
+        >
             {/* Controls */}
             <div className="p-2 border-b border-gray-700">
                 <div className="flex items-center gap-2">
