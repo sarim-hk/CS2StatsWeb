@@ -30,9 +30,9 @@ const monthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long", year: "
 const datePresets = [
     { key: "7days", label: "7 Days" },
     { key: "14days", label: "14 Days" },
-    { key: "1month", label: "1 Month" },
-    { key: "3months", label: "3 Months" },
-    { key: "6months", label: "6 Months" },
+    { key: "30days", label: "30 Days" },
+    { key: "90days", label: "90 Days" },
+    { key: "180days", label: "180 Days" },
 ] as const;
 
 type DatePreset = (typeof datePresets)[number]["key"];
@@ -76,16 +76,16 @@ function DateRangePicker({
         end.setHours(0, 0, 0, 0);
 
         const start = new Date(end);
-        if (preset === "7days" || preset === "14days") {
-            start.setDate(start.getDate() - (preset === "7days" ? 6 : 13));
-        } else {
-            const months = preset === "1month" ? 1 : preset === "3months" ? 3 : 6;
-            const targetMonth = start.getMonth() - months;
-            const targetYear = start.getFullYear() + Math.floor(targetMonth / 12);
-            const normalizedMonth = ((targetMonth % 12) + 12) % 12;
-            const lastDayOfTargetMonth = new Date(targetYear, normalizedMonth + 1, 0).getDate();
-            start.setFullYear(targetYear, normalizedMonth, Math.min(start.getDate(), lastDayOfTargetMonth));
-        }
+        const days = preset === "7days"
+            ? 7
+            : preset === "14days"
+                ? 14
+                : preset === "30days"
+                    ? 30
+                    : preset === "90days"
+                        ? 90
+                        : 180;
+        start.setDate(start.getDate() - (days - 1));
 
         setActivePreset(preset);
         setVisibleMonth(new Date(start.getFullYear(), start.getMonth(), 1));
