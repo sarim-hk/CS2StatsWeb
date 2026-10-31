@@ -15,10 +15,10 @@ function Player() {
     const [filter, setFilter] = useState<string>("");
     const [showPlayerELO, setShowPlayerELO] = useState(false);
     const [autoSwitchPaused, setAutoSwitchPaused] = useState(false);
-    const touchStartX = useRef<number | null>(null);
+    const profileTouchStart = useRef<{ x: number; y: number } | null>(null);
     const [showFilter, setShowFilter] = useState(true);
     const [filterAutoSwitchPaused, setFilterAutoSwitchPaused] = useState(false);
-    const filterTouchStartX = useRef<number | null>(null);
+    const filterTouchStart = useRef<{ x: number; y: number } | null>(null);
     const [notFound, setNotFound] = useState(false);
     const [hasError, setHasError] = useState(false);
     const handleNotFound = useCallback(() => setNotFound(true), []);
@@ -44,32 +44,38 @@ function Player() {
         return () => window.clearInterval(interval);
     }, [filterAutoSwitchPaused]);
     const handleProfileTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-        touchStartX.current = event.touches[0]?.clientX ?? null;
+        const touch = event.touches[0];
+        profileTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
     };
     const handleProfileTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-        if (touchStartX.current === null) return;
+        if (profileTouchStart.current === null) return;
 
-        const distance = event.changedTouches[0].clientX - touchStartX.current;
-        if (Math.abs(distance) >= 40) {
+        const touch = event.changedTouches[0];
+        const horizontalDistance = touch.clientX - profileTouchStart.current.x;
+        const verticalDistance = touch.clientY - profileTouchStart.current.y;
+        if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
             setAutoSwitchPaused(true);
             setShowPlayerELO((current) => !current);
         }
 
-        touchStartX.current = null;
+        profileTouchStart.current = null;
     };
     const handleFilterTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-        filterTouchStartX.current = event.touches[0]?.clientX ?? null;
+        const touch = event.touches[0];
+        filterTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
     };
     const handleFilterTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-        if (filterTouchStartX.current === null) return;
+        if (filterTouchStart.current === null) return;
 
-        const distance = event.changedTouches[0].clientX - filterTouchStartX.current;
-        if (Math.abs(distance) >= 40) {
+        const touch = event.changedTouches[0];
+        const horizontalDistance = touch.clientX - filterTouchStart.current.x;
+        const verticalDistance = touch.clientY - filterTouchStart.current.y;
+        if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
             setFilterAutoSwitchPaused(true);
             setShowFilter((current) => !current);
         }
 
-        filterTouchStartX.current = null;
+        filterTouchStart.current = null;
     };
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
