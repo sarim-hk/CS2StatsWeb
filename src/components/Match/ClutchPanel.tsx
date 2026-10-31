@@ -79,8 +79,8 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
                                         </div>
                                     </div>
 
-                                    <div className={`${ui.statCard} col-span-1 h-16 flex-col items-center justify-center gap-1 md:col-span-2 md:block md:h-auto`}>
-                                        <div className="flex h-full w-full flex-col items-center justify-center gap-0 md:block">
+                                    <div className={`${ui.statCard} row-span-2 h-[4.25rem] flex-col items-stretch justify-center gap-1 md:col-span-2 md:row-span-1 md:block md:h-auto`}>
+                                        <div className="flex min-h-0 w-full flex-1 flex-col items-center justify-center md:block">
                                             <div className={`${ui.statLabel} text-center md:text-left`}>Clutch Timeline</div>
                                             {/* Scrolls inside its own card. Chips are centred with auto margins
                                                 (not justify-center), so the first chips stay reachable when they overflow. */}
