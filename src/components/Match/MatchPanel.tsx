@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
 import { Link } from 'react-router-dom';
 
@@ -40,6 +40,26 @@ function MatchPanel({ Match }: MatchPanelProps) {
         : [];
 
     const [winningTeamId, losingTeamId] = sortedTeams.map((team) => team[0]);
+    const longestUsernameLength = Math.max(
+        0,
+        ...sortedTeams.flatMap(([, team]) =>
+            Object.values(team.Players).map((player) => player.Overall.Username.length),
+        ),
+    );
+    const longestTeamNameLength = Math.max(
+        0,
+        ...sortedTeams.map(([, team]) => team.TeamName.length),
+    );
+    const teamColumnStyle = {
+        '--team-column-mobile-width': `calc(${Math.max(8, longestUsernameLength)}ch + 1rem)`,
+        '--team-column-desktop-width': `calc(${Math.max(8, longestUsernameLength, longestTeamNameLength)}ch + 1rem)`,
+    } as CSSProperties;
+
+    const truncateTeamName = (teamName: string) => {
+        if (teamName.length <= longestUsernameLength) return teamName;
+
+        return `${teamName.slice(0, Math.max(1, longestUsernameLength - 1))}…`;
+    };
 
     const syncTableScroll = (sourceTeamId: string, scrollLeft: number) => {
         Object.entries(tableScrollContainers.current).forEach(([teamId, container]) => {
@@ -161,9 +181,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         onScroll={(event) => syncTableScroll(teamId, event.currentTarget.scrollLeft)}
                         className="overflow-x-auto"
                     >
-                        <table className="w-full min-w-[64rem] table-fixed">
+                        <table className="w-full min-w-max table-fixed max-md:[&_th]:px-2 max-md:[&_td]:px-2 md:min-w-[64rem]">
                             <colgroup>
-                                <col className="w-48" />
+                                <col
+                                    style={teamColumnStyle}
+                                    className="w-[var(--team-column-mobile-width)] md:w-[var(--team-column-desktop-width)]"
+                                />
                                 {MATCH_STAT_HEADERS.map((header) => (
                                     <col
                                         key={header.id}
@@ -179,10 +202,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                             : 'border-blue-500/50'
                                     }`}
                                 >
-                                    <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-3 text-left font-medium text-gray-300">
+                                    <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-2 text-left font-medium text-gray-300 md:px-3">
                                         <div className="flex items-center space-x-2">
                                             <span
-                                                className={`w-1.5 h-1.5 rounded-sm ${
+                                                className={`h-1.5 w-1.5 shrink-0 rounded-sm ${
                                                     Match?.Teams[teamId].Side === 2
                                                         ? 'bg-orange-500'
                                                         : 'bg-blue-500'
@@ -193,9 +216,15 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 {/* Team Name Link */}
                                                 <Link
                                                     to={`/team/${teamId}`}
-                                                    className="text-xs truncate hover:text-blue-400 transition-colors"
+                                                    className="text-xs hover:text-blue-400 transition-colors"
+                                                    title={Match?.Teams[teamId].TeamName}
                                                 >
-                                                    {Match?.Teams[teamId].TeamName}
+                                                    <span className="md:hidden">
+                                                        {truncateTeamName(Match?.Teams[teamId].TeamName ?? "")}
+                                                    </span>
+                                                    <span className="hidden md:inline">
+                                                        {Match?.Teams[teamId].TeamName}
+                                                    </span>
                                                 </Link>
 
                                                 <span className="text-[10px] truncate text-gray-400 pl-1">
@@ -236,7 +265,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 key={player.Overall.PlayerID}
                                                 className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                                             >
-                                                <td className="sticky left-0 z-10 whitespace-nowrap bg-gray-800 py-1.5 px-3">
+                                                <td className="sticky left-0 z-10 whitespace-nowrap bg-gray-800 py-1.5 px-2 md:px-3">
                                                     <Link
                                                         to={`/player/${player.Overall.PlayerID}`}
                                                         className="text-xs text-gray-200 hover:text-blue-400 transition-colors md:block md:max-w-48 md:truncate"
