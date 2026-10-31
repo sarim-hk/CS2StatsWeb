@@ -150,7 +150,7 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
     ];
 
     return (
-        <div className={ui.panel}>
+        <div className={ui.panelFlat}>
             <div className={ui.panelHeader}>
                 <div className="flex justify-center gap-2 p-2">
                     <button
@@ -176,7 +176,7 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
                     <div key={row.label} className={ui.panelRow}>
                         <div className={ui.panelRowContent}>
                             <div className="flex items-center justify-between">
-                                <div className={ui.statLabel}>{row.label}</div>
+                                <div className={ui.statRowLabel}>{row.label}</div>
                                 <div className="text-base font-semibold">{row.value}</div>
                             </div>
                         </div>

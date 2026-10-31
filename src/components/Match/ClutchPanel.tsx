@@ -43,7 +43,7 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
     };
 
     return (
-        <div className={ui.panel}>
+        <div className={ui.panelFlat}>
             {Object.values(team.Players).map(player => {
                 const stats = calculateClutchStats(player.Overall.PlayerID);
                 const events = [

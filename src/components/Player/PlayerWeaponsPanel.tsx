@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient, { isRequestCanceled } from "../../apiClient";
 import { Doughnut } from "react-chartjs-2";
+import { ui } from "../ui";
 import {
     ArcElement,
     Chart as ChartJS,
@@ -91,7 +92,7 @@ function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) 
     };
 
     return (
-        <div className="bg-gray-800 p-4 h-[230px] flex flex-col">
+        <div className={`${ui.panelFlat} flex h-[230px] flex-col p-4`}>
             <div className="mb-2 flex shrink-0 items-center justify-between">
                 <h2 className="text-xs font-medium text-gray-300">
                     Kills / Weapon

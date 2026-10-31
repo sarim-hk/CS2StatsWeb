@@ -226,7 +226,7 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
     }, [dateRange, mapId, onFilterChange]);
 
     return (
-        <div className="bg-gray-800">
+        <div className={ui.panelFlat}>
             <div className="p-2">
                 <div className="flex flex-col gap-2">
                     <DateRangePicker

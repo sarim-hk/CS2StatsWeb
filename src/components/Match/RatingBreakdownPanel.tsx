@@ -18,7 +18,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
     }
 
     return (
-        <div className={ui.panel}>
+        <div className={ui.panelFlat}>
             {Object.values(team.Players).map(player => {
 
                 return (

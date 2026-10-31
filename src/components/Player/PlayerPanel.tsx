@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import apiClient, { isRequestCanceled } from '../../apiClient';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
+import { ui } from '../ui';
 
 interface PlayerPanelProps {
     PlayerID: string;
@@ -30,7 +31,7 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
     }, [PlayerID]);
 
     return (
-        <div className="bg-gray-800">
+        <div className={ui.panelFlat}>
             <div className="p-4">
                 <div className="flex items-center justify-between gap-4">
                     <a

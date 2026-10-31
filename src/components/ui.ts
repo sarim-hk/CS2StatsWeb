@@ -1,5 +1,6 @@
 export const ui = {
-    panel: "overflow-hidden rounded-sm border border-gray-700 bg-gray-800",
+    panel: "overflow-hidden border border-gray-700 bg-gray-800",
+    panelFlat: "overflow-hidden bg-gray-800",
     panelHeader: "border-b border-gray-700 bg-gray-800",
     panelRow: "border-b border-gray-700 last:border-b-0",
     panelRowContent: "p-3 transition-colors duration-200 hover:bg-gray-700/50",
@@ -12,6 +13,7 @@ export const ui = {
     detailGrid: "flex-1 grid grid-cols-3 gap-6",
     statCard: "rounded-sm bg-gray-700/50 p-4 transition-colors duration-200 hover:bg-gray-700",
     statLabel: "mb-1 text-sm font-medium text-gray-400",
+    statRowLabel: "text-sm font-medium text-gray-400",
     statValue: "text-2xl font-semibold",
     statSecondary: "text-sm text-gray-500",
 } as const;

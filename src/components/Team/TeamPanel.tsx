@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import apiClient, { isRequestCanceled } from '../../apiClient';
 import TeamInfoInterface from '../../interfaces/TeamInfoInterface';
 import PlayersPanel from '../Player/PlayersPanel';
+import { ui } from '../ui';
 
 interface TeamPanelProps {
     TeamID: string;
@@ -31,7 +32,7 @@ function TeamPanel({ TeamID }: TeamPanelProps) {
     }, [TeamID]);
 
     return (
-        <div className="bg-gray-800">
+        <div className={ui.panelFlat}>
             <div className="p-4 pb-0">
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4 flex-1">

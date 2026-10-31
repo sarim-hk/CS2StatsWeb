@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient, { isRequestCanceled } from "../../apiClient";
 import { Line } from "react-chartjs-2";
+import { ui } from "../ui";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -136,7 +137,7 @@ function PlayerELOPanel({ PlayerID, filter = "" }: PlayerELOPanelProps) {
     };
 
     return (
-        <div className="bg-gray-800">
+        <div className={ui.panelFlat}>
             <div className="h-48">
                 <Line data={data} options={options as any} />
             </div>

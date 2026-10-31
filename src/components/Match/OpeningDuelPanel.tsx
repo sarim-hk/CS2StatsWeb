@@ -77,7 +77,7 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
     };
 
     return (
-        <div className={ui.panel}>
+        <div className={ui.panelFlat}>
             {Object.values(team.Players).map(player => {
                 const stats = calculateOpeningDuelStats(player.Overall.PlayerID);
 
