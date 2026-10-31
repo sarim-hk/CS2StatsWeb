@@ -8,9 +8,10 @@ interface PlayerStatsPanelProps {
     PlayerID: string;
     filter: string;
     onError?: () => void;
+    className?: string;
 }
 
-function PlayerStatsPanel({ PlayerID, filter, onError }: PlayerStatsPanelProps) {
+function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerStatsPanelProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>();
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
@@ -142,7 +143,7 @@ function PlayerStatsPanel({ PlayerID, filter, onError }: PlayerStatsPanelProps) 
     ];
 
     return (
-        <div className={ui.panelFlat}>
+        <div className={`${ui.panelFlat} ${className}`}>
             <div className={ui.panelHeader}>
                 <div className="flex justify-center gap-2 p-2">
                     <button

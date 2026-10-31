@@ -16,6 +16,9 @@ function Player() {
     const [showPlayerELO, setShowPlayerELO] = useState(false);
     const [autoSwitchPaused, setAutoSwitchPaused] = useState(false);
     const touchStartX = useRef<number | null>(null);
+    const [showFilter, setShowFilter] = useState(true);
+    const [filterAutoSwitchPaused, setFilterAutoSwitchPaused] = useState(false);
+    const filterTouchStartX = useRef<number | null>(null);
     const [notFound, setNotFound] = useState(false);
     const [hasError, setHasError] = useState(false);
     const handleNotFound = useCallback(() => setNotFound(true), []);
@@ -30,6 +33,16 @@ function Player() {
 
         return () => window.clearInterval(interval);
     }, [autoSwitchPaused]);
+
+    useEffect(() => {
+        if (filterAutoSwitchPaused || !window.matchMedia("(max-width: 767px)").matches) return;
+
+        const interval = window.setInterval(() => {
+            setShowFilter((current) => !current);
+        }, 5000);
+
+        return () => window.clearInterval(interval);
+    }, [filterAutoSwitchPaused]);
     const handleProfileTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
         touchStartX.current = event.touches[0]?.clientX ?? null;
     };
@@ -43,6 +56,20 @@ function Player() {
         }
 
         touchStartX.current = null;
+    };
+    const handleFilterTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+        filterTouchStartX.current = event.touches[0]?.clientX ?? null;
+    };
+    const handleFilterTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+        if (filterTouchStartX.current === null) return;
+
+        const distance = event.changedTouches[0].clientX - filterTouchStartX.current;
+        if (Math.abs(distance) >= 40) {
+            setFilterAutoSwitchPaused(true);
+            setShowFilter((current) => !current);
+        }
+
+        filterTouchStartX.current = null;
     };
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
@@ -59,8 +86,8 @@ function Player() {
 
     return (
         <Layout>
-            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:flex-row md:h-[calc(100dvh_-_6rem_-_2px)]">
-                <div className="min-w-0 flex-none md:flex-1">
+            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:h-[calc(100dvh_-_6rem_-_2px)]">
+                <div className="min-w-0 md:contents">
                     <div
                         className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:h-auto md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
                         onTouchStart={handleProfileTouchStart}
@@ -74,18 +101,28 @@ function Player() {
                         </div>
                     </div>
 
-                    <div className="pt-2">
-                        <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
+                    <div className="pt-2 md:col-start-1 md:row-start-3">
+                        <FilterPanel onFilterChange={setFilter} />
                     </div>
 
-                    <div className="pt-2">
-                        <FilterPanel onFilterChange={setFilter} />
+                    <div
+                        className="relative mt-2 h-[300px] touch-pan-y overflow-hidden md:contents"
+                        onTouchStart={handleFilterTouchStart}
+                        onTouchEnd={handleFilterTouchEnd}
+                    >
+                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:col-start-1 md:row-start-2 md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+                            <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
+                        </div>
+
+                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:col-start-2 md:row-start-2 md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+                            <PlayerStatsPanel PlayerID={PlayerID} filter={filter} onError={handleError} className="h-full md:h-auto" />
+                        </div>
                     </div>
 
                 </div>
 
-                <div className="flex min-w-0 flex-none flex-col md:flex-2">
-                    <div className="order-2 pt-2 md:order-1 md:pt-0">
+                <div className="min-w-0 md:contents">
+                    <div className="md:col-start-2 md:row-start-1">
                         <MatchesPanel
                             PlayerID={PlayerID}
                             filter={filter}
@@ -93,10 +130,6 @@ function Player() {
                             mobileNaturalHeight
                             onError={handleError}
                         />
-                    </div>
-
-                    <div className="order-1 pt-2 md:order-2">
-                        <PlayerStatsPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
                     </div>
 
                 </div>

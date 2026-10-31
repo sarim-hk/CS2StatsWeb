@@ -85,7 +85,7 @@ function PlayerWeaponsPanel({ PlayerID, filter = "", onError }: PlayerWeaponsPan
     };
 
     return (
-        <div className={`${ui.panelFlat} flex h-[230px] flex-col p-4`}>
+        <div className={`${ui.panelFlat} flex h-full flex-col p-4 md:h-[230px]`}>
             <div className="mb-2 flex shrink-0 items-center justify-between">
                 <h2 className="text-xs font-medium text-gray-300">
                     Kills / Weapon
