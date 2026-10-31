@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -184,8 +185,8 @@ function PlayersPanel({
                                 <div className="flex items-center justify-between gap-3">
 
                                     {/* Player info */}
-                                    <a
-                                        href={`/player/${player.PlayerID}`}
+                                    <Link
+                                        to={`/player/${player.PlayerID}`}
                                         className="flex items-center gap-3 flex-1"
                                     >
                                         <div className="relative">
@@ -213,7 +214,7 @@ function PlayersPanel({
                                                 )}
                                             </div>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
+import { Link } from 'react-router-dom';
 
 interface MatchPanelProps {
     Match: FullMatchInterface | undefined;
@@ -57,12 +58,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                     : 'text-orange-400'
                             }`}
                         >
-                            <a
-                                href={`/team/${winningTeamId}`}
+                            <Link
+                                to={`/team/${winningTeamId}`}
                                 className="hover:underline"
                             >
                                 {Match?.Teams[winningTeamId].TeamName}
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Score */}
@@ -98,12 +99,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                     : 'text-orange-400'
                             }`}
                         >
-                            <a
-                                href={`/team/${losingTeamId}`}
+                            <Link
+                                to={`/team/${losingTeamId}`}
                                 className="hover:underline"
                             >
                                 {Match?.Teams[losingTeamId].TeamName}
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -134,12 +135,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
 
                                             <span>
                                                 {/* Team Name Link */}
-                                                <a
-                                                    href={`/team/${teamId}`}
+                                                <Link
+                                                    to={`/team/${teamId}`}
                                                     className="text-xs truncate hover:text-blue-400 transition-colors"
                                                 >
                                                     {Match?.Teams[teamId].TeamName}
-                                                </a>
+                                                </Link>
 
                                                 <span className="text-[10px] truncate text-gray-400 pl-1">
                                                     {(Match?.Teams[teamId].DeltaELO ?? 0) >= 0
@@ -190,12 +191,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                                             >
                                                 <td className="py-1.5 px-3">
-                                                    <a
-                                                        href={`/player/${player.Overall.PlayerID}`}
+                                                    <Link
+                                                        to={`/player/${player.Overall.PlayerID}`}
                                                         className="text-xs text-gray-200 hover:text-blue-400 transition-colors"
                                                     >
                                                         {player.Overall.Username}
-                                                    </a>
+                                                    </Link>
                                                 </td>
 
                                                 <td className="py-1.5 px-3 text-center text-xs">

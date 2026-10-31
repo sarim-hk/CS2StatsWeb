@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface LayoutProps {
     children: ReactNode;
@@ -16,17 +17,17 @@ function Layout({ children }: LayoutProps) {
                     <div className="flex items-center justify-between h-16">
 
                         {/* Logo */}
-                        <a href="/" className="flex-shrink-0">
+                        <Link to="/" className="flex-shrink-0">
                             <img
                                 className="h-10 w-auto hover:opacity-90 transition-opacity"
                                 src="/logo_wide.png"
                                 alt="Logo"
                             />
-                        </a>
+                        </Link>
 
                         {/* Navigation Links */}
                         <div className="flex space-x-1">
-                            <NavLink href="/stats">Stats</NavLink>
+                            <NavLink to="/stats">Stats</NavLink>
                         </div>
 
                     </div>
@@ -46,14 +47,14 @@ function Layout({ children }: LayoutProps) {
 }
 
 // Navigation Link Component
-function NavLink({ href, children }: { href: string, children: ReactNode }) {
+function NavLink({ to, children }: { to: string, children: ReactNode }) {
     return (
-        <a
-            href={href}
+        <Link
+            to={to}
             className="px-4 py-2 rounded-sm text-[18px] font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
         >
             {children}
-        </a>
+        </Link>
     );
 }
 
