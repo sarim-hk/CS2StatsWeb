@@ -44,7 +44,11 @@ function Match() {
     }
 
     if (!match) {
-        return null;
+        return (
+            <Layout>
+                <div className="min-h-[calc(100dvh_-_6rem_-_2px)] bg-gray-800" />
+            </Layout>
+        );
     }
 
     return (
