@@ -7,7 +7,7 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
     return (
-        <div className="relative min-h-screen text-white">
+        <div className="relative min-h-[100dvh] text-white">
             
             <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-[#030D19] via-[#050B13] to-[#07090C]" />
 
