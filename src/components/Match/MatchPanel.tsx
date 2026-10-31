@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
 import { Link } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ const MATCH_STAT_HEADERS = [
 
 function MatchPanel({ Match }: MatchPanelProps) {
     const [showRounds, setShowRounds] = useState(false);
+    const tableScrollContainers = useRef<Record<string, HTMLDivElement | null>>({});
     const resultOrder = { Win: -1, Loss: 1, Tie: 0 };
 
     const sortedTeams = Match
@@ -39,6 +40,14 @@ function MatchPanel({ Match }: MatchPanelProps) {
         : [];
 
     const [winningTeamId, losingTeamId] = sortedTeams.map((team) => team[0]);
+
+    const syncTableScroll = (sourceTeamId: string, scrollLeft: number) => {
+        Object.entries(tableScrollContainers.current).forEach(([teamId, container]) => {
+            if (teamId !== sourceTeamId && container && container.scrollLeft !== scrollLeft) {
+                container.scrollLeft = scrollLeft;
+            }
+        });
+    };
 
     return (
         <div className="rounded-sm overflow-hidden shadow-lg bg-gray-800 border border-gray-700">
@@ -145,8 +154,23 @@ function MatchPanel({ Match }: MatchPanelProps) {
             {/* Team Tables */}
             {[winningTeamId, losingTeamId].map((teamId) => (
                 <div key={teamId} className="p-2">
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-max">
+                    <div
+                        ref={(element) => {
+                            tableScrollContainers.current[teamId] = element;
+                        }}
+                        onScroll={(event) => syncTableScroll(teamId, event.currentTarget.scrollLeft)}
+                        className="overflow-x-auto"
+                    >
+                        <table className="w-full min-w-[64rem] table-fixed">
+                            <colgroup>
+                                <col className="w-48" />
+                                {MATCH_STAT_HEADERS.map((header) => (
+                                    <col
+                                        key={header.id}
+                                        className={`w-16 ${header.id.startsWith('empty-') ? 'hidden md:table-column' : ''}`}
+                                    />
+                                ))}
+                            </colgroup>
                             <thead>
                                 <tr
                                     className={`border-b ${
@@ -155,7 +179,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                             : 'border-blue-500/50'
                                     }`}
                                 >
-                                    <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-3 text-left font-medium text-gray-300 md:w-48 md:max-w-48">
+                                    <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-3 text-left font-medium text-gray-300">
                                         <div className="flex items-center space-x-2">
                                             <span
                                                 className={`w-1.5 h-1.5 rounded-sm ${
@@ -212,7 +236,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 key={player.Overall.PlayerID}
                                                 className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                                             >
-                                                <td className="sticky left-0 z-10 whitespace-nowrap bg-gray-800 py-1.5 px-3 md:w-48 md:max-w-48">
+                                                <td className="sticky left-0 z-10 whitespace-nowrap bg-gray-800 py-1.5 px-3">
                                                     <Link
                                                         to={`/player/${player.Overall.PlayerID}`}
                                                         className="text-xs text-gray-200 hover:text-blue-400 transition-colors md:block md:max-w-48 md:truncate"
