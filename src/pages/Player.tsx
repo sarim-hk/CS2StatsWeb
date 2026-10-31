@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Layout from "../components/Layout";
@@ -8,41 +8,45 @@ import PlayerStatsPanel from '../components/Player/PlayerStatsPanel';
 import PlayerELOPanel from '../components/Player/PlayerELOPanel';
 import FilterPanel from '../components/Player/FilterPanel';
 import PlayerWeaponsPanel from '../components/Player/PlayerWeaponsPanel';
+import MobileSwipeHint from '../components/MobileSwipeHint';
 import NotFound from './NotFound';
+
+type SlideDirection = "forward" | "backward";
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
     const [filter, setFilter] = useState<string>("");
     const [showPlayerELO, setShowPlayerELO] = useState(false);
-    const [autoSwitchPaused, setAutoSwitchPaused] = useState(false);
+    const [isProfileSliding, setIsProfileSliding] = useState(false);
+    const [profileSlideDirection, setProfileSlideDirection] = useState<SlideDirection>("forward");
     const profileTouchStart = useRef<{ x: number; y: number } | null>(null);
     const [showFilter, setShowFilter] = useState(true);
-    const [filterAutoSwitchPaused, setFilterAutoSwitchPaused] = useState(false);
+    const [isFilterSliding, setIsFilterSliding] = useState(false);
+    const [statsSlideDirection, setStatsSlideDirection] = useState<SlideDirection>("forward");
     const filterTouchStart = useRef<{ x: number; y: number } | null>(null);
     const [notFound, setNotFound] = useState(false);
     const [hasError, setHasError] = useState(false);
     const handleNotFound = useCallback(() => setNotFound(true), []);
     const handleError = useCallback(() => setHasError(true), []);
+    const moveProfileView = useCallback((direction: SlideDirection) => {
+        if (isProfileSliding) return;
 
-    useEffect(() => {
-        if (autoSwitchPaused || !window.matchMedia("(max-width: 767px)").matches) return;
-
-        const interval = window.setInterval(() => {
+        setProfileSlideDirection(direction);
+        window.requestAnimationFrame(() => {
             setShowPlayerELO((current) => !current);
-        }, 5000);
+            setIsProfileSliding(true);
+        });
+    }, [isProfileSliding]);
+    const moveStatsView = useCallback((direction: SlideDirection) => {
+        if (isFilterSliding) return;
 
-        return () => window.clearInterval(interval);
-    }, [autoSwitchPaused]);
-
-    useEffect(() => {
-        if (filterAutoSwitchPaused || !window.matchMedia("(max-width: 767px)").matches) return;
-
-        const interval = window.setInterval(() => {
+        setStatsSlideDirection(direction);
+        window.requestAnimationFrame(() => {
             setShowFilter((current) => !current);
-        }, 5000);
+            setIsFilterSliding(true);
+        });
+    }, [isFilterSliding]);
 
-        return () => window.clearInterval(interval);
-    }, [filterAutoSwitchPaused]);
     const handleProfileTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
         const touch = event.touches[0];
         profileTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
@@ -54,8 +58,7 @@ function Player() {
         const horizontalDistance = touch.clientX - profileTouchStart.current.x;
         const verticalDistance = touch.clientY - profileTouchStart.current.y;
         if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
-            setAutoSwitchPaused(true);
-            setShowPlayerELO((current) => !current);
+            moveProfileView(horizontalDistance < 0 ? "forward" : "backward");
         }
 
         profileTouchStart.current = null;
@@ -71,8 +74,7 @@ function Player() {
         const horizontalDistance = touch.clientX - filterTouchStart.current.x;
         const verticalDistance = touch.clientY - filterTouchStart.current.y;
         if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
-            setFilterAutoSwitchPaused(true);
-            setShowFilter((current) => !current);
+            moveStatsView(horizontalDistance < 0 ? "forward" : "backward");
         }
 
         filterTouchStart.current = null;
@@ -99,12 +101,27 @@ function Player() {
                         onTouchStart={handleProfileTouchStart}
                         onTouchEnd={handleProfileTouchEnd}
                     >
-                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:h-auto md:pointer-events-auto md:opacity-100 md:transition-none ${showPlayerELO ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+                        <div
+                            className={`absolute inset-0 ${isProfileSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:transition-none ${showPlayerELO ? `${isProfileSliding ? (profileSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (profileSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none` : "translate-x-0"}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) setIsProfileSliding(false);
+                            }}
+                        >
                             <PlayerPanel PlayerID={PlayerID} onNotFound={handleNotFound} onError={handleError} />
                         </div>
-                        <div className={`absolute inset-0 border-t border-gray-700 transition-opacity duration-300 md:static md:h-auto md:pointer-events-auto md:border-0 md:pt-2 md:opacity-100 md:transition-none ${showPlayerELO ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+                        <div
+                            className={`absolute inset-0 border-t border-gray-700 ${isProfileSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:border-0 md:pt-2 md:transition-none ${showPlayerELO ? "translate-x-0" : `${isProfileSliding ? (profileSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (profileSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none`}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) setIsProfileSliding(false);
+                            }}
+                        >
                             <PlayerELOPanel PlayerID={PlayerID} filter={filter} />
                         </div>
+                        <MobileSwipeHint
+                            activeIndex={showPlayerELO ? 1 : 0}
+                            direction={profileSlideDirection}
+                            isSliding={isProfileSliding}
+                        />
                     </div>
 
                     <div
@@ -112,13 +129,28 @@ function Player() {
                         onTouchStart={handleFilterTouchStart}
                         onTouchEnd={handleFilterTouchEnd}
                     >
-                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:w-full md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+                        <div
+                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${showFilter ? `${isFilterSliding ? (statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none` : "translate-x-0"}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                            }}
+                        >
                             <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} />
                         </div>
 
-                        <div className={`absolute inset-0 transition-opacity duration-300 md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:opacity-100 md:transition-none ${showFilter ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+                        <div
+                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${showFilter ? "translate-x-0" : `${isFilterSliding ? (statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none`}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                            }}
+                        >
                             <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full md:h-auto" />
                         </div>
+                        <MobileSwipeHint
+                            activeIndex={showFilter ? 1 : 0}
+                            direction={statsSlideDirection}
+                            isSliding={isFilterSliding}
+                        />
                     </div>
 
                     <div className="order-1 pt-2 md:order-2">
