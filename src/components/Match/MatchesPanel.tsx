@@ -11,6 +11,7 @@ interface MatchesPanelProps {
     fullscreen?: boolean;
     searchEnabled?: boolean;
     panelSize?: number;
+    mobileNaturalHeight?: boolean;
     filter?: string;
     onError?: () => void;
 }
@@ -21,6 +22,7 @@ function MatchesPanel({
     fullscreen = false,
     searchEnabled = false,
     panelSize,
+    mobileNaturalHeight = false,
     filter = "",
     onError,
 }: MatchesPanelProps) {
@@ -53,7 +55,7 @@ function MatchesPanel({
 
     return (
         <div
-            className={`${ui.panelFlat} ${panelSize ? "" : "h-full"} scrollbar-hide`}
+            className={`${ui.panelFlat} ${panelSize ? "" : "h-full"} ${mobileNaturalHeight ? "max-md:!h-auto max-md:!overflow-visible" : ""} scrollbar-hide`}
             style={{
                 height: panelSize ? `${panelSize}px` : undefined,
                 overflowY: "auto",
@@ -142,10 +144,12 @@ function MatchesPanel({
                                                     {pad(d.getUTCDate())}{" "}
                                                     {months[d.getUTCMonth()]}{" "}
                                                     {d.getUTCFullYear()}
-                                                    <br />
-                                                    {pad(d.getUTCHours())}:
-                                                    {pad(d.getUTCMinutes())}:
-                                                    {pad(d.getUTCSeconds())} UTC
+                                                    <span className="hidden md:inline">
+                                                        <br />
+                                                        {pad(d.getUTCHours())}:
+                                                        {pad(d.getUTCMinutes())}:
+                                                        {pad(d.getUTCSeconds())} UTC
+                                                    </span>
                                                 </>
                                             );
                                         })()}

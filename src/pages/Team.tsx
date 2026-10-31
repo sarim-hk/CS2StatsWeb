@@ -28,22 +28,19 @@ function Team() {
 
     return (
         <Layout>
-            <div className="flex min-h-0 gap-2 overflow-y-auto md:h-[calc(100dvh_-_6rem_-_2px)]">
-                <div className="min-w-0 flex-1">
-                    <div>
+            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:flex-row md:h-[calc(100dvh_-_6rem_-_2px)]">
+                <div className="min-w-0 flex-none md:flex-1">
+                    <div className="overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:overflow-visible md:rounded-none md:border-0 md:bg-transparent">
                         <TeamPanel TeamID={TeamID} onNotFound={handleNotFound} onError={handleError} />
-                    </div>
-                    
-                    <div className="pt-2">
-                        <TeamELOPanel TeamID={TeamID} onError={handleError} />
+                        <div className="border-t border-gray-700 md:border-0 md:pt-2">
+                            <TeamELOPanel TeamID={TeamID} onError={handleError} />
+                        </div>
                     </div>
 
                 </div>
 
-                <div className="min-w-0 flex-2">
-                    <div>
-                        <MatchesPanel TeamID={TeamID} onError={handleError} />
-                    </div>
+                <div className="min-w-0 flex-none md:flex-2">
+                    <MatchesPanel TeamID={TeamID} onError={handleError} />
                 </div>
             </div>
         </Layout>

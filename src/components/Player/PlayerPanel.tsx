@@ -29,10 +29,10 @@ function PlayerPanel({ PlayerID, onNotFound, onError }: PlayerPanelProps) {
     return (
         <div className={ui.panelFlat}>
             <div className="p-4">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center justify-center gap-4 md:justify-between">
                     <a
                         href={`https://steamcommunity.com/profiles/${PlayerID}`}
-                        className="flex items-center gap-4 flex-1"
+                        className="flex flex-1 items-center justify-center gap-4 md:justify-start"
                     >
                         <div className="relative">
                             <img
