@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient, { isRequestCanceled } from '../../apiClient';
 import TeamInfoInterface from '../../interfaces/TeamInfoInterface';
 import PlayersPanel from '../Player/PlayersPanel';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface TeamPanelProps {
     TeamID: string;
@@ -13,15 +11,23 @@ function TeamPanel({ TeamID }: TeamPanelProps) {
     const [Team, setTeam] = useState<TeamInfoInterface>();
 
     useEffect(() => {
-        axios
-            .get<TeamInfoInterface>(`${API_URL}/team_panel?team_id=${TeamID}`)
+        const controller = new AbortController();
+
+        apiClient
+            .get<TeamInfoInterface>("/team_panel", {
+                params: { team_id: TeamID },
+                signal: controller.signal,
+            })
             .then((response) => {
                 setTeam(response.data);
             })
             .catch((error) => {
-                console.error("Error fetching data:", error);
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching team data:", error);
+                }
             });
 
+        return () => controller.abort();
     }, [TeamID]);
 
     return (

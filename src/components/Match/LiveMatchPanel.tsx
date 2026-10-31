@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient, { isRequestCanceled } from "../../apiClient";
 import LiveMatchInterface from "../../interfaces/LiveMatchInterface";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 function LiveMatchPanel() {
     const [liveMatch, setLiveMatch] = useState<LiveMatchInterface>();
 
     useEffect(() => {
-        fetchLiveMatch(setLiveMatch);
-        const intervalId = setInterval(() => fetchLiveMatch(setLiveMatch), 15000);
-        return () => clearInterval(intervalId);
+        const controller = new AbortController();
+        fetchLiveMatch(setLiveMatch, controller.signal);
+        const intervalId = setInterval(
+            () => fetchLiveMatch(setLiveMatch, controller.signal),
+            15000,
+        );
+        return () => {
+            controller.abort();
+            clearInterval(intervalId);
+        };
     }, []);
 
     if (!liveMatch || Math.floor(Date.now() / 1000) - liveMatch.InsertDate > 120) {
@@ -123,14 +128,18 @@ function getBombStatusLabel(bombStatus?: number): string {
     }
 }
 
-function fetchLiveMatch(setLiveMatch: React.Dispatch<React.SetStateAction<LiveMatchInterface | undefined>>) {
-    const url = `${API_URL}/live_match_panel`;
-    axios
-        .get<LiveMatchInterface>(url)
+function fetchLiveMatch(
+    setLiveMatch: React.Dispatch<React.SetStateAction<LiveMatchInterface | undefined>>,
+    signal: AbortSignal,
+) {
+    apiClient
+        .get<LiveMatchInterface>("/live_match_panel", { signal })
         .then((response) => setLiveMatch(response.data))
         .catch((error) => {
-            console.error("Error fetching data:", error);
-            setLiveMatch(undefined);
+            if (!isRequestCanceled(error)) {
+                console.error("Error fetching live match data:", error);
+                setLiveMatch(undefined);
+            }
         });
 }
 

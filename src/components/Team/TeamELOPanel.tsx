@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient, { isRequestCanceled } from "../../apiClient";
 import { Line } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -12,8 +12,6 @@ import {
     Legend,
 } from "chart.js";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface TeamELOPanelProps {
@@ -24,10 +22,21 @@ function TeamELOPanel({ TeamID }: TeamELOPanelProps) {
     const [teamELOHistory, setTeamELOHistory] = useState<any>(null);
 
     useEffect(() => {
-        axios
-            .get(`${API_URL}/teamelo_panel?team_id=${TeamID}`)
+        const controller = new AbortController();
+
+        apiClient
+            .get("/teamelo_panel", {
+                params: { team_id: TeamID },
+                signal: controller.signal,
+            })
             .then((response) => setTeamELOHistory(response.data))
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching team ELO data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [TeamID]);
 
     if (!teamELOHistory) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient, { isRequestCanceled } from "../../apiClient";
 import { Doughnut } from "react-chartjs-2";
 import {
     ArcElement,
@@ -7,8 +7,6 @@ import {
     Legend,
     Tooltip,
 } from "chart.js";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -36,13 +34,23 @@ function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) 
     const [playerWeapons, setPlayerWeapons] = useState<PlayerWeapons>();
 
     useEffect(() => {
+        const controller = new AbortController();
         const query = new URLSearchParams({ player_id: PlayerID });
         new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
 
-        axios
-            .get<PlayerWeaponsResponse>(`${API_URL}/playerweapons_panel?${query}`)
+        apiClient
+            .get<PlayerWeaponsResponse>("/playerweapons_panel", {
+                params: query,
+                signal: controller.signal,
+            })
             .then((response) => setPlayerWeapons(response.data?.[PlayerID]))
-            .catch((error) => console.error("Error fetching weapon data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching weapon data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [PlayerID, filter]);
 
     if (!playerWeapons) return null;

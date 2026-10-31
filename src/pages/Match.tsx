@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import apiClient, { isRequestCanceled } from "../apiClient";
 
 import Layout from "../components/Layout";
 import MatchPanel from "../components/Match/MatchPanel";
@@ -9,8 +9,6 @@ import ClutchPanel from "../components/Match/ClutchPanel";
 import TeamSelectorPanel from "../components/Match/TeamSelectorPanel";
 import OpeningDuelPanel from "../components/Match/OpeningDuelPanel";
 import RatingBreakdownPanel from "../components/Match/RatingBreakdownPanel";
-const API_URL = import.meta.env.VITE_API_URL;
-
 function Match() {
     const { MatchID } = useParams<{ MatchID: string }>();
     const [match, setMatch] = useState<FullMatchInterface>();
@@ -18,15 +16,26 @@ function Match() {
     const [activePanel, setActivePanel] = useState<"clutch" | "openingduel" | "ratingbreakdown">("clutch");
 
     useEffect(() => {
-        axios
-            .get<FullMatchInterface>(`${API_URL}/match_panel?match_id=${MatchID}`)
+        const controller = new AbortController();
+
+        apiClient
+            .get<FullMatchInterface>("/match_panel", {
+                params: { match_id: MatchID },
+                signal: controller.signal,
+            })
             .then((response) => {
                 setMatch(response.data);
                 if (response.data?.Teams) {
                     setSelectedTeamId(Object.keys(response.data.Teams)[0]);
                 }
             })
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching match data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [MatchID]);
 
     if (!match) {

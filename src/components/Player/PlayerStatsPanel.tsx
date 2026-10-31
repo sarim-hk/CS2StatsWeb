@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient, { isRequestCanceled } from '../../apiClient';
 import CompletePlayerStatsInterface from '../../interfaces/PlayerStatsInterface';
 import { ui } from '../ui';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface PlayerStatsPanelProps {
     PlayerID: string;
@@ -15,13 +13,24 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
     useEffect(() => {
-        const url = `${API_URL}/playerstats_panel?player_id=${PlayerID}${filter ? `&${filter}` : ''}`;
-        axios
-            .get<CompletePlayerStatsInterface>(url)
+        const controller = new AbortController();
+        const params = new URLSearchParams(filter);
+        params.set("player_id", PlayerID);
+        apiClient
+            .get<CompletePlayerStatsInterface>("/playerstats_panel", {
+                params,
+                signal: controller.signal,
+            })
             .then((response) => {
                 setPlayerStats(response.data);
             })
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching player stats data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [PlayerID, filter]);
 
     const getButtonStyle = (type: 'Overall' | 'Terrorist' | 'CounterTerrorist') => `

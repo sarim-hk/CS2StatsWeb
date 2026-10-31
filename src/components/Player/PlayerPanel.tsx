@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient, { isRequestCanceled } from '../../apiClient';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface PlayerPanelProps {
     PlayerID: string;
@@ -12,15 +10,23 @@ function PlayerPanel({ PlayerID }: PlayerPanelProps) {
     const [player, setPlayer] = useState<PlayerInfoInterface>();
 
     useEffect(() => {
-        axios
-            .get<PlayerInfoInterface>(`${API_URL}/player_panel?player_id=${PlayerID}`)
+        const controller = new AbortController();
+
+        apiClient
+            .get<PlayerInfoInterface>("/player_panel", {
+                params: { player_id: PlayerID },
+                signal: controller.signal,
+            })
             .then((response) => {
                 setPlayer(response.data);
             })
             .catch((error) => {
-                console.error("Error fetching data:", error);
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching player data:", error);
+                }
             });
 
+        return () => controller.abort();
     }, [PlayerID]);
 
     return (

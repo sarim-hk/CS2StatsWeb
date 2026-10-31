@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient, { isRequestCanceled } from "../../apiClient";
 import { Link } from "react-router-dom";
 import { ui } from "../ui";
 import MatchInterface from "../../interfaces/MatchInterface";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface MatchesPanelProps {
     PlayerID?: string;
@@ -27,23 +25,24 @@ function MatchesPanel({
     const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
-        let url = `${API_URL}/matches_panel`;
-
-        // PlayerID takes priority if both PlayerID and TeamID are specified
+        const controller = new AbortController();
+        const params = new URLSearchParams(filter);
         if (PlayerID) {
-            url += `?player_id=${PlayerID}`;
+            params.set("player_id", PlayerID);
         } else if (TeamID) {
-            url += `?team_id=${TeamID}`;
+            params.set("team_id", TeamID);
         }
 
-        if (filter) {
-            url += `${url.includes("?") ? "&" : "?"}${filter}`;
-        }
-
-        axios
-            .get<MatchInterface[]>(url)
+        apiClient
+            .get<MatchInterface[]>("/matches_panel", { params, signal: controller.signal })
             .then((response) => setMatches(response.data))
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching matches data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [PlayerID, TeamID, filter]);
 
     const filteredMatches = matches.filter((match) => {

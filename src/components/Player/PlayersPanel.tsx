@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
+import apiClient, { isRequestCanceled } from '../../apiClient';
 import { Link } from 'react-router-dom';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import { ui } from '../ui';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface PlayersPanelProps {
     TeamID?: string;
@@ -24,18 +22,23 @@ function PlayersPanel({
     const [switcherEnabled, setswitcherEnabled] = useState<boolean>(switcherModeEnabled);
 
     useEffect(() => {
-        let url = `${API_URL}/players_panel`;
+        const controller = new AbortController();
 
-        if (TeamID) {
-            url += `?team_id=${encodeURIComponent(TeamID)}`;
-        }
-
-        axios
-            .get<PlayerInfoInterface[]>(url)
+        apiClient
+            .get<PlayerInfoInterface[]>("/players_panel", {
+                params: TeamID ? { team_id: TeamID } : undefined,
+                signal: controller.signal,
+            })
             .then((response) => {
                 setPlayers(response.data);
             })
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                if (!isRequestCanceled(error)) {
+                    console.error("Error fetching players data:", error);
+                }
+            });
+
+        return () => controller.abort();
     }, [TeamID]);
 
     useEffect(() => {
