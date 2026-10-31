@@ -134,7 +134,7 @@ function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps)
 
     return (
         <div className={ui.panelFlat}>
-            <div className="h-48">
+            <div className="h-32 md:h-48">
                 <Line data={data} options={options as any} />
             </div>
         </div>
