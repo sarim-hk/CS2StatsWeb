@@ -5,6 +5,17 @@ import { Link } from 'react-router-dom';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import { ui } from '../ui';
 
+const utcDateTimeFormatter = new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short',
+});
+
 interface PlayersPanelProps {
     TeamID?: string;
     searchEnabled?: boolean;
@@ -141,9 +152,9 @@ function PlayersPanel({
                                             {players.length > 0 && players[0].RatingUpdateDate && (
                                                 <div className="text-gray-500 mt-1">
                                                     Last updated:{" "}
-                                                    {new Date(
-                                                        players[0].RatingUpdateDate
-                                                    ).toLocaleString()} UTC
+                                                    {utcDateTimeFormatter.format(
+                                                        new Date(players[0].RatingUpdateDate)
+                                                    )}
                                                 </div>
                                             )}
                                         </>
@@ -156,9 +167,9 @@ function PlayersPanel({
                                             {players.length > 0 && players[0].RatingUpdateDate && (
                                                 <div className="text-gray-500 mt-1">
                                                     Last updated:{" "}
-                                                    {new Date(
-                                                        players[0].RatingUpdateDate
-                                                    ).toLocaleString()} UTC
+                                                    {utcDateTimeFormatter.format(
+                                                        new Date(players[0].RatingUpdateDate)
+                                                    )}
                                                 </div>
                                             )}
                                         </>                                    )}
