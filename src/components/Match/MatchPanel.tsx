@@ -41,13 +41,13 @@ function MatchPanel({ Match }: MatchPanelProps) {
     return (
         <div className="rounded-sm overflow-hidden shadow-lg bg-gray-800 border border-gray-700">
             {/* Match Header */}
-            <div className="p-3 bg-gray-700 border-b border-gray-600">
-                <div className="flex items-center">
-                    <div className="text-base font-semibold text-gray-300">
+            <div className="p-2 bg-gray-700 border-b border-gray-600 md:p-3">
+                <div className="flex items-center justify-between gap-2">
+                    <div className="hidden text-sm font-semibold text-gray-300 md:block md:text-base">
                         {Match?.MapID}
                     </div>
 
-                    <div className="flex-1 flex justify-center mx-4 overflow-hidden">
+                    <div className="hidden flex-1 justify-center overflow-hidden mx-4 md:flex">
                         <div className="flex flex-nowrap gap-1 overflow-x-auto scrollbar-none">
                             {Match?.Rounds.map((round) => (
                                 <div
@@ -65,10 +65,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-2 justify-center">
+                    <div className="flex flex-1 items-center justify-center space-x-2 md:flex-none md:space-x-2">
                         {/* Winning Team */}
                         <div
-                            className={`text-base font-semibold ${
+                            className={`block whitespace-nowrap text-sm font-semibold md:text-base ${
                                 Match?.Teams[winningTeamId].Side === 3
                                     ? 'text-blue-400'
                                     : 'text-orange-400'
@@ -76,16 +76,16 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         >
                             <Link
                                 to={`/team/${winningTeamId}`}
-                                className="hover:underline"
+                                className="block whitespace-nowrap hover:underline"
                             >
                                 {Match?.Teams[winningTeamId].TeamName}
                             </Link>
                         </div>
 
                         {/* Score */}
-                        <div className="flex items-center space-x-2 px-2 py-0.5 bg-gray-800 rounded-sm">
+                        <div className="grid w-14 grid-cols-2 items-center rounded-sm bg-gray-800 px-1.5 py-0.5 md:flex md:w-auto md:grid-cols-3 md:space-x-2 md:px-2">
                             <span
-                                className={`text-base font-semibold ${
+                                className={`w-[2ch] justify-self-start text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
                                     Match?.Teams[winningTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
@@ -94,10 +94,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 {Match?.Teams[winningTeamId].Score}
                             </span>
 
-                            <span className="text-gray-400">:</span>
+                            <span className="hidden text-center text-gray-400 md:inline">:</span>
 
                             <span
-                                className={`text-base font-semibold ${
+                                className={`w-[2ch] justify-self-end text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
                                     Match?.Teams[losingTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
@@ -109,7 +109,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
 
                         {/* Losing Team */}
                         <div
-                            className={`text-base font-semibold ${
+                            className={`block whitespace-nowrap text-sm font-semibold md:text-base ${
                                 Match?.Teams[losingTeamId].Side === 3
                                     ? 'text-blue-400'
                                     : 'text-orange-400'
@@ -117,7 +117,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         >
                             <Link
                                 to={`/team/${losingTeamId}`}
-                                className="hover:underline"
+                                className="block whitespace-nowrap hover:underline"
                             >
                                 {Match?.Teams[losingTeamId].TeamName}
                             </Link>
@@ -130,7 +130,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
             {[winningTeamId, losingTeamId].map((teamId) => (
                 <div key={teamId} className="p-2">
                     <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full min-w-max">
                             <thead>
                                 <tr
                                     className={`border-b ${
@@ -139,7 +139,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                             : 'border-blue-500/50'
                                     }`}
                                 >
-                                    <th className="py-2 px-3 text-left font-medium text-gray-300 w-48">
+                                    <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-3 text-left font-medium text-gray-300 md:w-48 md:max-w-48">
                                         <div className="flex items-center space-x-2">
                                             <span
                                                 className={`w-1.5 h-1.5 rounded-sm ${
@@ -171,7 +171,11 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                     {MATCH_STAT_HEADERS.map((header) => (
                                         <th
                                             key={header.id}
-                                            className="py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16"
+                                            className={`py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16 ${
+                                                header.id.startsWith('empty-')
+                                                    ? 'hidden md:table-cell'
+                                                    : ''
+                                            }`}
                                         >
                                             {header.label}
                                         </th>
@@ -179,7 +183,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody className="md:[&>tr>td]:py-2.5">
                                 {Match?.Teams[teamId]?.Players &&
                                     Object.values(Match.Teams[teamId].Players)
                                         .sort(
@@ -192,10 +196,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 key={player.Overall.PlayerID}
                                                 className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                                             >
-                                                <td className="py-1.5 px-3">
+                                                <td className="sticky left-0 z-10 whitespace-nowrap bg-gray-800 py-1.5 px-3 md:w-48 md:max-w-48">
                                                     <Link
                                                         to={`/player/${player.Overall.PlayerID}`}
-                                                        className="text-xs text-gray-200 hover:text-blue-400 transition-colors"
+                                                        className="text-xs text-gray-200 hover:text-blue-400 transition-colors md:block md:max-w-48 md:truncate"
                                                     >
                                                         {player.Overall.Username}
                                                     </Link>
@@ -227,7 +231,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                     ).toFixed(2)}
                                                 </td>
 
-                                                <td className="py-1.5 px-3"></td>
+                                                <td className="hidden py-1.5 px-3 md:table-cell"></td>
 
                                                 <td className="py-1.5 px-3 text-center text-xs">
                                                     {player.Overall.UtilityDamage}
@@ -250,7 +254,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                     s
                                                 </td>
 
-                                                <td className="py-1.5 px-3"></td>
+                                                <td className="hidden py-1.5 px-3 md:table-cell"></td>
 
                                                 <td className="py-1.5 px-3 text-center text-xs">
                                                     {player.Overall.KAST.toFixed(2)}

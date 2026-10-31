@@ -84,8 +84,8 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
                 return (
                     <div key={player.Overall.PlayerID} className={ui.panelRow}>
                         <div className={ui.panelRowContent}>
-                            <div className="flex items-center space-x-6">
-                                <div className="flex w-24 flex-col items-center pt-2">
+                            <div className={ui.detailRow}>
+                                <div className={ui.detailIdentity}>
                                     <div className="relative">
                                         <img
                                             src={player.Overall.AvatarL}
@@ -99,7 +99,7 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
                                 <div className={ui.detailGrid}>
                                     <div className={ui.statCard}>
                                         <div className={ui.statLabel}>Attempt Rate</div>
-                                        <div className="flex items-baseline space-x-2">
+                                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                                             <span className={`${ui.statValue} text-blue-400`}>
                                                 {stats.attemptPercentage}%
                                             </span>
@@ -111,7 +111,7 @@ function OpeningDuelPanel({ Match, TeamID }: OpeningDuelProps) {
 
                                     <div className={ui.statCard}>
                                         <div className={ui.statLabel}>Success Rate</div>
-                                        <div className="flex items-baseline space-x-2">
+                                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                                             <span className={`${ui.statValue} text-green-400`}>
                                                 {stats.successPercentage}%
                                             </span>
