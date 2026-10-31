@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
 import { Link } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ const MATCH_STAT_HEADERS = [
 ] as const;
 
 function MatchPanel({ Match }: MatchPanelProps) {
+    const [showRounds, setShowRounds] = useState(false);
     const resultOrder = { Win: -1, Loss: 1, Tie: 0 };
 
     const sortedTeams = Match
@@ -47,7 +49,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                         {Match?.MapID}
                     </div>
 
-                    <div className="hidden flex-1 justify-center overflow-hidden mx-4 md:flex">
+                    <button
+                        type="button"
+                        onClick={() => setShowRounds(false)}
+                        aria-label="Show score"
+                        className={`${showRounds ? 'flex' : 'hidden'} flex-1 justify-center overflow-hidden mx-4 md:flex`}
+                    >
                         <div className="flex flex-nowrap gap-1 overflow-x-auto scrollbar-none">
                             {Match?.Rounds.map((round) => (
                                 <div
@@ -63,64 +70,73 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </button>
 
-                    <div className="flex flex-1 items-center justify-center space-x-2 md:flex-none md:space-x-2">
-                        {/* Winning Team */}
-                        <div
-                            className={`block whitespace-nowrap text-sm font-semibold md:text-base ${
-                                Match?.Teams[winningTeamId].Side === 3
-                                    ? 'text-blue-400'
-                                    : 'text-orange-400'
-                            }`}
-                        >
-                            <Link
-                                to={`/team/${winningTeamId}`}
-                                className="block whitespace-nowrap hover:underline"
-                            >
-                                {Match?.Teams[winningTeamId].TeamName}
-                            </Link>
-                        </div>
-
-                        {/* Score */}
-                        <div className="grid w-14 grid-cols-2 items-center rounded-sm bg-gray-800 px-1.5 py-0.5 md:flex md:w-auto md:grid-cols-3 md:space-x-2 md:px-2">
-                            <span
-                                className={`w-[2ch] justify-self-start text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
+                    <div className={`${showRounds ? 'hidden' : 'flex'} flex-1 items-center justify-center space-x-2 md:flex md:flex-none`}>
+                        <div className="flex items-center space-x-2">
+                            {/* Winning Team */}
+                            <div
+                                className={`whitespace-nowrap text-sm font-semibold md:text-base ${
                                     Match?.Teams[winningTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
                                 }`}
                             >
-                                {Match?.Teams[winningTeamId].Score}
-                            </span>
+                                <Link
+                                    to={`/team/${winningTeamId}`}
+                                    onClick={(event) => event.stopPropagation()}
+                                    className="hover:underline"
+                                >
+                                    {Match?.Teams[winningTeamId].TeamName}
+                                </Link>
+                            </div>
 
-                            <span className="hidden text-center text-gray-400 md:inline">:</span>
+                            {/* Score */}
+                            <button
+                                type="button"
+                                onClick={() => setShowRounds(true)}
+                                aria-label="Show individual rounds"
+                                className="grid w-14 grid-cols-2 items-center rounded-sm bg-gray-800 px-1.5 py-0.5 md:flex md:w-auto md:grid-cols-3 md:space-x-2 md:px-2"
+                            >
+                                <span
+                                    className={`w-[2ch] justify-self-start text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
+                                        Match?.Teams[winningTeamId].Side === 3
+                                            ? 'text-blue-400'
+                                            : 'text-orange-400'
+                                    }`}
+                                >
+                                    {Match?.Teams[winningTeamId].Score}
+                                </span>
 
-                            <span
-                                className={`w-[2ch] justify-self-end text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
+                                <span className="hidden text-center text-gray-400 md:inline">:</span>
+
+                                <span
+                                    className={`w-[2ch] justify-self-end text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
+                                        Match?.Teams[losingTeamId].Side === 3
+                                            ? 'text-blue-400'
+                                            : 'text-orange-400'
+                                    }`}
+                                >
+                                    {Match?.Teams[losingTeamId].Score}
+                                </span>
+                            </button>
+
+                            {/* Losing Team */}
+                            <div
+                                className={`whitespace-nowrap text-sm font-semibold md:text-base ${
                                     Match?.Teams[losingTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
                                 }`}
                             >
-                                {Match?.Teams[losingTeamId].Score}
-                            </span>
-                        </div>
-
-                        {/* Losing Team */}
-                        <div
-                            className={`block whitespace-nowrap text-sm font-semibold md:text-base ${
-                                Match?.Teams[losingTeamId].Side === 3
-                                    ? 'text-blue-400'
-                                    : 'text-orange-400'
-                            }`}
-                        >
-                            <Link
-                                to={`/team/${losingTeamId}`}
-                                className="block whitespace-nowrap hover:underline"
-                            >
-                                {Match?.Teams[losingTeamId].TeamName}
-                            </Link>
+                                <Link
+                                    to={`/team/${losingTeamId}`}
+                                    onClick={(event) => event.stopPropagation()}
+                                    className="hover:underline"
+                                >
+                                    {Match?.Teams[losingTeamId].TeamName}
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
