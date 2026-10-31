@@ -97,11 +97,11 @@ function ClutchPanel({ Match, TeamID }: ClutchPanelProps) {
                                         <div className={sharedStyles.cardLabel}>Clutch Timeline</div>
                                         <div className="overflow-x-auto overflow-y-hidden whitespace-nowrap h-8">
                                             <div className="inline-flex gap-2">
-                                                {events.map((event, index) => {
+                                                {events.map((event) => {
                                                     const isClutch = 'EnemyCount' in event;
                                                     return (
                                                         <div
-                                                            key={`${event.RoundID}-${index}`}
+                                                            key={isClutch ? `clutch-${event.ClutchID}` : `duel-${event.DuelID}`}
                                                             className={`
                                                                 px-3 py-1 rounded-sm text-xs font-medium flex-shrink-0
                                                                 ${isClutch

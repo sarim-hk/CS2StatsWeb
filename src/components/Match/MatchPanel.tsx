@@ -5,6 +5,22 @@ interface MatchPanelProps {
     Match: FullMatchInterface | undefined;
 }
 
+const MATCH_STAT_HEADERS = [
+    { id: 'kills', label: 'K' },
+    { id: 'assists', label: 'A' },
+    { id: 'deaths', label: 'D' },
+    { id: 'kd', label: 'K/D' },
+    { id: 'adr', label: 'ADR' },
+    { id: 'empty-utility', label: '' },
+    { id: 'utility-damage', label: 'UD' },
+    { id: 'entry-frags', label: 'EF' },
+    { id: 'time-entry-frag', label: 'Time/EF' },
+    { id: 'empty-kast', label: '' },
+    { id: 'kast', label: 'KAST' },
+    { id: 'impact', label: 'Impact' },
+    { id: 'rating', label: 'Rating' },
+] as const;
+
 function MatchPanel({ Match }: MatchPanelProps) {
     const resultOrder = { Win: -1, Loss: 1, Tie: 0 };
 
@@ -152,26 +168,12 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                         </div>
                                     </th>
 
-                                    {[
-                                        'K',
-                                        'A',
-                                        'D',
-                                        'K/D',
-                                        'ADR',
-                                        '',
-                                        'UD',
-                                        'EF',
-                                        'Time/EF',
-                                        '',
-                                        'KAST',
-                                        'Impact',
-                                        'Rating',
-                                    ].map((header, index) => (
+                                    {MATCH_STAT_HEADERS.map((header) => (
                                         <th
-                                            key={index}
+                                            key={header.id}
                                             className="py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16"
                                         >
-                                            {header}
+                                            {header.label}
                                         </th>
                                     ))}
                                 </tr>
@@ -185,9 +187,9 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                                 b.Overall.Rating -
                                                 a.Overall.Rating
                                         )
-                                        .map((player, playerIndex) => (
+                                        .map((player) => (
                                             <tr
-                                                key={playerIndex}
+                                                key={player.Overall.PlayerID}
                                                 className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                                             >
                                                 <td className="py-1.5 px-3">

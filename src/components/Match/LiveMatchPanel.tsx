@@ -54,9 +54,9 @@ function LiveMatchPanel() {
             {[
                 { players: tPlayers, side: 'T', name: 'Terrorists', colorClass: 'border-orange-500/50' },
                 { players: ctPlayers, side: 'CT', name: 'Counter-Terrorists', colorClass: 'border-blue-500/50' }
-            ].map((team, index) => (
+            ].map((team) => (
                 team.players && team.players.length > 0 && (
-                    <div key={index} className="p-2">
+                    <div key={team.side} className="p-2">
                         <div className="overflow-x-auto">
                             <table className="w-full">
 
@@ -68,8 +68,8 @@ function LiveMatchPanel() {
                                                 <span className="text-xs">{team.name}</span>
                                             </div>
                                         </th>
-                                        {['K', 'A', 'D', 'ADR', 'Health', 'Money'].map((header, index) => (
-                                            <th key={index} className="py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16">
+                                        {['K', 'A', 'D', 'ADR', 'Health', 'Money'].map((header) => (
+                                            <th key={header} className="py-2 px-3 text-center text-[10px] font-medium text-gray-400 w-16">
                                                 {header}
                                             </th>
                                         ))}
@@ -78,8 +78,8 @@ function LiveMatchPanel() {
                                 
                                 <tbody>
 
-                                    {team.players.map((player, playerIndex) => (
-                                        <tr key={playerIndex} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                                    {team.players.map((player) => (
+                                        <tr key={player.PlayerID} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
                                             
                                             <td className="py-1.5 px-3">
                                                 <span className="text-xs text-gray-200">{player.Username}</span>

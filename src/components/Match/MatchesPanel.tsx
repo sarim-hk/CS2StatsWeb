@@ -82,9 +82,9 @@ function MatchesPanel({
             )}
 
             {filteredMatches.length > 0 ? (
-                filteredMatches.map((match, index) => (
+                filteredMatches.map((match) => (
                     <div
-                        key={index}
+                        key={match.MatchID}
                         className={`border-b border-gray-700 last:border-b-0 ${
                             match.MatchResult === "Win"
                                 ? "bg-gradient-to-r from-gray-800 via-gray-800/80 to-green-500/10"

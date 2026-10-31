@@ -174,8 +174,8 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
             </div>
 
             <div>
-                {statRows.map((row, index) => (
-                    <div key={index} className={sharedStyles.row}>
+                {statRows.map((row) => (
+                    <div key={row.label} className={sharedStyles.row}>
                         <div className={sharedStyles.rowContent}>
                             <div className="flex items-center justify-between">
                                 <div className={sharedStyles.statLabel}>{row.label}</div>
