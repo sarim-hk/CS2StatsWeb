@@ -1,35 +1,31 @@
-import { useEffect, useState } from 'react';
-import apiClient, { isRequestCanceled } from '../../apiClient';
+import { useState } from 'react';
+import apiClient, { ApiError } from '../../apiClient';
+import useApiRequest from '../../useApiRequest';
 import TeamInfoInterface from '../../interfaces/TeamInfoInterface';
 import PlayersPanel from '../Player/PlayersPanel';
 import { ui } from '../ui';
 
 interface TeamPanelProps {
     TeamID: string;
+    onNotFound?: () => void;
+    onError?: () => void;
 }
 
-function TeamPanel({ TeamID }: TeamPanelProps) {
+function TeamPanel({ TeamID, onNotFound, onError }: TeamPanelProps) {
     const [Team, setTeam] = useState<TeamInfoInterface>();
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        apiClient
-            .get<TeamInfoInterface>("/team_panel", {
-                params: { team_id: TeamID },
-                signal: controller.signal,
-            })
-            .then((response) => {
-                setTeam(response.data);
-            })
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching team data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [TeamID]);
+    useApiRequest<TeamInfoInterface>({
+        request: (signal) => apiClient.get("/team_panel", {
+            params: { team_id: TeamID },
+            signal,
+        }),
+        onSuccess: setTeam,
+        onError: (error: ApiError) => {
+            if (error.status === 404) onNotFound?.();
+            else onError?.();
+        },
+        dependencies: [TeamID],
+    });
 
     return (
         <div className={ui.panelFlat}>
@@ -60,7 +56,7 @@ function TeamPanel({ TeamID }: TeamPanelProps) {
             </div>
             
             <div>
-                <PlayersPanel TeamID={TeamID} switcherModeEnabled={false} />
+                <PlayersPanel TeamID={TeamID} switcherModeEnabled={false} onError={onError} />
             </div>
         
         </div>

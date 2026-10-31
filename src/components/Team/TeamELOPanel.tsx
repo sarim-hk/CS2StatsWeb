@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import apiClient, { isRequestCanceled } from "../../apiClient";
+import { useState } from "react";
+import apiClient from "../../apiClient";
+import useApiRequest from "../../useApiRequest";
 import { Line } from "react-chartjs-2";
 import { ui } from "../ui";
 import {
@@ -17,28 +18,21 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 interface TeamELOPanelProps {
     TeamID: string;
+    onError?: () => void;
 }
 
-function TeamELOPanel({ TeamID }: TeamELOPanelProps) {
+function TeamELOPanel({ TeamID, onError }: TeamELOPanelProps) {
     const [teamELOHistory, setTeamELOHistory] = useState<any>(null);
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        apiClient
-            .get("/teamelo_panel", {
+    useApiRequest({
+        request: (signal) => apiClient.get("/teamelo_panel", {
                 params: { team_id: TeamID },
-                signal: controller.signal,
-            })
-            .then((response) => setTeamELOHistory(response.data))
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching team ELO data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [TeamID]);
+                signal,
+            }),
+        onSuccess: setTeamELOHistory,
+        onError,
+        dependencies: [TeamID],
+    });
 
     if (!teamELOHistory) {
         return null;

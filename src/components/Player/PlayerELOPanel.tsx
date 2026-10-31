@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import apiClient, { isRequestCanceled } from "../../apiClient";
+import { useState } from "react";
+import apiClient from "../../apiClient";
+import useApiRequest from "../../useApiRequest";
 import { Line } from "react-chartjs-2";
 import { ui } from "../ui";
 import {
@@ -18,27 +19,22 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 interface PlayerELOPanelProps {
     PlayerID: string;
     filter?: string;
+    onError?: () => void;
 }
 
-function PlayerELOPanel({ PlayerID, filter = "" }: PlayerELOPanelProps) {
+function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps) {
     const [playerELOHistory, setPlayerELOHistory] = useState<any>(null);
 
-    useEffect(() => {
-        const controller = new AbortController();
+    useApiRequest({
+        request: (signal) => {
         const query = new URLSearchParams({ player_id: PlayerID });
         new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
-
-        apiClient
-            .get("/playerelo_panel", { params: query, signal: controller.signal })
-            .then((response) => setPlayerELOHistory(response.data))
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching player ELO data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [PlayerID, filter]);
+            return apiClient.get("/playerelo_panel", { params: query, signal });
+        },
+        onSuccess: setPlayerELOHistory,
+        onError,
+        dependencies: [PlayerID, filter],
+    });
 
     if (!playerELOHistory) {
         return null;

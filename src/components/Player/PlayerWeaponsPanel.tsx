@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import apiClient, { isRequestCanceled } from "../../apiClient";
+import { useState } from "react";
+import apiClient from "../../apiClient";
+import useApiRequest from "../../useApiRequest";
 import { Doughnut } from "react-chartjs-2";
 import { ui } from "../ui";
 import {
@@ -29,30 +30,22 @@ interface PlayerWeaponsResponse {
 interface PlayerWeaponsPanelProps {
     PlayerID: string;
     filter?: string;
+    onError?: () => void;
 }
 
-function PlayerWeaponsPanel({ PlayerID, filter = "" }: PlayerWeaponsPanelProps) {
+function PlayerWeaponsPanel({ PlayerID, filter = "", onError }: PlayerWeaponsPanelProps) {
     const [playerWeapons, setPlayerWeapons] = useState<PlayerWeapons>();
 
-    useEffect(() => {
-        const controller = new AbortController();
+    useApiRequest<PlayerWeaponsResponse>({
+        request: (signal) => {
         const query = new URLSearchParams({ player_id: PlayerID });
         new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
-
-        apiClient
-            .get<PlayerWeaponsResponse>("/playerweapons_panel", {
-                params: query,
-                signal: controller.signal,
-            })
-            .then((response) => setPlayerWeapons(response.data?.[PlayerID]))
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching weapon data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [PlayerID, filter]);
+            return apiClient.get("/playerweapons_panel", { params: query, signal });
+        },
+        onSuccess: (data) => setPlayerWeapons(data?.[PlayerID]),
+        onError,
+        dependencies: [PlayerID, filter],
+    });
 
     if (!playerWeapons) return null;
 

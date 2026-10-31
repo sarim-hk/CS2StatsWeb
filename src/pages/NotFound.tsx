@@ -2,17 +2,39 @@ import { Link } from "react-router-dom";
 
 import Layout from "../components/Layout";
 
-function NotFound() {
+interface NotFoundProps {
+    resource?: "page" | "match" | "team" | "player";
+    error?: boolean;
+}
+
+const resourceLabels = {
+    page: "page",
+    match: "match",
+    team: "team",
+    player: "player",
+} as const;
+
+function NotFound({ resource = "page", error = false }: NotFoundProps) {
+    const label = resourceLabels[resource];
+
     return (
         <Layout>
             <section className="flex min-h-[calc(100dvh_-_6rem_-_2px)] items-center justify-center px-4 py-12 text-center">
                 <div className="max-w-md rounded-sm border border-gray-700 bg-gray-800 p-8 shadow-xl">
                     <p className="text-6xl font-semibold tracking-tight text-green-400">404</p>
                     <h1 className="mt-4 text-xl font-semibold text-gray-200">
-                        Page not found
+                        {error
+                            ? `Unable to load ${label}`
+                            : label === "page"
+                                ? "Page not found"
+                                : `${label[0].toUpperCase()}${label.slice(1)} not found`}
                     </h1>
                     <p className="mt-2 text-sm leading-6 text-gray-400">
-                        The page you are looking for does not exist or may have been moved.
+                        {error
+                            ? "Something went wrong while loading this resource. Please try again later."
+                            : label === "page"
+                            ? "The page you are looking for does not exist or may have been moved."
+                            : `We couldn't find that ${label}. Check the ID and try again.`}
                     </p>
                     <Link
                         to="/"

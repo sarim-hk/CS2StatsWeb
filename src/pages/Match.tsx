@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import apiClient, { isRequestCanceled } from "../apiClient";
+import apiClient, { ApiError } from "../apiClient";
+import useApiRequest from "../useApiRequest";
 
 import Layout from "../components/Layout";
 import MatchPanel from "../components/Match/MatchPanel";
@@ -9,34 +10,38 @@ import ClutchPanel from "../components/Match/ClutchPanel";
 import TeamSelectorPanel from "../components/Match/TeamSelectorPanel";
 import OpeningDuelPanel from "../components/Match/OpeningDuelPanel";
 import RatingBreakdownPanel from "../components/Match/RatingBreakdownPanel";
+import NotFound from "./NotFound";
 function Match() {
     const { MatchID } = useParams<{ MatchID: string }>();
     const [match, setMatch] = useState<FullMatchInterface>();
     const [selectedTeamId, setSelectedTeamId] = useState<string>();
+    const [notFound, setNotFound] = useState(false);
+    const [hasError, setHasError] = useState(false);
     const [activePanel, setActivePanel] = useState<"clutch" | "openingduel" | "ratingbreakdown">("clutch");
 
-    useEffect(() => {
-        const controller = new AbortController();
+    useApiRequest<FullMatchInterface>({
+        request: (signal) => apiClient.get("/match_panel", {
+            params: { match_id: MatchID },
+            signal,
+        }),
+        onSuccess: (data) => {
+            setMatch(data);
+            if (data.Teams) setSelectedTeamId(Object.keys(data.Teams)[0]);
+        },
+        onError: (error: ApiError) => {
+            if (error.status === 404) setNotFound(true);
+            else setHasError(true);
+        },
+        dependencies: [MatchID],
+    });
 
-        apiClient
-            .get<FullMatchInterface>("/match_panel", {
-                params: { match_id: MatchID },
-                signal: controller.signal,
-            })
-            .then((response) => {
-                setMatch(response.data);
-                if (response.data?.Teams) {
-                    setSelectedTeamId(Object.keys(response.data.Teams)[0]);
-                }
-            })
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching match data:", error);
-                }
-            });
+    if (notFound || !MatchID) {
+        return <NotFound resource="match" />;
+    }
 
-        return () => controller.abort();
-    }, [MatchID]);
+    if (hasError) {
+        return <NotFound resource="match" error />;
+    }
 
     if (!match) {
         return null;

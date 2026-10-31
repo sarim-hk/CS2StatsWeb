@@ -1,37 +1,29 @@
-import { useEffect, useState } from 'react';
-import apiClient, { isRequestCanceled } from '../../apiClient';
+import { useState } from 'react';
+import apiClient from '../../apiClient';
+import useApiRequest from '../../useApiRequest';
 import CompletePlayerStatsInterface from '../../interfaces/PlayerStatsInterface';
 import { ui } from '../ui';
 
 interface PlayerStatsPanelProps {
     PlayerID: string;
     filter: string;
+    onError?: () => void;
 }
 
-function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
+function PlayerStatsPanel({ PlayerID, filter, onError }: PlayerStatsPanelProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>();
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
-    useEffect(() => {
-        const controller = new AbortController();
+    useApiRequest<CompletePlayerStatsInterface>({
+        request: (signal) => {
         const params = new URLSearchParams(filter);
         params.set("player_id", PlayerID);
-        apiClient
-            .get<CompletePlayerStatsInterface>("/playerstats_panel", {
-                params,
-                signal: controller.signal,
-            })
-            .then((response) => {
-                setPlayerStats(response.data);
-            })
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching player stats data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [PlayerID, filter]);
+            return apiClient.get("/playerstats_panel", { params, signal });
+        },
+        onSuccess: setPlayerStats,
+        onError,
+        dependencies: [PlayerID, filter],
+    });
 
     const getButtonStyle = (type: 'Overall' | 'Terrorist' | 'CounterTerrorist') => `
         ${ui.control}

@@ -1,34 +1,30 @@
-import { useEffect, useState } from 'react';
-import apiClient, { isRequestCanceled } from '../../apiClient';
+import { useState } from 'react';
+import apiClient, { ApiError } from '../../apiClient';
+import useApiRequest from '../../useApiRequest';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import { ui } from '../ui';
 
 interface PlayerPanelProps {
     PlayerID: string;
+    onNotFound?: () => void;
+    onError?: () => void;
 }
 
-function PlayerPanel({ PlayerID }: PlayerPanelProps) {
+function PlayerPanel({ PlayerID, onNotFound, onError }: PlayerPanelProps) {
     const [player, setPlayer] = useState<PlayerInfoInterface>();
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        apiClient
-            .get<PlayerInfoInterface>("/player_panel", {
-                params: { player_id: PlayerID },
-                signal: controller.signal,
-            })
-            .then((response) => {
-                setPlayer(response.data);
-            })
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching player data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [PlayerID]);
+    useApiRequest<PlayerInfoInterface>({
+        request: (signal) => apiClient.get("/player_panel", {
+            params: { player_id: PlayerID },
+            signal,
+        }),
+        onSuccess: setPlayer,
+        onError: (error: ApiError) => {
+            if (error.status === 404) onNotFound?.();
+            else onError?.();
+        },
+        dependencies: [PlayerID],
+    });
 
     return (
         <div className={ui.panelFlat}>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import apiClient, { isRequestCanceled } from '../../apiClient';
+import apiClient from '../../apiClient';
+import useApiRequest from '../../useApiRequest';
 import { Link } from 'react-router-dom';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import { ui } from '../ui';
@@ -9,6 +10,7 @@ interface PlayersPanelProps {
     searchEnabled?: boolean;
     switcherModeEnabled?: boolean;
     panelSize?: number;
+    onError?: () => void;
 }
 
 function PlayersPanel({
@@ -16,30 +18,21 @@ function PlayersPanel({
     searchEnabled = false,
     switcherModeEnabled = true,
     panelSize,
+    onError,
 }: PlayersPanelProps) {
     const [players, setPlayers] = useState<PlayerInfoInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [switcherEnabled, setswitcherEnabled] = useState<boolean>(switcherModeEnabled);
 
-    useEffect(() => {
-        const controller = new AbortController();
-
-        apiClient
-            .get<PlayerInfoInterface[]>("/players_panel", {
+    useApiRequest<PlayerInfoInterface[]>({
+        request: (signal) => apiClient.get("/players_panel", {
                 params: TeamID ? { team_id: TeamID } : undefined,
-                signal: controller.signal,
-            })
-            .then((response) => {
-                setPlayers(response.data);
-            })
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching players data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [TeamID]);
+                signal,
+            }),
+        onSuccess: setPlayers,
+        onError,
+        dependencies: [TeamID],
+    });
 
     useEffect(() => {
         // If the selector is disabled, always use ELO mode.

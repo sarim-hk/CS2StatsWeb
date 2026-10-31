@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import apiClient, { isRequestCanceled } from "../../apiClient";
+import { useState } from "react";
+import apiClient from "../../apiClient";
+import useApiRequest from "../../useApiRequest";
 import { Link } from "react-router-dom";
 import { ui } from "../ui";
 import MatchInterface from "../../interfaces/MatchInterface";
@@ -11,6 +12,7 @@ interface MatchesPanelProps {
     searchEnabled?: boolean;
     panelSize?: number;
     filter?: string;
+    onError?: () => void;
 }
 
 function MatchesPanel({
@@ -20,12 +22,13 @@ function MatchesPanel({
     searchEnabled = false,
     panelSize,
     filter = "",
+    onError,
 }: MatchesPanelProps) {
     const [matches, setMatches] = useState<MatchInterface[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
-    useEffect(() => {
-        const controller = new AbortController();
+    useApiRequest<MatchInterface[]>({
+        request: (signal) => {
         const params = new URLSearchParams(filter);
         if (PlayerID) {
             params.set("player_id", PlayerID);
@@ -33,17 +36,12 @@ function MatchesPanel({
             params.set("team_id", TeamID);
         }
 
-        apiClient
-            .get<MatchInterface[]>("/matches_panel", { params, signal: controller.signal })
-            .then((response) => setMatches(response.data))
-            .catch((error) => {
-                if (!isRequestCanceled(error)) {
-                    console.error("Error fetching matches data:", error);
-                }
-            });
-
-        return () => controller.abort();
-    }, [PlayerID, TeamID, filter]);
+            return apiClient.get("/matches_panel", { params, signal });
+        },
+        onSuccess: setMatches,
+        onError,
+        dependencies: [PlayerID, TeamID, filter],
+    });
 
     const filteredMatches = matches.filter((match) => {
         const searchMatch = match.MapID
