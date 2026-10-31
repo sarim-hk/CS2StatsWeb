@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CompletePlayerStatsInterface from '../../interfaces/PlayerStatsInterface';
+import { ui } from '../ui';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,27 +24,15 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
             .catch((error) => console.error("Error fetching data:", error));
     }, [PlayerID, filter]);
 
-    const sharedStyles = {
-        container: "bg-gray-800",
-        header: "border-b border-gray-700",
-        headerContent: "p-2 flex justify-center space-x-2",
-        button: "px-3 py-1 text-xs font-medium transition-colors duration-200",
-        statsContainer: "p-4",
-        row: "border-b border-gray-700 last:border-b-0",
-        rowContent: "p-3 hover:bg-gray-700/50 transition-colors duration-200",
-        statLabel: "text-sm font-medium text-gray-400",
-        statValue: "text-base font-semibold"
-    };
-
     const getButtonStyle = (type: 'Overall' | 'Terrorist' | 'CounterTerrorist') => `
-        ${sharedStyles.button}
+        ${ui.control}
         ${selectedStatType === type
             ? type === 'Overall'
                 ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/50'
                 : type === 'Terrorist'
                     ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/50'
                     : 'bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/50'
-            : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300'
+            : ui.controlIdle
     }`;
 
     const stats = playerStats?.[PlayerID][selectedStatType];
@@ -152,9 +141,9 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
     ];
 
     return (
-        <div className={sharedStyles.container}>
-            <div className={sharedStyles.header}>
-                <div className={sharedStyles.headerContent}>
+        <div className={ui.panel}>
+            <div className={ui.panelHeader}>
+                <div className="flex justify-center gap-2 p-2">
                     <button
                         onClick={() => setSelectedStatType('Overall')}
                         className={getButtonStyle('Overall')}>
@@ -175,11 +164,11 @@ function PlayerStatsPanel({ PlayerID, filter }: PlayerStatsPanelProps) {
 
             <div>
                 {statRows.map((row) => (
-                    <div key={row.label} className={sharedStyles.row}>
-                        <div className={sharedStyles.rowContent}>
+                    <div key={row.label} className={ui.panelRow}>
+                        <div className={ui.panelRowContent}>
                             <div className="flex items-center justify-between">
-                                <div className={sharedStyles.statLabel}>{row.label}</div>
-                                <div className={sharedStyles.statValue}>{row.value}</div>
+                                <div className={ui.statLabel}>{row.label}</div>
+                                <div className="text-base font-semibold">{row.value}</div>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import FullMatchInterface from '../../interfaces/FullMatchInterface';
+import { ui } from '../ui';
 
 interface RatingBreakdownPanelProps {
     Match: FullMatchInterface | undefined;
@@ -16,53 +17,38 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
         return null;
     }
 
-    const sharedStyles = {
-        container: "bg-gray-800",
-        row: "border-b border-gray-700 last:border-b-0",
-        rowContent: "p-[11px] hover:bg-gray-700/50 transition-colors duration-200",
-        avatarContainer: "flex flex-col items-center pt-2 w-24",
-        avatarWrapper: "relative",
-        avatar: "w-16 h-16 ring-2 ring-gray-600 shadow-md",
-        username: "mt-2 text-xs font-medium text-gray-200",
-        gridContainer: "flex-1 grid grid-cols-3 gap-6",
-        card: "bg-gray-700/50 rounded-sm p-4 hover:bg-gray-700 transition-colors duration-200",
-        cardLabel: "text-sm font-medium text-gray-400 mb-1",
-        statValue: "text-2xl font-semibold",
-        statSecondary: "text-sm text-gray-500"
-    };
-
     return (
-        <div className={sharedStyles.container}>
+        <div className={ui.panel}>
             {Object.values(team.Players).map(player => {
 
                 return (
-                    <div key={player.Overall.PlayerID} className={sharedStyles.row}>
-                        <div className={sharedStyles.rowContent}>
+                    <div key={player.Overall.PlayerID} className={ui.panelRow}>
+                        <div className={ui.panelRowContent}>
                             <div className="flex items-center space-x-6">
-                                <div className={sharedStyles.avatarContainer}>
+                                <div className="flex w-24 flex-col items-center pt-2">
                                     <div className="relative">
                                         <img
                                             src={player.Overall.AvatarL}
-                                            className={sharedStyles.avatar}
+                                            className={ui.detailAvatar}
                                             alt={player.Overall.Username}
                                         />
                                     </div>
-                                    <div className={sharedStyles.username}>{player.Overall.Username}</div>
+                                    <div className={ui.detailUsername}>{player.Overall.Username}</div>
                                 </div>
 
-                                <div className={sharedStyles.gridContainer}>
-                                    <div className={sharedStyles.card}>
-                                        <div className={sharedStyles.cardLabel}>Overall Rating</div>
+                                <div className={ui.detailGrid}>
+                                    <div className={ui.statCard}>
+                                        <div className={ui.statLabel}>Overall Rating</div>
                                         <div className="flex items-baseline space-x-2">
-                                            <span className={`${sharedStyles.statValue} text-green-400`}>
+                                            <span className={`${ui.statValue} text-green-400`}>
                                                 {player.Overall.Rating}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className={sharedStyles.card}>
+                                    <div className={ui.statCard}>
                                         <div className="flex justify-between items-start">
-                                            <div className={sharedStyles.cardLabel}>Counter-Terrorist Rating</div>
+                                            <div className={ui.statLabel}>Counter-Terrorist Rating</div>
                                             <div className="relative group">
                                                 <div className="w-4 h-4 flex items-center justify-center text-gray-400 text-sm cursor-help">
                                                     <span className="font-medium">i</span>
@@ -73,15 +59,15 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                             </div>
                                         </div>
                                         <div className="flex items-baseline space-x-2">
-                                            <span className={`${sharedStyles.statValue} text-blue-500`}>
+                                            <span className={`${ui.statValue} text-blue-500`}>
                                                 {player.CounterTerrorist.Rating}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className={sharedStyles.card}>
+                                    <div className={ui.statCard}>
                                         <div className="flex justify-between items-start">
-                                            <div className={sharedStyles.cardLabel}>Terrorist Rating</div>
+                                            <div className={ui.statLabel}>Terrorist Rating</div>
                                             <div className="relative group">
                                                 <div className="w-4 h-4 flex items-center justify-center text-gray-400 text-sm cursor-help">
                                                     <span className="font-medium">i</span>
@@ -91,7 +77,7 @@ function RatingBreakdownPanel({ Match, TeamID }: RatingBreakdownPanelProps) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={`${sharedStyles.statValue} text-orange-500`}>
+                                        <div className={`${ui.statValue} text-orange-500`}>
                                             {player.Terrorist.Rating}
                                         </div>
                                     </div>

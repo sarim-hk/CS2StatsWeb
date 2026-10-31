@@ -1,4 +1,5 @@
 import FullMatchInterface from "../../interfaces/FullMatchInterface";
+import { ui } from "../ui";
 
 interface TeamSelectorPanelProps {
     Match: FullMatchInterface;
@@ -17,7 +18,7 @@ function TeamSelectorPanel({
 }: TeamSelectorPanelProps) {
     
     return (
-        <div className="bg-gray-800 p-3 border-b border-gray-700">
+        <div className={`${ui.panelHeader} p-3`}>
             <div className="flex flex-col gap-3">
                 
                 {/* Panel Type Selector */}
@@ -25,10 +26,10 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("clutch")}
                         className={`
-                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
+                            ${ui.control}
                             ${activePanel === "clutch"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
-                                : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                : ui.controlIdle
                             }
                         `}
                     >
@@ -38,10 +39,10 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("openingduel")}
                         className={`
-                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
+                            ${ui.control}
                             ${activePanel === "openingduel"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
-                                : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                : ui.controlIdle
                             }
                         `}
                     >
@@ -51,10 +52,10 @@ function TeamSelectorPanel({
                     <button
                         onClick={() => onPanelChange("ratingbreakdown")}
                         className={`
-                            px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
+                            ${ui.control}
                             ${activePanel === "ratingbreakdown"
                                 ? "bg-green-500/20 text-green-400 ring-1 ring-green-500/50"
-                                : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                : ui.controlIdle
                             }
                         `}
                     >
@@ -70,12 +71,12 @@ function TeamSelectorPanel({
                             key={teamId}
                             onClick={() => onTeamSelect(teamId)}
                             className={`
-                                px-3 py-1 rounded-sm text-xs font-medium transition-all duration-200
+                                ${ui.control}
                                 ${selectedTeamId === teamId
                                     ? team.Side === 2
                                         ? "bg-orange-500/20 text-orange-500 ring-1 ring-orange-500/50"
                                         : "bg-blue-500/20 text-blue-500 ring-1 ring-blue-500/50"
-                                    : "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                                    : ui.controlIdle
                                 }
                             `}
                         >

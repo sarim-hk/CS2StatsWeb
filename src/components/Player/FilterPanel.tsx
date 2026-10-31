@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ui } from "../ui";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
     return (
@@ -185,8 +186,7 @@ function DateRangePicker({
                             placeholder="Filter by Map Name"
                             value={mapId}
                             onChange={(event) => onMapIdChange(event.target.value)}
-                            className={`min-w-0 flex-1 px-3 py-1 text-xs font-medium bg-gray-700/50 text-white
-                                focus:outline-none transition-colors duration-200 hover:bg-gray-700
+                            className={`${ui.input} flex-1
                                 ${mapId.trim() ? "ring-1 ring-green-500/50 bg-green-500/20 text-green-400" : ""}`}
                         />
                         <button

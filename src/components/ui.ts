@@ -1,0 +1,17 @@
+export const ui = {
+    panel: "overflow-hidden rounded-sm border border-gray-700 bg-gray-800",
+    panelHeader: "border-b border-gray-700 bg-gray-800",
+    panelRow: "border-b border-gray-700 last:border-b-0",
+    panelRowContent: "p-3 transition-colors duration-200 hover:bg-gray-700/50",
+    control: "rounded-sm px-3 py-1 text-xs font-medium transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-green-500/50",
+    controlIdle: "bg-gray-700/50 text-gray-400 hover:bg-gray-700 hover:text-gray-300",
+    controlActive: "bg-green-500/20 text-green-400 ring-1 ring-green-500/50",
+    input: "min-w-0 rounded-sm bg-gray-700/50 px-3 py-1 text-xs font-medium text-white transition-colors duration-200 placeholder:text-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-green-500/50",
+    detailAvatar: "h-16 w-16 object-cover ring-2 ring-gray-600 shadow-md",
+    detailUsername: "mt-2 text-xs font-medium text-gray-200",
+    detailGrid: "flex-1 grid grid-cols-3 gap-6",
+    statCard: "rounded-sm bg-gray-700/50 p-4 transition-colors duration-200 hover:bg-gray-700",
+    statLabel: "mb-1 text-sm font-medium text-gray-400",
+    statValue: "text-2xl font-semibold",
+    statSecondary: "text-sm text-gray-500",
+} as const;
