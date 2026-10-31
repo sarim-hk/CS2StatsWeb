@@ -90,10 +90,12 @@ function MatchesPanel({
                                 : ""
                         }`}
                     >
-                        <div className="p-3 hover:bg-gray-700/50 transition-colors duration-200">
+                        <Link
+                            to={`/match/${match.MatchID}`}
+                            className="block p-3 transition-colors duration-200 hover:bg-gray-700/50"
+                        >
                             <div className="grid grid-cols-4 gap-4">
-                                <Link
-                                    to={`/match/${match.MatchID}`}
+                                <div
                                     className={`flex items-center ${
                                         fullscreen
                                             ? "col-span-2"
@@ -148,7 +150,7 @@ function MatchesPanel({
                                             );
                                         })()}
                                     </div>
-                                </Link>
+                                </div>
 
                                 <div
                                     className={`${
@@ -161,55 +163,43 @@ function MatchesPanel({
                                         <div className="flex items-center gap-2 font-medium">
                                             {match.WinningSide === 2 ? (
                                                 <>
-                                                    <Link
-                                                        to={`/team/${match.WinningTeamID}`}
-                                                        className="text-orange-500 hover:text-orange-400 transition-colors"
-                                                    >
+                                                    <span className="text-orange-500">
                                                         {match.WinningTeamName}{" "}
                                                         <span className="font-semibold">
                                                             {
                                                                 match.WinningTeamScore
                                                             }
                                                         </span>
-                                                    </Link>
+                                                    </span>
 
-                                                    <Link
-                                                        to={`/team/${match.LosingTeamID}`}
-                                                        className="text-blue-500 hover:text-blue-400 transition-colors"
-                                                    >
+                                                    <span className="text-blue-500">
                                                         <span className="font-semibold">
                                                             {
                                                                 match.LosingTeamScore
                                                             }
                                                         </span>{" "}
                                                         {match.LosingTeamName}
-                                                    </Link>
+                                                    </span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Link
-                                                        to={`/team/${match.WinningTeamID}`}
-                                                        className="text-blue-500 hover:text-blue-400 transition-colors"
-                                                    >
+                                                    <span className="text-blue-500">
                                                         {match.WinningTeamName}{" "}
                                                         <span className="font-semibold">
                                                             {
                                                                 match.WinningTeamScore
                                                             }
                                                         </span>
-                                                    </Link>
+                                                    </span>
 
-                                                    <Link
-                                                        to={`/team/${match.LosingTeamID}`}
-                                                        className="text-orange-500 hover:text-orange-400 transition-colors"
-                                                    >
+                                                    <span className="text-orange-500">
                                                         <span className="font-semibold">
                                                             {
                                                                 match.LosingTeamScore
                                                             }
                                                         </span>{" "}
                                                         {match.LosingTeamName}
-                                                    </Link>
+                                                    </span>
                                                 </>
                                             )}
                                         </div>
@@ -228,7 +218,7 @@ function MatchesPanel({
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                 ))
             ) : (
