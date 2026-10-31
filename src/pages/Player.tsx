@@ -86,8 +86,8 @@ function Player() {
 
     return (
         <Layout>
-            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:h-[calc(100dvh_-_6rem_-_2px)]">
-                <div className="min-w-0 md:contents">
+            <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:relative md:flex-row md:h-[calc(100dvh_-_6rem_-_2px)]">
+                <div className="min-w-0 md:flex md:flex-1 md:flex-col">
                     <div
                         className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:h-auto md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
                         onTouchStart={handleProfileTouchStart}
@@ -101,28 +101,28 @@ function Player() {
                         </div>
                     </div>
 
-                    <div className="pt-2 md:col-start-1 md:row-start-3">
-                        <FilterPanel onFilterChange={setFilter} />
-                    </div>
-
                     <div
-                        className="relative mt-2 h-[300px] touch-pan-y overflow-hidden md:contents"
+                        className="relative order-2 mt-2 h-[300px] touch-pan-y overflow-hidden md:order-1 md:contents"
                         onTouchStart={handleFilterTouchStart}
                         onTouchEnd={handleFilterTouchEnd}
                     >
-                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:col-start-1 md:row-start-2 md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "pointer-events-none opacity-0" : "opacity-100"}`}>
+                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:w-full md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "pointer-events-none opacity-0" : "opacity-100"}`}>
                             <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
                         </div>
 
-                        <div className={`absolute inset-0 transition-opacity duration-300 md:static md:col-start-2 md:row-start-2 md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+                        <div className={`absolute inset-0 transition-opacity duration-300 md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:opacity-100 md:transition-none ${showFilter ? "opacity-100" : "pointer-events-none opacity-0"}`}>
                             <PlayerStatsPanel PlayerID={PlayerID} filter={filter} onError={handleError} className="h-full md:h-auto" />
                         </div>
                     </div>
 
+                    <div className="order-1 pt-2 md:order-2">
+                        <FilterPanel onFilterChange={setFilter} />
+                    </div>
+
                 </div>
 
-                <div className="min-w-0 md:contents">
-                    <div className="md:col-start-2 md:row-start-1">
+                <div className="min-w-0 md:flex-2">
+                    <div>
                         <MatchesPanel
                             PlayerID={PlayerID}
                             filter={filter}
