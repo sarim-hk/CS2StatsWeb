@@ -3,6 +3,7 @@ import apiClient from "../../apiClient";
 import useApiRequest from "../../useApiRequest";
 import { Link } from "react-router-dom";
 import { ui } from "../ui";
+import EmptyState from "../EmptyState";
 import MatchInterface from "../../interfaces/MatchInterface";
 
 interface MatchesPanelProps {
@@ -226,9 +227,7 @@ function MatchesPanel({
                     </div>
                 ))
             ) : (
-                <div className="p-3 text-gray-300 text-sm font-medium">
-                    No matches found.
-                </div>
+                <EmptyState message="No matches found." />
             )}
         </div>
     );

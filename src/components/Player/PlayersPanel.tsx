@@ -4,6 +4,7 @@ import useApiRequest from '../../useApiRequest';
 import { Link } from 'react-router-dom';
 import PlayerInfoInterface from '../../interfaces/PlayerInfoInterface';
 import { ui } from '../ui';
+import EmptyState from '../EmptyState';
 
 const utcDateTimeFormatter = new Intl.DateTimeFormat('en-GB', {
     day: '2-digit',
@@ -227,9 +228,7 @@ function PlayersPanel({
                         </div>
                     ))
                 ) : (
-                    <div className="p-3 text-gray-300 text-sm font-medium">
-                        No players found.
-                    </div>
+                    <EmptyState message="No players found." />
                 )}
             </div>
         </div>

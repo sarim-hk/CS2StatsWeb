@@ -3,6 +3,7 @@ import apiClient from '../../apiClient';
 import useApiRequest from '../../useApiRequest';
 import CompletePlayerStatsInterface from '../../interfaces/PlayerStatsInterface';
 import { ui } from '../ui';
+import EmptyState from '../EmptyState';
 
 interface PlayerStatsPanelProps {
     PlayerID: string;
@@ -13,6 +14,7 @@ interface PlayerStatsPanelProps {
 
 function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerStatsPanelProps) {
     const [playerStats, setPlayerStats] = useState<CompletePlayerStatsInterface>();
+    const [hasLoaded, setHasLoaded] = useState(false);
     const [selectedStatType, setSelectedStatType] = useState<'Overall' | 'Terrorist' | 'CounterTerrorist'>('Overall');
 
     useApiRequest<CompletePlayerStatsInterface>({
@@ -21,8 +23,15 @@ function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerS
         params.set("player_id", PlayerID);
             return apiClient.get("/playerstats_panel", { params, signal });
         },
-        onSuccess: setPlayerStats,
-        onError,
+        onSuccess: (data) => {
+            setPlayerStats(data);
+            setHasLoaded(true);
+        },
+        onError: () => {
+            setPlayerStats(undefined);
+            setHasLoaded(true);
+            onError?.();
+        },
         dependencies: [PlayerID, filter],
     });
 
@@ -37,7 +46,8 @@ function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerS
             : ui.controlIdle
     }`;
 
-    const stats = playerStats?.[PlayerID][selectedStatType];
+    const player = playerStats?.[PlayerID];
+    const stats = player?.[selectedStatType];
 
     const statRows = [
         {
@@ -127,13 +137,13 @@ function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerS
                     </div>
                     <div className="flex flex-col items-center">
                         <span className="text-xs text-gray-500">Matches</span>
-                        <span className="text-gray-300">{Number(playerStats?.[PlayerID]?.MatchesPlayed ?? 0)}</span>
+                                <span className="text-gray-300">{Number(player?.MatchesPlayed ?? 0)}</span>
                     </div>
                     <div className="flex flex-col items-center">
                         <span className="text-xs text-gray-500">Win Rate</span>
                         <span className="text-gray-300">
-                            {playerStats?.[PlayerID]?.MatchesWon && playerStats?.[PlayerID]?.MatchesPlayed
-                                ? ((Number(playerStats[PlayerID].MatchesWon) / Number(playerStats[PlayerID].MatchesPlayed)) * 100).toFixed(0)
+                            {player?.MatchesWon && player?.MatchesPlayed
+                                ? ((Number(player.MatchesWon) / Number(player.MatchesPlayed)) * 100).toFixed(0)
                                 : "0"}%
                         </span>
                     </div>
@@ -165,16 +175,20 @@ function PlayerStatsPanel({ PlayerID, filter, onError, className = "" }: PlayerS
             </div>
 
             <div>
-                {statRows.map((row) => (
-                    <div key={row.label} className={ui.panelRow}>
-                        <div className={ui.panelRowContent}>
-                            <div className="flex items-center justify-between">
-                                <div className={ui.statRowLabel}>{row.label}</div>
-                                <div className="text-base font-semibold">{row.value}</div>
+                {hasLoaded && !player ? (
+                    <EmptyState message="No stats found." />
+                ) : (
+                    statRows.map((row) => (
+                        <div key={row.label} className={ui.panelRow}>
+                            <div className={ui.panelRowContent}>
+                                <div className="flex items-center justify-between">
+                                    <div className={ui.statRowLabel}>{row.label}</div>
+                                    <div className="text-base font-semibold">{row.value}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );

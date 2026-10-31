@@ -3,6 +3,7 @@ import apiClient from "../../apiClient";
 import useApiRequest from "../../useApiRequest";
 import { Line } from "react-chartjs-2";
 import { ui } from "../ui";
+import EmptyState from "../EmptyState";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -25,6 +26,7 @@ interface PlayerELOPanelProps {
 
 function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps) {
     const [playerELOHistory, setPlayerELOHistory] = useState<any>(null);
+    const [hasLoaded, setHasLoaded] = useState(false);
 
     useApiRequest({
         request: (signal) => {
@@ -32,13 +34,24 @@ function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps)
         new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
             return apiClient.get("/playerelo_panel", { params: query, signal });
         },
-        onSuccess: setPlayerELOHistory,
-        onError,
+        onSuccess: (data) => {
+            setPlayerELOHistory(data);
+            setHasLoaded(true);
+        },
+        onError: () => {
+            setPlayerELOHistory(null);
+            setHasLoaded(true);
+            onError?.();
+        },
         dependencies: [PlayerID, filter],
     });
 
     if (!playerELOHistory) {
-        return null;
+        return hasLoaded ? (
+            <div className={ui.panelFlat}>
+                <EmptyState message="No ELO history found." className="flex h-32 items-center justify-center text-center md:h-48" />
+            </div>
+        ) : null;
     }
 
     const eloData = [];

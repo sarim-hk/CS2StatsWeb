@@ -3,6 +3,7 @@ import apiClient from "../../apiClient";
 import useApiRequest from "../../useApiRequest";
 import { Doughnut } from "react-chartjs-2";
 import { ui } from "../ui";
+import EmptyState from "../EmptyState";
 import {
     ArcElement,
     Chart as ChartJS,
@@ -35,6 +36,7 @@ interface PlayerWeaponsPanelProps {
 
 function PlayerWeaponsPanel({ PlayerID, filter = "", onError }: PlayerWeaponsPanelProps) {
     const [playerWeapons, setPlayerWeapons] = useState<PlayerWeapons>();
+    const [hasLoaded, setHasLoaded] = useState(false);
 
     useApiRequest<PlayerWeaponsResponse>({
         request: (signal) => {
@@ -42,12 +44,25 @@ function PlayerWeaponsPanel({ PlayerID, filter = "", onError }: PlayerWeaponsPan
         new URLSearchParams(filter).forEach((value, key) => query.set(key, value));
             return apiClient.get("/playerweapons_panel", { params: query, signal });
         },
-        onSuccess: (data) => setPlayerWeapons(data?.[PlayerID]),
-        onError,
+        onSuccess: (data) => {
+            setPlayerWeapons(data?.[PlayerID]);
+            setHasLoaded(true);
+        },
+        onError: () => {
+            setPlayerWeapons(undefined);
+            setHasLoaded(true);
+            onError?.();
+        },
         dependencies: [PlayerID, filter],
     });
 
-    if (!playerWeapons) return null;
+    if (!playerWeapons) {
+        return hasLoaded ? (
+            <div className={`${ui.panelFlat} flex h-full flex-col p-4 md:h-[230px]`}>
+                <EmptyState message="No weapon stats found." className="flex flex-1 items-center justify-center text-center" />
+            </div>
+        ) : null;
+    }
 
     const weapons = playerWeapons.Weapons ?? [];
     const totalKills = weapons.reduce(
@@ -115,9 +130,7 @@ function PlayerWeaponsPanel({ PlayerID, filter = "", onError }: PlayerWeaponsPan
                     />
                 </div>
             ) : (
-                <div className="flex flex-1 items-center justify-center text-center text-xs font-medium text-gray-400">
-                    No weapon kills found.
-                </div>
+                <EmptyState message="No weapon stats found." className="flex flex-1 items-center justify-center text-center" />
             )}
         </div>
     );

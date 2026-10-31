@@ -3,6 +3,7 @@ import apiClient from "../../apiClient";
 import useApiRequest from "../../useApiRequest";
 import { Line } from "react-chartjs-2";
 import { ui } from "../ui";
+import EmptyState from "../EmptyState";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,19 +25,31 @@ interface TeamELOPanelProps {
 
 function TeamELOPanel({ TeamID, onError }: TeamELOPanelProps) {
     const [teamELOHistory, setTeamELOHistory] = useState<any>(null);
+    const [hasLoaded, setHasLoaded] = useState(false);
 
     useApiRequest({
         request: (signal) => apiClient.get("/teamelo_panel", {
                 params: { team_id: TeamID },
                 signal,
             }),
-        onSuccess: setTeamELOHistory,
-        onError,
+        onSuccess: (data) => {
+            setTeamELOHistory(data);
+            setHasLoaded(true);
+        },
+        onError: () => {
+            setTeamELOHistory(null);
+            setHasLoaded(true);
+            onError?.();
+        },
         dependencies: [TeamID],
     });
 
     if (!teamELOHistory) {
-        return null;
+        return hasLoaded ? (
+            <div className={ui.panelFlat}>
+                <EmptyState message="No ELO history found." className="flex h-48 items-center justify-center text-center" />
+            </div>
+        ) : null;
     }
 
     const eloData = [];
