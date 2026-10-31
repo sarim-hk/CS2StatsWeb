@@ -103,7 +103,7 @@ function Player() {
                             <PlayerPanel PlayerID={PlayerID} onNotFound={handleNotFound} onError={handleError} />
                         </div>
                         <div className={`absolute inset-0 border-t border-gray-700 transition-opacity duration-300 md:static md:h-auto md:pointer-events-auto md:border-0 md:pt-2 md:opacity-100 md:transition-none ${showPlayerELO ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-                            <PlayerELOPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
+                            <PlayerELOPanel PlayerID={PlayerID} filter={filter} />
                         </div>
                     </div>
 
@@ -113,11 +113,11 @@ function Player() {
                         onTouchEnd={handleFilterTouchEnd}
                     >
                         <div className={`absolute inset-0 transition-opacity duration-300 md:static md:w-full md:pointer-events-auto md:opacity-100 md:pt-2 md:transition-none ${showFilter ? "pointer-events-none opacity-0" : "opacity-100"}`}>
-                            <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} onError={handleError} />
+                            <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} />
                         </div>
 
                         <div className={`absolute inset-0 transition-opacity duration-300 md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:opacity-100 md:transition-none ${showFilter ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-                            <PlayerStatsPanel PlayerID={PlayerID} filter={filter} onError={handleError} className="h-full md:h-auto" />
+                            <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full md:h-auto" />
                         </div>
                     </div>
 
@@ -134,7 +134,6 @@ function Player() {
                             filter={filter}
                             panelSize={544}
                             mobileNaturalHeight
-                            onError={handleError}
                         />
                     </div>
 
