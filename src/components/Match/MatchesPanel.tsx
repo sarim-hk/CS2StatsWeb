@@ -142,7 +142,9 @@ function MatchesPanel({
                                             return (
                                                 <>
                                                     {days[d.getUTCDay()]},{" "}
-                                                    {pad(d.getUTCDate())}{" "}
+                                                    {pad(d.getUTCDate())}
+                                                    <br className="md:hidden" />
+                                                    <span className="hidden md:inline"> </span>
                                                     {months[d.getUTCMonth()]}{" "}
                                                     {d.getUTCFullYear()}
                                                     <span className="hidden md:inline">
@@ -165,45 +167,45 @@ function MatchesPanel({
                                     }`}
                                 >
                                     <div className="flex flex-col items-end">
-                                        <div className="flex items-center gap-2 font-medium">
+                                        <div className="flex w-full max-w-full items-center justify-end gap-2 font-medium">
                                             {match.WinningSide === 2 ? (
                                                 <>
-                                                    <span className="text-orange-500">
-                                                        {match.WinningTeamName}{" "}
-                                                        <span className="font-semibold">
+                                                    <span className="flex min-w-0 max-w-[48%] items-center gap-1 text-orange-500 md:max-w-none md:flex-none">
+                                                        <span className="min-w-0 truncate md:overflow-visible md:text-clip md:whitespace-normal">{match.WinningTeamName}</span>
+                                                        <span className="shrink-0 font-semibold">
                                                             {
                                                                 match.WinningTeamScore
                                                             }
                                                         </span>
                                                     </span>
 
-                                                    <span className="text-blue-500">
-                                                        <span className="font-semibold">
+                                                    <span className="flex min-w-0 max-w-[48%] items-center gap-1 text-blue-500 md:max-w-none md:flex-none">
+                                                        <span className="shrink-0 font-semibold">
                                                             {
                                                                 match.LosingTeamScore
                                                             }
-                                                        </span>{" "}
-                                                        {match.LosingTeamName}
+                                                        </span>
+                                                        <span className="min-w-0 truncate md:overflow-visible md:text-clip md:whitespace-normal">{match.LosingTeamName}</span>
                                                     </span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span className="text-blue-500">
-                                                        {match.WinningTeamName}{" "}
-                                                        <span className="font-semibold">
+                                                    <span className="flex min-w-0 max-w-[48%] items-center gap-1 text-blue-500 md:max-w-none md:flex-none">
+                                                        <span className="min-w-0 truncate md:overflow-visible md:text-clip md:whitespace-normal">{match.WinningTeamName}</span>
+                                                        <span className="shrink-0 font-semibold">
                                                             {
                                                                 match.WinningTeamScore
                                                             }
                                                         </span>
                                                     </span>
 
-                                                    <span className="text-orange-500">
-                                                        <span className="font-semibold">
+                                                    <span className="flex min-w-0 max-w-[48%] items-center gap-1 text-orange-500 md:max-w-none md:flex-none">
+                                                        <span className="shrink-0 font-semibold">
                                                             {
                                                                 match.LosingTeamScore
                                                             }
-                                                        </span>{" "}
-                                                        {match.LosingTeamName}
+                                                        </span>
+                                                        <span className="min-w-0 truncate md:overflow-visible md:text-clip md:whitespace-normal">{match.LosingTeamName}</span>
                                                     </span>
                                                 </>
                                             )}
