@@ -25,6 +25,7 @@ interface DateRange {
 
 interface FilterPanelProps {
     onFilterChange: (filter: string) => void;
+    className?: string;
 }
 
 const monthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" });
@@ -115,8 +116,8 @@ function DateRangePicker({
     }
 
     return (
-        <div className="flex-1 min-w-0">
-            <div className="w-full rounded-sm border border-gray-700 bg-gray-800 p-2 shadow-lg">
+        <div className="flex-1 min-w-0 md:h-full">
+            <div className="w-full rounded-sm border border-gray-700 bg-gray-800 p-2 shadow-lg md:flex md:h-full md:flex-col">
 
                     <div className="mb-2 flex items-center justify-between">
                         <button
@@ -155,7 +156,7 @@ function DateRangePicker({
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-7 gap-y-1.5 text-center">
+                    <div className="grid grid-cols-7 gap-y-1.5 text-center md:flex-1 md:grid-rows-5">
                         {days.map(({ date, currentMonth }) => {
                             const inRange = Boolean(value.start && value.end && date > value.start && date < value.end);
                             const selected = sameDay(date, value.start) || sameDay(date, value.end);
@@ -164,7 +165,7 @@ function DateRangePicker({
                                     key={date.toISOString()}
                                     type="button"
                                     onClick={() => selectDate(date)}
-                                    className={`h-6 text-xs transition-colors ${
+                                    className={`h-6 text-xs transition-colors md:h-auto ${
                                         selected
                                             ? "bg-green-500 font-semibold text-gray-900"
                                             : inRange
@@ -207,7 +208,7 @@ function DateRangePicker({
     );
 }
 
-function FilterPanel({ onFilterChange }: FilterPanelProps) {
+function FilterPanel({ onFilterChange, className = "" }: FilterPanelProps) {
     const [dateRange, setDateRange] = useState<DateRange>({ start: null, end: null });
     const [mapId, setMapId] = useState<string>("");
 
@@ -226,9 +227,9 @@ function FilterPanel({ onFilterChange }: FilterPanelProps) {
     }, [dateRange, mapId, onFilterChange]);
 
     return (
-        <div className={ui.panelFlat}>
-            <div className="p-2">
-                <div className="flex flex-col gap-2">
+        <div className={`${ui.panelFlat} ${className}`}>
+            <div className="h-full p-2">
+                <div className="flex h-full flex-col gap-2">
                     <DateRangePicker
                         value={dateRange}
                         mapId={mapId}

@@ -68,14 +68,14 @@ function Player() {
     return (
         <Layout>
             <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:relative md:flex-row md:h-[calc(100dvh_-_6rem_-_2px)]">
-                <div className="min-w-0 md:flex md:flex-1 md:flex-col md:self-start">
+                <div className="min-w-0 md:flex md:h-full md:min-h-0 md:flex-1 md:flex-col">
                     <div
-                        className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:h-auto md:shrink-0 md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
+                        className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:flex md:min-h-0 md:flex-[1_1_20rem] md:flex-col md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
                         onTouchStart={handleProfileTouchStart}
                         onTouchEnd={handleProfileTouchEnd}
                     >
                         <div
-                            className={`absolute inset-0 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:transition-none ${profileCarousel.getTransform(0)} ${profileCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:shrink-0 md:pointer-events-auto md:translate-x-0 md:transition-none ${profileCarousel.getTransform(0)} ${profileCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) profileCarousel.finishSlide();
                             }}
@@ -83,12 +83,16 @@ function Player() {
                             <PlayerPanel PlayerID={PlayerID} onNotFound={handleNotFound} onError={handleError} />
                         </div>
                         <div
-                            className={`absolute inset-0 border-t border-gray-700 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:border-0 md:pt-2 md:transition-none ${profileCarousel.getTransform(1)} ${profileCarousel.activeIndex === 1 ? "" : "pointer-events-none"}`}
+                            className={`absolute inset-0 border-t border-gray-700 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:flex md:min-h-0 md:flex-[1_1_12rem] md:flex-col md:pointer-events-auto md:translate-x-0 md:border-0 md:pt-2 md:transition-none ${profileCarousel.getTransform(1)} ${profileCarousel.activeIndex === 1 ? "" : "pointer-events-none"}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) profileCarousel.finishSlide();
                             }}
                         >
-                            <PlayerELOPanel PlayerID={PlayerID} filter={filter} />
+                            <PlayerELOPanel
+                                PlayerID={PlayerID}
+                                filter={filter}
+                                className="md:flex md:min-h-0 md:flex-1 md:flex-col"
+                            />
                         </div>
                         <SwipeHint
                             activeIndex={profileCarousel.activeIndex}
@@ -113,12 +117,12 @@ function Player() {
                         </div>
 
                         <div
-                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${statsCarousel.getTransform(0)} ${statsCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(0)} ${statsCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
                         >
-                            <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full md:h-auto" />
+                            <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full" />
                         </div>
                         <div
                             className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(2)} ${statsCarousel.activeIndex !== 2 ? "pointer-events-none" : ""}`}
@@ -137,7 +141,7 @@ function Player() {
                     </div>
 
                     <div
-                        className="relative hidden h-[238px] shrink-0 cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing md:block md:[&_*]:select-none"
+                        className="relative hidden h-[238px] cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing md:flex md:min-h-0 md:flex-[1_1_14.875rem] md:flex-col md:[&_*]:select-none"
                         onPointerDown={handleDesktopBreakdownPointerDown}
                         onPointerUp={handleDesktopBreakdownPointerUp}
                     >
@@ -191,19 +195,21 @@ function Player() {
                     </div>
 
                     <div className="order-1 pt-2 md:order-2 md:shrink-0">
-                        <FilterPanel onFilterChange={setFilter} />
+                        <FilterPanel onFilterChange={setFilter} className="md:h-[300px]" />
                     </div>
 
                 </div>
 
-                <div className="min-w-0 md:flex-2">
-                    <div>
+                <div className="min-w-0 md:flex md:min-h-0 md:flex-2 md:flex-col">
+                    <div className="min-h-0 md:flex-1">
                         <MatchesPanel
                             PlayerID={PlayerID}
                             filter={filter}
-                            panelSize={544}
                             mobileNaturalHeight
                         />
+                    </div>
+                    <div className="hidden shrink-0 pt-2 md:block">
+                        <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="md:h-[300px]" />
                     </div>
 
                 </div>

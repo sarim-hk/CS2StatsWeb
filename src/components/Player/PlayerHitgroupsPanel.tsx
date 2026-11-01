@@ -134,14 +134,14 @@ function PlayerHitgroupsPanel({ PlayerID, filter = "", onError }: PlayerHitgroup
 
     if (!playerHitgroups) {
         return hasLoaded ? (
-            <div className={`${ui.panelFlat} flex h-full flex-col p-4 md:h-[230px]`}>
+            <div className={`${ui.panelFlat} flex h-full flex-col p-4`}>
                 <EmptyState message="No hitgroup stats found." className="flex flex-1 items-center justify-center text-center" />
             </div>
         ) : null;
     }
 
     return (
-        <div className={`${ui.panelFlat} flex h-full flex-col p-4 md:h-[230px]`}>
+        <div className={`${ui.panelFlat} flex h-full flex-col p-4`}>
             <div className="mb-2 flex shrink-0 items-center justify-between">
                 <h2 className="text-xs font-medium text-gray-300">Kills / Hitgroup</h2>
                 <span className="text-[10px] text-gray-500">{totalKills} total</span>

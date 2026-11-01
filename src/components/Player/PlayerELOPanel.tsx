@@ -22,9 +22,10 @@ interface PlayerELOPanelProps {
     PlayerID: string;
     filter?: string;
     onError?: () => void;
+    className?: string;
 }
 
-function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps) {
+function PlayerELOPanel({ PlayerID, filter = "", onError, className = "" }: PlayerELOPanelProps) {
     const [playerELOHistory, setPlayerELOHistory] = useState<any>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -48,7 +49,7 @@ function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps)
 
     if (!playerELOHistory) {
         return hasLoaded ? (
-            <div className={ui.panelFlat}>
+            <div className={`${ui.panelFlat} ${className}`}>
                 <EmptyState message="No ELO history found." className="flex h-32 items-center justify-center text-center md:h-48" />
             </div>
         ) : null;
@@ -147,8 +148,8 @@ function PlayerELOPanel({ PlayerID, filter = "", onError }: PlayerELOPanelProps)
     };
 
     return (
-        <div className={ui.panelFlat}>
-            <div className="h-32 md:h-48">
+        <div className={`${ui.panelFlat} ${className}`}>
+            <div className="h-32 md:min-h-0 md:flex-1">
                 <Line data={data} options={options as any} />
             </div>
         </div>
