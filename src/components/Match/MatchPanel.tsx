@@ -22,6 +22,16 @@ const MATCH_STAT_HEADERS = [
     { id: 'rating', label: 'Rating' },
 ] as const;
 
+function measureMobileNameWidth(name: string) {
+    if (typeof document === "undefined") return name.length * 6;
+
+    const context = document.createElement("canvas").getContext("2d");
+    if (!context) return name.length * 6;
+
+    context.font = "400 12px 'Noto Sans', ui-sans-serif, system-ui, sans-serif";
+    return context.measureText(name).width;
+}
+
 function MatchPanel({ Match }: MatchPanelProps) {
     const [showRounds, setShowRounds] = useState(false);
     const tableScrollContainers = useRef<Record<string, HTMLDivElement | null>>({});
@@ -50,8 +60,20 @@ function MatchPanel({ Match }: MatchPanelProps) {
         0,
         ...sortedTeams.map(([, team]) => team.TeamName.length),
     );
+    const mobileTeamNames = sortedTeams.map(([, team]) =>
+        team.TeamName.length <= longestUsernameLength
+            ? team.TeamName
+            : `${team.TeamName.slice(0, Math.max(1, longestUsernameLength - 1))}\u2026`,
+    );
+    const widestMobileColumnText = Math.max(
+        48,
+        ...sortedTeams.flatMap(([, team]) =>
+            Object.values(team.Players).map((player) => measureMobileNameWidth(player.Overall.Username)),
+        ),
+        ...mobileTeamNames.map(measureMobileNameWidth),
+    );
     const teamColumnStyle = {
-        '--team-column-mobile-width': `calc(${Math.max(8, longestUsernameLength)}ch + 1rem)`,
+        '--team-column-mobile-width': `calc(${Math.ceil(widestMobileColumnText)}px + 1rem)`,
         '--team-column-desktop-width': `calc(${Math.max(8, longestUsernameLength, longestTeamNameLength)}ch + 1rem)`,
     } as CSSProperties;
 
@@ -203,37 +225,30 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                     }`}
                                 >
                                     <th className="sticky left-0 z-20 whitespace-nowrap bg-gray-800 py-2 px-2 text-left font-medium text-gray-300 md:px-3">
-                                        <div className="flex items-center space-x-2">
+                                        <div className="flex items-center gap-1">
                                             <span
-                                                className={`h-1.5 w-1.5 shrink-0 rounded-sm ${
+                                                className={`shrink-0 text-[10px] font-medium ${
                                                     Match?.Teams[teamId].Side === 2
-                                                        ? 'bg-orange-500'
-                                                        : 'bg-blue-500'
+                                                        ? 'text-orange-400'
+                                                        : 'text-blue-400'
                                                 }`}
-                                            ></span>
-
-                                            <span>
-                                                {/* Team Name Link */}
-                                                <Link
-                                                    to={`/team/${teamId}`}
-                                                    className="text-xs hover:text-blue-400 transition-colors"
-                                                    title={Match?.Teams[teamId].TeamName}
-                                                >
-                                                    <span className="md:hidden">
-                                                        {truncateTeamName(Match?.Teams[teamId].TeamName ?? "")}
-                                                    </span>
-                                                    <span className="hidden md:inline">
-                                                        {Match?.Teams[teamId].TeamName}
-                                                    </span>
-                                                </Link>
-
-                                                <span className="text-[10px] truncate text-gray-400 pl-1">
-                                                    {(Match?.Teams[teamId].DeltaELO ?? 0) >= 0
-                                                        ? '+'
-                                                        : ''}
-                                                    {Match?.Teams[teamId].DeltaELO ?? 0}
-                                                </span>
+                                            >
+                                                {(Match?.Teams[teamId].DeltaELO ?? 0) >= 0 ? '+' : ''}
+                                                {Match?.Teams[teamId].DeltaELO ?? 0}
                                             </span>
+
+                                            <Link
+                                                to={`/team/${teamId}`}
+                                                className="min-w-0 truncate text-xs hover:text-blue-400 transition-colors md:overflow-visible md:text-clip md:whitespace-normal"
+                                                title={Match?.Teams[teamId].TeamName}
+                                            >
+                                                <span className="md:hidden">
+                                                    {truncateTeamName(Match?.Teams[teamId].TeamName ?? "")}
+                                                </span>
+                                                <span className="hidden md:inline">
+                                                    {Match?.Teams[teamId].TeamName}
+                                                </span>
+                                            </Link>
                                         </div>
                                     </th>
 
