@@ -1,13 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
-interface MobileSwipeHintProps {
+interface SwipeHintProps {
     activeIndex: number;
     viewCount: number;
     direction: "forward" | "backward";
     isSliding: boolean;
+    visibility?: "mobile" | "all";
 }
 
-function MobileSwipeHint({ activeIndex, viewCount, direction, isSliding }: MobileSwipeHintProps) {
+function SwipeHint({
+    activeIndex,
+    viewCount,
+    direction,
+    isSliding,
+    visibility = "mobile",
+}: SwipeHintProps) {
     const [progressIndex, setProgressIndex] = useState<number>(activeIndex);
     const [isProgressSliding, setIsProgressSliding] = useState(false);
     const wasSliding = useRef(false);
@@ -57,7 +64,7 @@ function MobileSwipeHint({ activeIndex, viewCount, direction, isSliding }: Mobil
     }, []);
 
     return (
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-0.5 overflow-hidden bg-gray-700 md:hidden">
+        <div aria-hidden="true" className={`pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-0.5 overflow-hidden bg-gray-700 ${visibility === "mobile" ? "md:hidden" : ""}`}>
             <div
                 className={`h-full bg-green-400 ${isProgressSliding ? "transition-transform duration-150 ease-out" : "transition-none"}`}
                 style={{ width: `${100 / viewCount}%`, transform: `translateX(${progressIndex * 100}%)` }}
@@ -66,4 +73,4 @@ function MobileSwipeHint({ activeIndex, viewCount, direction, isSliding }: Mobil
     );
 }
 
-export default MobileSwipeHint;
+export default SwipeHint;

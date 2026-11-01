@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Layout from "../components/Layout";
@@ -9,97 +9,48 @@ import PlayerELOPanel from '../components/Player/PlayerELOPanel';
 import FilterPanel from '../components/Player/FilterPanel';
 import PlayerWeaponsPanel from '../components/Player/PlayerWeaponsPanel';
 import PlayerHitgroupsPanel from '../components/Player/PlayerHitgroupsPanel';
-import MobileSwipeHint from '../components/MobileSwipeHint';
+import SwipeHint from '../components/SwipeHint';
+import useSwipeCarousel from '../useSwipeCarousel';
 import NotFound from './NotFound';
-
-type SlideDirection = "forward" | "backward";
 
 function Player() {
     const { PlayerID } = useParams<{ PlayerID: string }>();
     const [filter, setFilter] = useState<string>("");
-    const [showPlayerELO, setShowPlayerELO] = useState(false);
-    const [isProfileSliding, setIsProfileSliding] = useState(false);
-    const [profileSlideDirection, setProfileSlideDirection] = useState<SlideDirection>("forward");
-    const profileTouchStart = useRef<{ x: number; y: number } | null>(null);
-    const [activeStatsPanel, setActiveStatsPanel] = useState(0);
-    const [isFilterSliding, setIsFilterSliding] = useState(false);
-    const [statsSlideDirection, setStatsSlideDirection] = useState<SlideDirection>("forward");
-    const filterTouchStart = useRef<{ x: number; y: number } | null>(null);
+    const profileCarousel = useSwipeCarousel(2);
+    const statsCarousel = useSwipeCarousel(3);
+    const desktopBreakdownCarousel = useSwipeCarousel(2);
     const [notFound, setNotFound] = useState(false);
     const [hasError, setHasError] = useState(false);
     const handleNotFound = useCallback(() => setNotFound(true), []);
     const handleError = useCallback(() => setHasError(true), []);
-    const moveProfileView = useCallback((direction: SlideDirection) => {
-        if (isProfileSliding) return;
-
-        setProfileSlideDirection(direction);
-        window.requestAnimationFrame(() => {
-            setShowPlayerELO((current) => !current);
-            setIsProfileSliding(true);
-        });
-    }, [isProfileSliding]);
-    const moveStatsView = useCallback((direction: SlideDirection) => {
-        if (isFilterSliding) return;
-
-        setStatsSlideDirection(direction);
-        window.requestAnimationFrame(() => {
-            setActiveStatsPanel((current) => (
-                direction === "forward"
-                    ? (current + 1) % 3
-                    : (current + 2) % 3
-            ));
-            setIsFilterSliding(true);
-        });
-    }, [isFilterSliding]);
     const handleProfileTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
         const touch = event.touches[0];
-        profileTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+        if (touch) profileCarousel.startSwipe({ x: touch.clientX, y: touch.clientY });
     };
     const handleProfileTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-        if (profileTouchStart.current === null) return;
-
         const touch = event.changedTouches[0];
-        const horizontalDistance = touch.clientX - profileTouchStart.current.x;
-        const verticalDistance = touch.clientY - profileTouchStart.current.y;
-        if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
-            moveProfileView(horizontalDistance < 0 ? "forward" : "backward");
-        }
-
-        profileTouchStart.current = null;
+        if (touch) profileCarousel.endSwipe({ x: touch.clientX, y: touch.clientY });
     };
     const handleFilterTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
         const touch = event.touches[0];
-        filterTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+        if (touch) statsCarousel.startSwipe({ x: touch.clientX, y: touch.clientY });
     };
     const handleFilterTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-        if (filterTouchStart.current === null) return;
-
         const touch = event.changedTouches[0];
-        const horizontalDistance = touch.clientX - filterTouchStart.current.x;
-        const verticalDistance = touch.clientY - filterTouchStart.current.y;
-        if (Math.abs(horizontalDistance) >= 40 && Math.abs(horizontalDistance) >= Math.abs(verticalDistance) * 1.5) {
-            moveStatsView(horizontalDistance < 0 ? "forward" : "backward");
-        }
-
-        filterTouchStart.current = null;
+        if (touch) statsCarousel.endSwipe({ x: touch.clientX, y: touch.clientY });
     };
 
-    const getStatsPanelTransform = (index: number) => {
-        if (index === activeStatsPanel) return "translate-x-0";
+    const handleDesktopBreakdownPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (event.pointerType !== "mouse") return;
 
-        if (!isFilterSliding) {
-            return statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full";
+        desktopBreakdownCarousel.startSwipe({ x: event.clientX, y: event.clientY });
+        event.currentTarget.setPointerCapture(event.pointerId);
+    };
+
+    const handleDesktopBreakdownPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (event.pointerType === "mouse") {
+            desktopBreakdownCarousel.endSwipe({ x: event.clientX, y: event.clientY });
         }
-
-        const outgoingIndex = statsSlideDirection === "forward"
-            ? (activeStatsPanel + 2) % 3
-            : (activeStatsPanel + 1) % 3;
-
-        if (index === outgoingIndex) {
-            return statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full";
-        }
-
-        return statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full";
     };
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
@@ -117,33 +68,33 @@ function Player() {
     return (
         <Layout>
             <div className="flex min-h-0 flex-col gap-2 overflow-y-auto md:relative md:flex-row md:h-[calc(100dvh_-_6rem_-_2px)]">
-                <div className="min-w-0 md:flex md:flex-1 md:flex-col">
+                <div className="min-w-0 md:flex md:flex-1 md:flex-col md:self-start">
                     <div
-                        className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:h-auto md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
+                        className="relative h-32 touch-pan-y overflow-hidden rounded-sm border border-gray-700 bg-gray-800 md:h-auto md:shrink-0 md:overflow-visible md:rounded-none md:border-0 md:bg-transparent"
                         onTouchStart={handleProfileTouchStart}
                         onTouchEnd={handleProfileTouchEnd}
                     >
                         <div
-                            className={`absolute inset-0 ${isProfileSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:transition-none ${showPlayerELO ? `${isProfileSliding ? (profileSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (profileSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none` : "translate-x-0"}`}
+                            className={`absolute inset-0 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:transition-none ${profileCarousel.getTransform(0)} ${profileCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
-                                if (event.target === event.currentTarget) setIsProfileSliding(false);
+                                if (event.target === event.currentTarget) profileCarousel.finishSlide();
                             }}
                         >
                             <PlayerPanel PlayerID={PlayerID} onNotFound={handleNotFound} onError={handleError} />
                         </div>
                         <div
-                            className={`absolute inset-0 border-t border-gray-700 ${isProfileSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:border-0 md:pt-2 md:transition-none ${showPlayerELO ? "translate-x-0" : `${isProfileSliding ? (profileSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (profileSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none`}`}
+                            className={`absolute inset-0 border-t border-gray-700 ${profileCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:h-auto md:pointer-events-auto md:translate-x-0 md:border-0 md:pt-2 md:transition-none ${profileCarousel.getTransform(1)} ${profileCarousel.activeIndex === 1 ? "" : "pointer-events-none"}`}
                             onTransitionEnd={(event) => {
-                                if (event.target === event.currentTarget) setIsProfileSliding(false);
+                                if (event.target === event.currentTarget) profileCarousel.finishSlide();
                             }}
                         >
                             <PlayerELOPanel PlayerID={PlayerID} filter={filter} />
                         </div>
-                        <MobileSwipeHint
-                            activeIndex={showPlayerELO ? 1 : 0}
+                        <SwipeHint
+                            activeIndex={profileCarousel.activeIndex}
                             viewCount={2}
-                            direction={profileSlideDirection}
-                            isSliding={isProfileSliding}
+                            direction={profileCarousel.direction}
+                            isSliding={profileCarousel.isSliding}
                         />
                     </div>
 
@@ -153,39 +104,93 @@ function Player() {
                         onTouchEnd={handleFilterTouchEnd}
                     >
                         <div
-                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${getStatsPanelTransform(0)} ${activeStatsPanel !== 0 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(0)} ${statsCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
-                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                                if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
                         >
                             <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} />
                         </div>
 
                         <div
-                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${getStatsPanelTransform(1)} ${activeStatsPanel !== 1 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${statsCarousel.getTransform(1)} ${statsCarousel.activeIndex !== 1 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
-                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                                if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
                         >
                             <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full md:h-auto" />
                         </div>
                         <div
-                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${getStatsPanelTransform(2)} ${activeStatsPanel !== 2 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(2)} ${statsCarousel.activeIndex !== 2 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
-                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                                if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
                         >
                             <PlayerHitgroupsPanel PlayerID={PlayerID} filter={filter} />
                         </div>
-                        <MobileSwipeHint
-                            activeIndex={activeStatsPanel}
+                        <SwipeHint
+                            activeIndex={statsCarousel.activeIndex}
                             viewCount={3}
-                            direction={statsSlideDirection}
-                            isSliding={isFilterSliding}
+                            direction={statsCarousel.direction}
+                            isSliding={statsCarousel.isSliding}
                         />
                     </div>
 
-                    <div className="order-1 pt-2 md:order-2">
+                    <div
+                        className="relative hidden h-[238px] shrink-0 cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing md:block md:[&_*]:select-none"
+                        onPointerDown={handleDesktopBreakdownPointerDown}
+                        onPointerUp={handleDesktopBreakdownPointerUp}
+                    >
+                        <div
+                            className={`absolute inset-x-0 bottom-0 top-2 ${desktopBreakdownCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} ${desktopBreakdownCarousel.getTransform(0)} ${desktopBreakdownCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) desktopBreakdownCarousel.finishSlide();
+                            }}
+                        >
+                            <PlayerWeaponsPanel PlayerID={PlayerID} filter={filter} />
+                        </div>
+                        <div
+                            className={`absolute inset-x-0 bottom-0 top-2 ${desktopBreakdownCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} ${desktopBreakdownCarousel.getTransform(1)} ${desktopBreakdownCarousel.activeIndex !== 1 ? "pointer-events-none" : ""}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) desktopBreakdownCarousel.finishSlide();
+                            }}
+                        >
+                            <PlayerHitgroupsPanel PlayerID={PlayerID} filter={filter} />
+                        </div>
+                        <button
+                            type="button"
+                            aria-label="Show previous breakdown"
+                            onClick={() => desktopBreakdownCarousel.move("backward")}
+                            onPointerDown={(event) => event.stopPropagation()}
+                            onPointerUp={(event) => event.stopPropagation()}
+                            className="absolute left-2 top-1/2 z-20 flex -translate-y-1/2 p-1 text-gray-400 transition-colors hover:text-gray-200"
+                        >
+                            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="m15 18-6-6 6-6" />
+                            </svg>
+                        </button>
+                        <button
+                            type="button"
+                            aria-label="Show next breakdown"
+                            onClick={() => desktopBreakdownCarousel.move("forward")}
+                            onPointerDown={(event) => event.stopPropagation()}
+                            onPointerUp={(event) => event.stopPropagation()}
+                            className="absolute right-2 top-1/2 z-20 flex -translate-y-1/2 p-1 text-gray-400 transition-colors hover:text-gray-200"
+                        >
+                            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="m9 18 6-6-6-6" />
+                            </svg>
+                        </button>
+                        <SwipeHint
+                            activeIndex={desktopBreakdownCarousel.activeIndex}
+                            viewCount={2}
+                            direction={desktopBreakdownCarousel.direction}
+                            isSliding={desktopBreakdownCarousel.isSliding}
+                            visibility="all"
+                        />
+                    </div>
+
+                    <div className="order-1 pt-2 md:order-2 md:shrink-0">
                         <FilterPanel onFilterChange={setFilter} />
                     </div>
 
