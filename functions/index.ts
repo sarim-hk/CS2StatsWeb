@@ -51,9 +51,9 @@ export async function onRequest(context: HomePreviewContext) {
     const headerColor = `${ansi}[1;36m`;
     const valueColor = `${ansi}[0;37m`;
     const playerNames = topPlayers.map((player) => cleanName(player.Username));
-    const playerNameWidth = Math.max(8, ...playerNames.map((name) => name.length + 3));
+    const playerNameWidth = Math.max(8, ...playerNames.map((name) => name.length));
     const playerRows = topPlayers.map((player, index) => {
-        const name = `${index + 1}. ${playerNames[index]}`.padEnd(playerNameWidth);
+        const name = playerNames[index].padEnd(playerNameWidth);
         return `${name} ${Number(player.Rating ?? 0).toFixed(2)}`;
     });
     const matchRows = latestMatch
@@ -66,8 +66,8 @@ export async function onRequest(context: HomePreviewContext) {
     const leftWidth = 18;
     const content = [
         String.fromCharCode(96).repeat(3) + "ansi",
-        `${headerColor}${"Top 3 Players".padEnd(leftWidth)}Latest Match${reset}`,
-        ...Array.from({ length: 3 }, (_, index) => `${valueColor}${(playerRows[index] ?? "").padEnd(leftWidth)}${matchRows[index] ?? ""}${reset}`),
+        `${headerColor}${"Top 3 Players".padEnd(leftWidth)} Latest Match${reset}`,
+        ...Array.from({ length: 3 }, (_, index) => `${valueColor}${(playerRows[index] ?? "").padEnd(leftWidth)} ${matchRows[index] ?? ""}${reset}`),
         String.fromCharCode(96).repeat(3),
     ].join("\n");
     const siteUrl = (context.env.SITE_URL ?? new URL(context.request.url).origin).replace(/\/$/, "");
