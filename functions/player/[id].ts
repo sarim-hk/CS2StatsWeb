@@ -63,7 +63,7 @@ export async function onRequest(context: PlayerPreviewContext) {
     const headshots = Number(stats.Headshots ?? 0);
     const rating = Number(stats.Rating ?? 0).toFixed(2);
     const kd = (deaths > 0 ? kills / deaths : 0).toFixed(2);
-    const adr = Number(stats.ADR ?? 0).toFixed(2);
+    const adr = Number(stats.ADR ?? 0).toFixed(0);
     const headshotRate = kills > 0 ? `${((headshots / kills) * 100).toFixed(0)}%` : "0%";
     const matchesPlayed = Number(playerStats?.MatchesPlayed ?? 0);
     const winRate = matchesPlayed > 0
