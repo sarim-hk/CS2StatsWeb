@@ -124,10 +124,10 @@ function MatchPanel({ Match }: MatchPanelProps) {
                     </button>
 
                     <div className={`${showRounds ? 'hidden' : 'flex'} flex-1 items-center justify-center space-x-2 md:flex md:flex-none`}>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex min-w-0 items-center space-x-2">
                             {/* Winning Team */}
                             <div
-                                className={`whitespace-nowrap text-sm font-semibold md:text-base ${
+                                className={`min-w-0 truncate whitespace-nowrap text-[clamp(0.625rem,3vw,0.875rem)] font-semibold md:text-base ${
                                     Match?.Teams[winningTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
@@ -147,7 +147,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
                                 type="button"
                                 onClick={() => setShowRounds(true)}
                                 aria-label="Show individual rounds"
-                                className="grid w-14 grid-cols-2 items-center rounded-sm bg-gray-800 px-1.5 py-0.5 md:flex md:w-auto md:grid-cols-3 md:space-x-2 md:px-2"
+                                className="grid w-14 shrink-0 grid-cols-2 items-center rounded-sm bg-gray-800 px-1.5 py-0.5 md:flex md:w-auto md:grid-cols-3 md:space-x-2 md:px-2"
                             >
                                 <span
                                     className={`w-[2ch] justify-self-start text-center text-sm font-semibold md:w-auto md:justify-self-auto md:text-base ${
@@ -174,7 +174,7 @@ function MatchPanel({ Match }: MatchPanelProps) {
 
                             {/* Losing Team */}
                             <div
-                                className={`whitespace-nowrap text-sm font-semibold md:text-base ${
+                                className={`min-w-0 truncate whitespace-nowrap text-[clamp(0.625rem,3vw,0.875rem)] font-semibold md:text-base ${
                                     Match?.Teams[losingTeamId].Side === 3
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
