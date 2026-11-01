@@ -19,6 +19,13 @@ function escapeHtml(value: unknown) {
         .replace(/'/g, "&#39;");
 }
 
+function cleanDisplayName(value: unknown) {
+    return String(value ?? "")
+        .replace(/[\p{Extended_Pictographic}\p{Emoji_Presentation}\uFE0F]/gu, "")
+        .replace(/\s+/g, " ")
+        .trim() || "Player";
+}
+
 function formatMatchDate(value: unknown) {
     const date = new Date(`${String(value ?? "")}Z`);
     if (Number.isNaN(date.getTime())) return String(value ?? "");
@@ -54,7 +61,28 @@ export async function onRequest(context: MatchPreviewContext) {
     const match = await response.json() as {
         MapID?: string;
         MatchDate?: string;
-        Teams?: Record<string, { TeamName?: string; Score?: number; Result?: string }>;
+        Teams?: Record<string, {
+            TeamID?: string;
+            Side?: number;
+            TeamName?: string;
+            Score?: number;
+            Result?: string;
+            Players?: Record<string, {
+                Overall?: {
+                    Username?: string;
+                    Kills?: number;
+                    Assists?: number;
+                    Deaths?: number;
+                    ADR?: number;
+                    Damage?: number;
+                    UtilityDamage?: number;
+                    Impact?: number;
+                    KAST?: number;
+                    Rating?: number;
+                    Blinds?: { Count?: number; TotalDuration?: number };
+                };
+            }>;
+        }>;
     };
     const teams = Object.values(match.Teams ?? {}).sort((first, second) => {
         if (first.Result === "Win") return -1;
@@ -63,20 +91,54 @@ export async function onRequest(context: MatchPreviewContext) {
     });
     const firstTeam = teams[0];
     const secondTeam = teams[1];
-    const title = `${firstTeam?.TeamName ?? "Team"} ${firstTeam?.Score ?? 0}–${secondTeam?.Score ?? 0} ${secondTeam?.TeamName ?? "Team"}`;
+    const firstTeamName = cleanDisplayName(firstTeam?.TeamName ?? "Team");
+    const secondTeamName = cleanDisplayName(secondTeam?.TeamName ?? "Team");
+    const title = `${firstTeamName} ${firstTeam?.Score ?? 0} : ${secondTeam?.Score ?? 0} ${secondTeamName}`;
     const description = `${match.MapID ?? "Match"} · ${formatMatchDate(match.MatchDate)}`;
     const siteUrl = (context.env.SITE_URL ?? new URL(context.request.url).origin).replace(/\/$/, "");
     const pageUrl = `${siteUrl}/match/${encodeURIComponent(matchId)}`;
+    const sharedNameWidth = Math.max(
+        4,
+        "CT 0".length,
+        ...teams.flatMap((team) => Object.values(team.Players ?? {})
+            .map((player) => cleanDisplayName(player.Overall?.Username ?? "Player").length)),
+    );
+    const formatPlayers = (team: typeof firstTeam) => {
+        const sideName = team?.Side === 2 ? "T" : "CT";
+        const teamLabel = `${sideName} ${team?.Score ?? 0}`;
+        const players = Object.values(team?.Players ?? {})
+            .sort((first, second) => (second.Overall?.Rating ?? 0) - (first.Overall?.Rating ?? 0))
+            .map((player) => player.Overall ?? {});
+        const nameWidth = sharedNameWidth;
+        const rows = players.map((player) => {
+            const name = cleanDisplayName(player.Username ?? "Player").padEnd(nameWidth);
+            const kills = String(player.Kills ?? 0).padStart(3);
+            const assists = String(player.Assists ?? 0).padStart(3);
+            const deaths = String(player.Deaths ?? 0).padStart(3);
+            const rating = Number(player.Rating ?? 0).toFixed(2).padStart(6);
+            return `${name}  ${kills}  ${assists}  ${deaths}  ${rating}`;
+        });
+
+        const ansi = String.fromCharCode(27);
+        const reset = `${ansi}[0m`;
+        const headerColor = `${ansi}[1;36m`;
+        const valueColor = `${ansi}[0;37m`;
+        const header = `${headerColor}${teamLabel.padEnd(nameWidth)}  ${"K".padStart(3)}  ${"A".padStart(3)}  ${"D".padStart(3)}  ${"Rating".padStart(6)}${reset}`;
+        const coloredRows = rows.map((row) => `${valueColor}${row}${reset}`);
+        return [String.fromCharCode(96).repeat(3) + "ansi", header, ...coloredRows, String.fromCharCode(96).repeat(3)].join("\n");
+    };
+    const teamUrl = (team: typeof firstTeam) => team?.TeamID
+        ? `${siteUrl}/team/${encodeURIComponent(team.TeamID)}`
+        : pageUrl;
     const payload = {
         component: {
             type: 17,
-            accent_color: 2278750,
+            accent_color: 2042167,
             components: [
-                { type: 10, content: `## ${title}\n${description}` },
-                {
-                    type: 1,
-                    components: [{ type: 2, style: 5, label: "Open match", url: pageUrl }],
-                },
+                { type: 12, items: [{ media: { url: `${siteUrl}/logo_wide.png` } }] },
+                { type: 14, divider: true, spacing: 1 },
+                { type: 10, content: formatPlayers(firstTeam) },
+                { type: 10, content: formatPlayers(secondTeam) },
             ],
         },
     };
