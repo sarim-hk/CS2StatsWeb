@@ -67,6 +67,7 @@ function Home() {
 
 				<MobileSwipeHint
 					activeIndex={showMatches ? 1 : 0}
+					viewCount={2}
 					direction={slideDirection}
 					isSliding={isSliding}
 				/>

@@ -8,6 +8,7 @@ import PlayerStatsPanel from '../components/Player/PlayerStatsPanel';
 import PlayerELOPanel from '../components/Player/PlayerELOPanel';
 import FilterPanel from '../components/Player/FilterPanel';
 import PlayerWeaponsPanel from '../components/Player/PlayerWeaponsPanel';
+import PlayerHitgroupsPanel from '../components/Player/PlayerHitgroupsPanel';
 import MobileSwipeHint from '../components/MobileSwipeHint';
 import NotFound from './NotFound';
 
@@ -20,7 +21,7 @@ function Player() {
     const [isProfileSliding, setIsProfileSliding] = useState(false);
     const [profileSlideDirection, setProfileSlideDirection] = useState<SlideDirection>("forward");
     const profileTouchStart = useRef<{ x: number; y: number } | null>(null);
-    const [showFilter, setShowFilter] = useState(true);
+    const [activeStatsPanel, setActiveStatsPanel] = useState(0);
     const [isFilterSliding, setIsFilterSliding] = useState(false);
     const [statsSlideDirection, setStatsSlideDirection] = useState<SlideDirection>("forward");
     const filterTouchStart = useRef<{ x: number; y: number } | null>(null);
@@ -42,11 +43,14 @@ function Player() {
 
         setStatsSlideDirection(direction);
         window.requestAnimationFrame(() => {
-            setShowFilter((current) => !current);
+            setActiveStatsPanel((current) => (
+                direction === "forward"
+                    ? (current + 1) % 3
+                    : (current + 2) % 3
+            ));
             setIsFilterSliding(true);
         });
     }, [isFilterSliding]);
-
     const handleProfileTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
         const touch = event.touches[0];
         profileTouchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
@@ -78,6 +82,24 @@ function Player() {
         }
 
         filterTouchStart.current = null;
+    };
+
+    const getStatsPanelTransform = (index: number) => {
+        if (index === activeStatsPanel) return "translate-x-0";
+
+        if (!isFilterSliding) {
+            return statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full";
+        }
+
+        const outgoingIndex = statsSlideDirection === "forward"
+            ? (activeStatsPanel + 2) % 3
+            : (activeStatsPanel + 1) % 3;
+
+        if (index === outgoingIndex) {
+            return statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full";
+        }
+
+        return statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full";
     };
 
     if (PlayerID === undefined || PlayerID.trim() === "") {
@@ -119,6 +141,7 @@ function Player() {
                         </div>
                         <MobileSwipeHint
                             activeIndex={showPlayerELO ? 1 : 0}
+                            viewCount={2}
                             direction={profileSlideDirection}
                             isSliding={isProfileSliding}
                         />
@@ -130,7 +153,7 @@ function Player() {
                         onTouchEnd={handleFilterTouchEnd}
                     >
                         <div
-                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${showFilter ? `${isFilterSliding ? (statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none` : "translate-x-0"}`}
+                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${getStatsPanelTransform(0)} ${activeStatsPanel !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) setIsFilterSliding(false);
                             }}
@@ -139,15 +162,24 @@ function Player() {
                         </div>
 
                         <div
-                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${showFilter ? "translate-x-0" : `${isFilterSliding ? (statsSlideDirection === "forward" ? "-translate-x-full" : "translate-x-full") : (statsSlideDirection === "forward" ? "translate-x-full" : "-translate-x-full")} pointer-events-none`}`}
+                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${getStatsPanelTransform(1)} ${activeStatsPanel !== 1 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) setIsFilterSliding(false);
                             }}
                         >
                             <PlayerStatsPanel PlayerID={PlayerID} filter={filter} className="h-full md:h-auto" />
                         </div>
+                        <div
+                            className={`absolute inset-0 ${isFilterSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:static md:w-full md:pointer-events-auto md:translate-x-0 md:pt-2 md:transition-none ${getStatsPanelTransform(2)} ${activeStatsPanel !== 2 ? "pointer-events-none" : ""}`}
+                            onTransitionEnd={(event) => {
+                                if (event.target === event.currentTarget) setIsFilterSliding(false);
+                            }}
+                        >
+                            <PlayerHitgroupsPanel PlayerID={PlayerID} filter={filter} />
+                        </div>
                         <MobileSwipeHint
-                            activeIndex={showFilter ? 1 : 0}
+                            activeIndex={activeStatsPanel}
+                            viewCount={3}
                             direction={statsSlideDirection}
                             isSliding={isFilterSliding}
                         />

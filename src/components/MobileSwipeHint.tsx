@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 interface MobileSwipeHintProps {
-    activeIndex: 0 | 1;
+    activeIndex: number;
+    viewCount: number;
     direction: "forward" | "backward";
     isSliding: boolean;
 }
 
-function MobileSwipeHint({ activeIndex, direction, isSliding }: MobileSwipeHintProps) {
+function MobileSwipeHint({ activeIndex, viewCount, direction, isSliding }: MobileSwipeHintProps) {
     const [progressIndex, setProgressIndex] = useState<number>(activeIndex);
     const [isProgressSliding, setIsProgressSliding] = useState(false);
     const wasSliding = useRef(false);
@@ -16,16 +17,16 @@ function MobileSwipeHint({ activeIndex, direction, isSliding }: MobileSwipeHintP
     useEffect(() => {
         if (isSliding && !wasSliding.current) {
             const isForwardWrap = activeIndex === 0 && direction === "forward";
-            const isBackwardWrap = activeIndex === 1 && direction === "backward";
+            const isBackwardWrap = activeIndex === viewCount - 1 && direction === "backward";
 
             if (isForwardWrap || isBackwardWrap) {
                 isWrapping.current = true;
                 setIsProgressSliding(true);
-                setProgressIndex(isForwardWrap ? 2 : -1);
+                setProgressIndex(isForwardWrap ? viewCount : -1);
 
                 timers.current.push(window.setTimeout(() => {
                     setIsProgressSliding(false);
-                    setProgressIndex(isForwardWrap ? -1 : 2);
+                    setProgressIndex(isForwardWrap ? -1 : viewCount);
 
                     window.requestAnimationFrame(() => {
                         setIsProgressSliding(true);
@@ -49,7 +50,7 @@ function MobileSwipeHint({ activeIndex, direction, isSliding }: MobileSwipeHintP
         }
 
         wasSliding.current = isSliding;
-    }, [activeIndex, direction, isSliding]);
+    }, [activeIndex, direction, isSliding, viewCount]);
 
     useEffect(() => () => {
         timers.current.forEach((timer) => window.clearTimeout(timer));
@@ -58,8 +59,8 @@ function MobileSwipeHint({ activeIndex, direction, isSliding }: MobileSwipeHintP
     return (
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-0.5 overflow-hidden bg-gray-700 md:hidden">
             <div
-                className={`h-full w-1/2 bg-green-400 ${isProgressSliding ? "transition-transform duration-150 ease-out" : "transition-none"}`}
-                style={{ transform: `translateX(${progressIndex * 100}%)` }}
+                className={`h-full bg-green-400 ${isProgressSliding ? "transition-transform duration-150 ease-out" : "transition-none"}`}
+                style={{ width: `${100 / viewCount}%`, transform: `translateX(${progressIndex * 100}%)` }}
             />
         </div>
     );
