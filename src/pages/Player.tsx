@@ -104,7 +104,7 @@ function Player() {
                         onTouchEnd={handleFilterTouchEnd}
                     >
                         <div
-                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(0)} ${statsCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:hidden ${statsCarousel.getTransform(1)} ${statsCarousel.activeIndex !== 1 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
@@ -113,7 +113,7 @@ function Player() {
                         </div>
 
                         <div
-                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${statsCarousel.getTransform(1)} ${statsCarousel.activeIndex !== 1 ? "pointer-events-none" : ""}`}
+                            className={`absolute inset-0 ${statsCarousel.isSliding ? "transition-transform duration-300 ease-out" : "transition-none"} md:absolute md:left-[calc(33.333%+0.5rem)] md:right-0 md:top-[552px] md:pointer-events-auto md:translate-x-0 md:transition-none ${statsCarousel.getTransform(0)} ${statsCarousel.activeIndex !== 0 ? "pointer-events-none" : ""}`}
                             onTransitionEnd={(event) => {
                                 if (event.target === event.currentTarget) statsCarousel.finishSlide();
                             }}
