@@ -48,6 +48,10 @@ function PlayerELOPanel({ PlayerID, filter = "", onError, className = "" }: Play
     });
 
     if (!playerELOHistory) {
+        if (!hasLoaded) {
+            return <div aria-busy="true" className={`${ui.panelFlat} h-full md:h-auto ${className}`} />;
+        }
+
         return hasLoaded ? (
             <div className={`${ui.panelFlat} ${className}`}>
                 <EmptyState message="No ELO history found." className="flex h-32 items-center justify-center text-center md:h-48" />

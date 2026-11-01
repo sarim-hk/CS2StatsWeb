@@ -133,6 +133,10 @@ function PlayerHitgroupsPanel({ PlayerID, filter = "", onError }: PlayerHitgroup
     }, [applyBodyModelColors]);
 
     if (!playerHitgroups) {
+        if (!hasLoaded) {
+            return <div aria-busy="true" className={`${ui.panelFlat} h-full`} />;
+        }
+
         return hasLoaded ? (
             <div className={`${ui.panelFlat} flex h-full flex-col p-4`}>
                 <EmptyState message="No hitgroup stats found." className="flex flex-1 items-center justify-center text-center" />
