@@ -1,5 +1,8 @@
 import FullMatchInterface from "../../interfaces/FullMatchInterface";
 import { ui } from "../ui";
+import apiClient from "../../apiClient";
+
+const DEMO_RETENTION_MS = 14 * 24 * 60 * 60 * 1000;
 
 interface TeamSelectorPanelProps {
     Match: FullMatchInterface;
@@ -16,9 +19,25 @@ function TeamSelectorPanel({
     activePanel,
     onPanelChange
 }: TeamSelectorPanelProps) {
+    const hasMatchName = typeof Match.MatchName === "string" && Match.MatchName.trim().length > 0;
+    const matchDate = new Date(Match.MatchDate);
+    const isDemoExpired = !Number.isNaN(matchDate.getTime())
+        && Date.now() - matchDate.getTime() >= DEMO_RETENTION_MS;
+    const demoDownloadUrl = hasMatchName && !isDemoExpired
+        ? apiClient.getUri({ url: `/download_demo/${encodeURIComponent(String(Match.MatchID))}` })
+        : undefined;
     
     return (
-        <div className={`${ui.panelHeader} p-3`}>
+        <div className={`${ui.panelHeader} relative p-3`}>
+            {demoDownloadUrl && (
+                <a
+                    href={demoDownloadUrl}
+                    className="absolute right-2 top-2 rounded-sm px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-gray-700 hover:text-blue-300"
+                    aria-label="Download match demo"
+                >
+                    Download demo
+                </a>
+            )}
             <div className="flex flex-col gap-3">
                 
                 {/* Panel Type Selector */}

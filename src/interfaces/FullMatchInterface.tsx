@@ -90,6 +90,7 @@ interface FullMatchInterface {
     MapID: string;
     MatchDate: string;
     MatchID: number;
+    MatchName?: string;
     Rounds: RoundInterface[];
     StartTick: number;
     Teams: {
