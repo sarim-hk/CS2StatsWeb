@@ -29,16 +29,18 @@ function TeamSelectorPanel({
     
     return (
         <div className={`${ui.panelHeader} relative p-3`}>
-            {demoDownloadUrl && (
-                <a
-                    href={demoDownloadUrl}
-                    className="absolute right-2 top-2 rounded-sm px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-gray-700 hover:text-blue-300"
-                    aria-label="Download match demo"
-                >
-                    Download demo
-                </a>
-            )}
             <div className="flex flex-col gap-3">
+                {demoDownloadUrl && (
+                    <div className="hidden md:absolute md:right-2 md:top-2 md:flex">
+                        <a
+                            href={demoDownloadUrl}
+                            className="rounded-sm px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-gray-700 hover:text-blue-300"
+                            aria-label="Download match demo"
+                        >
+                            Download demo
+                        </a>
+                    </div>
+                )}
                 
                 {/* Panel Type Selector */}
                 <div className="flex justify-center gap-2">
