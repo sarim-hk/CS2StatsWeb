@@ -25,11 +25,6 @@ function Layout({ children }: LayoutProps) {
                             />
                         </Link>
 
-                        {/* Navigation Links */}
-                        <div className="flex space-x-1">
-                            <NavLink to="/stats">Stats</NavLink>
-                        </div>
-
                     </div>
                 </div>
             </nav>
@@ -43,18 +38,6 @@ function Layout({ children }: LayoutProps) {
                 </div>
             </main>
         </div>
-    );
-}
-
-// Navigation Link Component
-function NavLink({ to, children }: { to: string, children: ReactNode }) {
-    return (
-        <Link
-            to={to}
-            className="px-4 py-2 rounded-sm text-[18px] font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-all duration-200"
-        >
-            {children}
-        </Link>
     );
 }
 
